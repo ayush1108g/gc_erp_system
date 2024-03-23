@@ -5,6 +5,7 @@ const router = express.Router();
 
 // Route to get all assignments of a course
 router.get('/:courseId/assignments', courseController.getAllAssignments);
+router.get('/:courseId/feedback', courseController.getCourseFeedback);
 
 router
     .route('/:id')

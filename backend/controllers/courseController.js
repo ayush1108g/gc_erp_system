@@ -83,6 +83,27 @@ exports.updateCourse = catchAsync(async (req, res) => {
   });
 });
 
+exports.getCourseFeedback = async (req, res, next) => {
+  try {
+    const courseId = req.params.courseId;
+
+    // Find the course by its ID and populate the feedback field to get associated feedback
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    // Extract feedback from the course object
+    const feedback = course.feedback;
+
+    res.status(200).json({ feedback });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 exports.getAllAssignments = async (req, res, next) => {
   try {
     const courseId = req.params.courseId;

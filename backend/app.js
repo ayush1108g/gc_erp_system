@@ -21,8 +21,10 @@ const authController = require("./controllers/authentication");
 
 const userRouter = require("./routes/userRoutes");
 const courseRouter = require("./routes/courseRoutes");
+const feedbackRouter = require("./routes/feedbackRoutes");
 const assignmentRouter = require("./routes/assignmentRoutes");
 const assignmentFileRouter = require("./routes/assignmentFileRoutes");
+const inventoryRouter = require("./routes/inventoryRoutes");
 const attendanceRouter = require("./routes/attendanceRoutes");
 
 const AppError = require("./utils/appError");
@@ -89,7 +91,9 @@ app.use(authController.protect);
 
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/assignments", assignmentRouter);
+app.use("/api/v1/feedback", feedbackRouter);
 app.use("/api/v1/submitAssignment", assignmentFileRouter);
+app.use("/api/v1/inventory", inventoryRouter);
 app.use("/api/v1/attendance", attendanceRouter);
 
 app.all("*", (req, res, next) => {

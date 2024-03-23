@@ -15,14 +15,13 @@ const equipmentInventorySchema = new Schema({
     type: Number,
     required: true,
   },
-  issued_to: {
+  issued_to: [{
     student_id: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    issued_date: Date,
-    return_date: Date,
-  },
+    issued_date: Date
+  }],
   last_updated: {
     type: Date,
     default: Date.now,
