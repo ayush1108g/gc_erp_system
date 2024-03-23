@@ -11,6 +11,8 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 console.log("app");
 
@@ -19,6 +21,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const courseRouter = require("./routes/courseRoutes");
 const userRouter = require("./routes/userRoutes");
 const assignmentRouter = require("./routes/assignmentRoutes");
+const assignmentFileRouter = require("./routes/assignmentFileRoutes");
 
 const AppError = require("./utils/appError");
 
@@ -80,7 +83,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/assignments", assignmentRouter);
-
+app.use("/api/v1/submitAssignment", assignmentFileRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
