@@ -51,13 +51,13 @@ exports.createOne = (Model) =>
 
 exports.getOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    let doc = Model.findById(req.params.id);
-
+    let doc = await Model.find({_id:req.params.id});
+    // console.log(req.params.id);
     if (!doc) {
       return next(new AppError("No doc found with that ID", 404));
     }
 
-    res.status(200).json({
+    res.status(200).json ({
       status: "success",
       data: {
         data: doc,
