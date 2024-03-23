@@ -52,7 +52,7 @@ exports.createOne = Model => catchAsync(async (req,res)=>{
 });
 
 exports.getOne = Model => catchAsync(async(req,res,next) => {
-    let query = Model.findById(req.params.id);
+    let doc = Model.findById(req.params.id);
 
     if(!doc)
     {
@@ -70,8 +70,8 @@ exports.getOne = Model => catchAsync(async(req,res,next) => {
 exports.getAll = Model => catchAsync( async (req,res)=> {
 
     let filter = {};
-    if(req.params.courseId)
-    filter = {course: req.params.courseId};
+    if(req.params.id)
+    filter = {course: req.params.id};
 
     const features = new APIFeatures(Model.find(), req.query)
     .filter()
