@@ -49,11 +49,9 @@ exports.createOne = (Model) =>
     });
   });
 
-exports.getOne = (Model, popOptions) =>
+exports.getOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    let query = Model.findById(req.params.id);
-    if (popOptions) query = query.populate(popOptions);
-    const doc = await query;
+    let doc = Model.findById(req.params.id);
 
     if (!doc) {
       return next(new AppError("No doc found with that ID", 404));
@@ -70,14 +68,13 @@ exports.getOne = (Model, popOptions) =>
 exports.getAll = (Model) =>
   catchAsync(async (req, res) => {
     let filter = {};
-    if (req.params.courseId) filter = { course: req.params.courseId };
+    if (req.params.id) filter = { course: req.params.id };
 
     const features = new APIFeatures(Model.find(), req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
-    // const doc = await features.query.explain();
 
     const doc = await features.query;
 
