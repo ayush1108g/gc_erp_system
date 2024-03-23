@@ -123,7 +123,6 @@ exports.updateuser = catchasync(async (req, res) => {
   const user = req.user;
   user.name = req.body.name || user.name;
   user.email = req.body.email || user.email;
-  user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
   user.address = req.body.address || user.address;
 
   await user.save();
@@ -146,12 +145,37 @@ exports.getuserbyid = catchasync(async (req, res) => {
   const userData = {
     name: user.name,
     email: user.email,
-    phoneNumber: user.phoneNumber,
     address: user.address,
   };
   res.status(200).json({
     status: "success",
     data: userData,
+  });
+});
+
+exports.tobeapproved = catchasync(async (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return next(new AppError("You are not authorized to approve users", 401));
+  }
+  const user = await User.find({ isApproved: false });
+  res.status(200).json({
+    status: "success",
+    data: user,
+    length: user.length,
+  });
+});
+
+exports.approveuser = catchasync(async (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return next(new AppError("You are not authorized to approve users", 401));
+  }
+  const user = await User.findById(req.params.id);
+  if (!user) return next(new AppError("User not found", 404));
+  user.isApproved = true;
+  await user.save();
+  res.status(200).json({
+    status: "success",
+    data: user,
   });
 });
 

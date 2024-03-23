@@ -17,11 +17,13 @@ app.use(express.urlencoded({ extended: true }));
 console.log("app");
 
 const globalErrorHandler = require("./controllers/errorController");
+const authController = require("./controllers/authentication");
 
-const courseRouter = require("./routes/courseRoutes");
 const userRouter = require("./routes/userRoutes");
+const courseRouter = require("./routes/courseRoutes");
 const assignmentRouter = require("./routes/assignmentRoutes");
 const assignmentFileRouter = require("./routes/assignmentFileRoutes");
+const attendanceRouter = require("./routes/attendanceRoutes");
 
 const AppError = require("./utils/appError");
 
@@ -81,9 +83,14 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/users", userRouter);
+
+//middleware to check if the user is logged in
+app.use(authController.protect);
+
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/assignments", assignmentRouter);
 app.use("/api/v1/submitAssignment", assignmentFileRouter);
+app.use("/api/v1/attendance", attendanceRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

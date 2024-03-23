@@ -12,6 +12,7 @@ import LoginContext from "./store/context/loginContext";
 
 import Errorpage from "./pages/Errorpage";
 import FullAuthLoader from "./component/FullAuthLoader";
+import SignupPage from "./component/Sign_up_Page";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -51,6 +52,7 @@ const RoutesWithAnimation = () => {
         <Route path="/login/forgotpassword/:id/confirm" element={<ForgotPassConfirmPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/" element={<Homepage />} /> */}
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="*" element={<Errorpage />} />
       </Routes>
     </>

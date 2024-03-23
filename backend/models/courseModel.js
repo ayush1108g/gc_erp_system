@@ -49,19 +49,8 @@ const courseSchema = new Schema({
   ],
   attendance_records: [
     {
-      date: Date,
-      present_students: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-      absent_students: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
+      type: Schema.Types.ObjectId,
+      ref: "Attendance",
     },
   ],
   grades: [

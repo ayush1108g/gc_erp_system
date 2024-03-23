@@ -120,6 +120,9 @@ const protect = catchasync(async (req, res, next) => {
       new AppError("user recently changed password! please login again", 401)
     );
   }
+  if (currentUser.isApproved === false) {
+    return next(new AppError("Your account is not approved yet", 401));
+  }
   req.user = currentUser;
   next();
 });

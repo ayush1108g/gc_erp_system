@@ -21,6 +21,11 @@ const attendanceSchema = new Schema({
     ref: "Course",
     required: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   location: {
     lat: {
       type: Number,
@@ -33,7 +38,11 @@ const attendanceSchema = new Schema({
   },
   date: {
     type: Date,
-    required: true,
+    default: Date.now,
+  },
+  validtill: {
+    type: Date,
+    default: Date.now + 1000 * 60 * 60,
   },
   attendance_records: [attendanceRecordSchema],
 });

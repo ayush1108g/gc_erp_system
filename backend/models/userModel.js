@@ -184,7 +184,6 @@ const userSchema = new Schema({
     phone: {
       type: String,
       required: [true, "No user phone Number is provided"],
-      unique: true,
       minlength: [10, "Incorrect phone number"],
       maxlength: [10, "Incorrect phone number"],
     },
