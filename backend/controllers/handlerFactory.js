@@ -51,10 +51,8 @@ exports.createOne = Model => catchAsync(async (req,res)=>{
     })
 });
 
-exports.getOne = (Model, popOptions) => catchAsync(async(req,res,next) => {
+exports.getOne = Model => catchAsync(async(req,res,next) => {
     let query = Model.findById(req.params.id);
-    if(popOptions) query = query.populate(popOptions);
-    const doc = await query;
 
     if(!doc)
     {
@@ -80,7 +78,6 @@ exports.getAll = Model => catchAsync( async (req,res)=> {
     .sort()
     .limitFields()
     .paginate();
-    // const doc = await features.query.explain();
 
     const doc = await features.query;
 
