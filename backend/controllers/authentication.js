@@ -46,10 +46,15 @@ const createSendToken = catchasync(async (user, statusCode, res) => {
   // console.log(token);
   // console.log(user);
   user.password = undefined;
+  if (user.role === "student") {
+    user.courses_taught = undefined;
+    user.isApproved = undefined;
+  }
   res.status(statusCode).json({
     status: "success",
     AccessToken,
     RefreshToken,
+    role: user.role,
     data: { user },
   });
 });

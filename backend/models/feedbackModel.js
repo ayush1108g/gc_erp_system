@@ -1,34 +1,34 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
 const feedbackSchema = new Schema({
   student_id: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: "User",
+    required: true,
   },
   course_id: {
     type: Schema.Types.ObjectId,
-    ref: 'Course',
-    required: true
+    ref: "Course",
+    required: true,
   },
   feedback_type: {
     type: String,
-    enum: ['course', 'professor', 'facility', 'event'],
-    required: true
+    enum: "course",
+    required: true,
   },
   rating: {
     type: Number,
-    required: true
+    required: true,
   },
   comments: String,
   submitted_at: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-const Feedback = mongoose.model('Feedback', feedbackSchema);
+const Feedback = mongoose.model("Feedback", feedbackSchema);
 
 module.exports = Feedback;

@@ -152,59 +152,100 @@ const crypto = require("crypto");
 // const User = mongoose.model("User", userSchema);
 // module.exports = User;
 
-
-
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-   role: {
+  role: {
+    // role of the user (student, teacher, admin)
     type: String,
-    enum: ['student', 'teacher', 'admin'],
-    required: true
+    enum: ["student", "teacher", "admin"],
+    required: true,
+  },
+  email: {
+    type: String,
+    required: [true, "No user email is provided"],
+    unique: true,
+    lowercase: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Please provide a password"],
+    select: false,
   },
   personal_info: {
-    name: String,
+    // personal information of the user (student, teacher, admin)
+    name: {
+      type: String,
+      required: [true, "No user name is provided"],
+    },
     rollNumber: String,
-    email: String,
-    phone: String,
+    phone: {
+      type: String,
+      required: [true, "No user phone Number is provided"],
+      unique: true,
+      minlength: [10, "Incorrect phone number"],
+      maxlength: [10, "Incorrect phone number"],
+    },
     address: String,
     date_of_birth: Date,
     gender: String,
-    profile_picture: String
+    profile_picture: {
+      type: String,
+      default: "default.jpg",
+    },
   },
   academic_info: {
+    // academic information of the user (student, teacher)
     department: [String],
     program: [String],
     batch: [Number],
-    semester: [Number]
+    semester: [Number],
   },
-  courses_enrolled: [{
-    course_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Course',
-      required: true
+  courses_enrolled: [
+    // courses enrolled by the student
+    {
+      course_id: {
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+        required: true,
+      },
+      enrollment_date: Date,
+      status: {
+        type: String,
+        enum: ["enrolled", "completed", "dropped"],
+        default: "enrolled",
+      },
     },
-    enrollment_date: Date,
-    status: {
-      type: String,
-      enum: ['enrolled', 'completed', 'dropped'],
-      default: 'enrolled'
-    }
-  }],
-  feedback_given: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Feedback'
-  }],
-  equipment_issued: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Equipment'
-  }],
-  courses_taught: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Course'
-  }],
+  ],
+  courses_taught: [
+    // courses taught by the teacher
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Course",
+    },
+  ],
+  feedback_given: [
+    // feedback given by the user(student)
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Feedback",
+    },
+  ],
+  equipment_issued: [
+    // equipment issued to the student
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Equipment",
+    },
+  ],
+
+  isApproved: {
+    // approval status of the user(student, teacher)
+    type: Boolean,
+    default: false,
+  },
   passwordChangedAt: Date,
   resetPasswordToken: {
     type: "string",
@@ -254,6 +295,6 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

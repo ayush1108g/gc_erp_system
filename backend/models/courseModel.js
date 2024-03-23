@@ -1,71 +1,88 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
 const courseSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   professor: {
     type: [String],
-    required: true
+    required: true,
   },
-  schedule: [{
-    day: String,
-    time: String
-  }],
-  department: [{
-    type: String,
-    required: true
-  }],
-  semester: [{
-    type: Number,
-    required: true
-  }],
-  students_enrolled: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  assignments: [{
-    assignment_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Assignment',
-      auto: true
+  schedule: [
+    {
+      day: String,
+      time: String,
     },
-    name: String,
-    due_date: Date,
-    total_marks: Number
-  }],
-  attendance_records: [{
-    date: Date,
-    present_students: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }],
-    absent_students: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }]
-  }],
-  grades: [{
-    student_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+  ],
+  department: [
+    {
+      type: String,
+      required: true,
     },
-    assignment_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Assignment'
+  ],
+  semester: [
+    {
+      type: Number,
+      required: true,
     },
-    marks_obtained: Number,
-    feedback: String
-  }]
+  ],
+  students_enrolled: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  assignments: [
+    {
+      assignment_id: {
+        type: Schema.Types.ObjectId,
+        ref: "Assignment",
+        auto: true,
+      },
+      name: String,
+      due_date: Date,
+      total_marks: Number,
+    },
+  ],
+  attendance_records: [
+    {
+      date: Date,
+      present_students: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      absent_students: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+    },
+  ],
+  grades: [
+    {
+      student_id: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+      assignment_id: {
+        type: Schema.Types.ObjectId,
+        ref: "Assignment",
+      },
+      marks_obtained: Number,
+      feedback: String,
+    },
+  ],
 });
 
-const Course = mongoose.model('Course', courseSchema);
+const Course = mongoose.model("Course", courseSchema);
 
 module.exports = Course;
-
 
 // const mongoose = require('mongoose');
 

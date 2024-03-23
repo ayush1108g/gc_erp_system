@@ -18,8 +18,19 @@ exports.verifytoken = catchasync(async (req, res, next) => {
   });
 });
 
-exports.signup = catchasync(async (req, res) => {
+exports.signup = catchasync(async (req, res, next) => {
   console.log(req.body);
+  req.body.isApproved = false;
+  if (!req.body.role) {
+    return next(new AppError("please provide role", 400));
+  }
+  if (req?.body?.role === "student") {
+    if (req.body.courses_taught) req.body.courses_taught = [];
+
+    if (!req.body?.personal_info?.rollNumber) {
+      return next(new AppError("please provide roll number", 400));
+    }
+  }
   const newusersignup = await User.create(req.body);
 
   authentication.createSendToken(newusersignup, 201, res);
@@ -34,6 +45,9 @@ exports.login = catchasync(async (req, res, next) => {
   console.log(user);
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("incorrect email or password", 401));
+  }
+  if (user.isApproved === false) {
+    return next(new AppError("Your account is not approved yet", 401));
   }
   console.log(user);
   authentication.createSendToken(user, 200, res);
