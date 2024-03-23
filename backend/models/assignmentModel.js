@@ -8,9 +8,9 @@ const submissionSchema = new Schema({
     ref: 'Student',
     required: true
   },
+  submissionFile: String,
   grade: {
-    type: Number,
-    required: true
+    type: Number
   },
   comments: String
 });
@@ -20,6 +20,8 @@ const assignmentSchema = new Schema({
     type: String,
     required: true
   },
+  description: String,
+  questionFile: String,
   courseId: {
     type: Schema.Types.ObjectId,
     ref: 'Course',
@@ -33,7 +35,23 @@ const assignmentSchema = new Schema({
     type: Number,
     required: true
   },
-  submissions: [submissionSchema]
+  submissions: [submissionSchema],
+  doubts:[
+    {
+      message:{
+        type: String,
+        required:[true, 'Empty message!']
+      },
+      date: {
+        type: Date,
+        default: Date.now()
+      },
+      student_id:{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      }
+    }
+  ]
 });
 
 const Assignment = mongoose.model('Assignment', assignmentSchema);

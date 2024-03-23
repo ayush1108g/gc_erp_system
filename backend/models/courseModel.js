@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const courseSchema = new Schema({
-  course_name: {
+  name: {
     type: String,
     required: true
   },
@@ -25,11 +25,12 @@ const courseSchema = new Schema({
   }],
   students_enrolled: [{
     type: Schema.Types.ObjectId,
-    ref: 'Student'
+    ref: 'User'
   }],
   assignments: [{
-    _id: {
+    assignment_id: {
       type: Schema.Types.ObjectId,
+      ref: 'Assignment',
       auto: true
     },
     name: String,
@@ -40,17 +41,17 @@ const courseSchema = new Schema({
     date: Date,
     present_students: [{
       type: Schema.Types.ObjectId,
-      ref: 'Student'
+      ref: 'User'
     }],
     absent_students: [{
       type: Schema.Types.ObjectId,
-      ref: 'Student'
+      ref: 'User'
     }]
   }],
   grades: [{
     student_id: {
       type: Schema.Types.ObjectId,
-      ref: 'Student'
+      ref: 'User'
     },
     assignment_id: {
       type: Schema.Types.ObjectId,

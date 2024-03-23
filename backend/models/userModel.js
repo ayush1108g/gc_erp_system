@@ -205,7 +205,7 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Course'
   }],
-    passwordChangedAt: Date,
+  passwordChangedAt: Date,
   resetPasswordToken: {
     type: "string",
   },

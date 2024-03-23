@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const feedbackSchema = new Schema({
   student_id: {
     type: Schema.Types.ObjectId,
-    ref: 'Student',
+    ref: 'User',
     required: true
   },
   course_id: {

@@ -2,6 +2,10 @@ const express = require("express");
 const courseController = require('../controllers/courseController');
 
 const router = express.Router();
+
+// Route to get all assignments of a course
+router.get('/:courseId/assignments', courseController.getAllAssignments);
+
 router
     .route('/:id')
     .get(courseController.getCourse)
