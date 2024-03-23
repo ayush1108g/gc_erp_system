@@ -2,26 +2,26 @@ import React from "react"
 import classes from "./signup.module.css";
 
 const sign_up_page = () => {
-    return (<>
-        <h1 className={classes.h1}>Sign Up</h1><br /><br />
+    return (<div className={classes.container}>
+        <h1 className={classes.h1}>Sign Up</h1>
         <div class={classes.gridContainer}>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="1">Name</span>
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="1" />
+                <input type="text" class="form-control shadow-none " placeholder="Username" aria-label="Username" aria-describedby="1" />
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="2">Roll Number</span>
-                <input type="text" class="form-control" placeholder="Roll number" aria-label="Roll number" aria-describedby="2" />
+                <input type="text" class="form-control shadow-none " placeholder="Roll number" aria-label="Roll number" aria-describedby="2" />
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="3">Email</span>
-                <input type="text" class="form-control" placeholder="xyz@gmail.com" aria-label="xyz@gmail.com" aria-describedby="3" />
+                <input type="text" class="form-control shadow-none " placeholder="xyz@gmail.com" aria-label="xyz@gmail.com" aria-describedby="3" />
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span className="input-group-text">
                     <label for="exampleDataList" class="form-label">Branch</label>
                 </span>
-                <input type="text" class="form-control " list="datalistOptions" id="4" />
+                <input type="text" class="form-control shadow-none" list="datalistOptions" id="4" />
                 <datalist id="datalistOptions">
                     <option value="Computer Science" />
                     <option value="Electronics and Communication" />
@@ -33,19 +33,19 @@ const sign_up_page = () => {
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="5">Phone</span>
-                <input type="text" class="form-control" aria-label="xyz@gmail.com" aria-describedby="5" />
+                <input type="text" class="form-control shadow-none " aria-label="xyz@gmail.com" aria-describedby="5" />
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="6">High School percentage</span>
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control shadow-none " />
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="7">Intermediate percentage</span>
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control shadow-none " />
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="8">Year of Passout</span>
-                <select class="form-control " aria-label="Large select example">
+                <select class="form-control shadow-none" aria-label="Large select example">
                     <option selected>Only For Students</option>
                     <option value="0">2024</option>
                     <option value="1">2025</option>
@@ -62,7 +62,7 @@ const sign_up_page = () => {
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="5">Current Semester</span>
-                <select class="form-control " aria-label="Large select example">
+                <select class="form-control shadow-none" aria-label="Large select example">
                     <option selected>Select Semester</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -78,7 +78,7 @@ const sign_up_page = () => {
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="9">Gender</span>
-                <select class="form-control " aria-label="Large select example">
+                <select class="form-control shadow-none" aria-label="Large select example">
                     <option selected>Select Gender</option>
                     <option value="1">Male</option>
                     <option value="2">Female</option>
@@ -87,7 +87,7 @@ const sign_up_page = () => {
             </div>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="10">Role</span>
-                <select class="form-control " aria-label="Large select example">
+                <select class="form-control shadow-none" aria-label="Large select example">
                     <option selected>Select Role</option>
                     <option value="1">Student</option>
                     <option value="2">Teacher</option>
@@ -98,19 +98,19 @@ const sign_up_page = () => {
         <div class={`${classes.gridContainer} ${classes.Container2}`}>
             <div className={`${classes.gridItem} input-group mb-3`}>
                 <span class="input-group-text" id="10">Address</span>
-                <input type="text" className="form-control w-75" />
-                <span class="input-group-text" id="11">PinCode</span>
-                <input type="text" class="form-control" width />
+                <input type="text" className="form-control shadow-none w-75" />
             </div>
 
         </div>
         <div className={classes.photo}>
-            <h2>Upload Your Passport size Photo</h2>
-            <form action="#" method="post" enctype="multipart/form-data">
-                <label for="photo">Choose a photo:</label><br />
-                <input type="file" id="photo" name="photo" accept="image/*" /><br /><br />
-                <input type="submit" value="Upload" />
-            </form>
+            <h5>Passport size Photo</h5>
+        <div class={`${classes.gridContainer} ${classes.Container2}`}>
+
+            <div className={`${classes.gridItem} input-group mb-3`}>
+            <input type="file" class="form-control shadow-none " id="inputGroupFile02"/>
+            <span class="input-group-text" for="inputGroupFile02">Upload</span>
+            </div>
+            </div>
         </div>
         <div className={classes.button}>
         <button type="button" class={` btn btn-success`}>Submit</button>
@@ -125,7 +125,7 @@ const sign_up_page = () => {
             <input type="text" id="rollnumber" name="rollnumber"/>
             </row>
           </form> */}
-    </>)
+    </div>)
 }
 
 export default sign_up_page

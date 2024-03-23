@@ -1,6 +1,6 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import Sign_up_page from "./component/Sign_up_Page";
 import React, { useEffect, useState, useContext } from "react";
 import { Route, Routes, useLocation, HashRouter } from "react-router-dom";
 
@@ -13,6 +13,10 @@ import LoginContext from "./store/context/loginContext";
 import Errorpage from "./pages/Errorpage";
 import FullAuthLoader from "./component/FullAuthLoader";
 import SignupPage from "./component/Sign_up_Page";
+import View_attendance from "./component/View_attendance";
+import Feedback_form from "./component/Feedback_form";
+import Inventory_form from "./component/Inventory_form";
+import Inventory_Page from "./component/Inventory_page";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -54,6 +58,7 @@ const RoutesWithAnimation = () => {
         <Route path="/" element={<Homepage />} /> */}
         <Route path="/signup" element={<SignupPage />} />
         <Route path="*" element={<Errorpage />} />
+        
       </Routes>
     </>
   );
@@ -80,7 +85,11 @@ const MainContent = () => {
   //   return () => window.removeEventListener("scroll", handleScroll);
   // }, []);
   return (
-    <div>
+    <div style={{
+      display:"flex",
+      justifyContent:"center",
+      alignItems:'center'
+    }}>
       {loginCtx.loading && <FullAuthLoader />}
       <RoutesWithAnimation />
     </div>
