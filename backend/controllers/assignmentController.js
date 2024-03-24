@@ -87,6 +87,7 @@ exports.updateStudentGrade = async (req, res, next) => {
 exports.addSubmissionFile = async (req, res, next) => {
   try {
     const studentId = req.user._id;
+    const rollNumber = req.user.personal_info.rollNumber;
     const { assignmentId, submissionFile } = req.body;
 
     // Check if the assignment exists
@@ -117,6 +118,7 @@ exports.addSubmissionFile = async (req, res, next) => {
       assignment.submissions.push({
         studentId,
         submissionFile,
+        rollNumber
       });
     } else {
       // If the student has already submitted, update the submission file
@@ -139,6 +141,7 @@ exports.addSubmissionFile = async (req, res, next) => {
 exports.addDoubt = async (req, res, next) => {
   try {
     const studentId = req.user._id;
+    const student_name = req.user.personal_info.name;
     const { assignmentId, message } = req.body;
 
     // Check if the assignment exists
@@ -157,6 +160,7 @@ exports.addDoubt = async (req, res, next) => {
     assignment.doubts.push({
       message,
       student_id: studentId,
+      student_name
     });
 
     // Save the updated assignment
@@ -223,3 +227,4 @@ exports.getAssignmentByID = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
