@@ -24,6 +24,7 @@ const assignmentRouter = require("./routes/assignmentRoutes");
 const assignmentFileRouter = require("./routes/assignmentFileRoutes");
 const inventoryRouter = require("./routes/inventoryRoutes");
 const attendanceRouter = require("./routes/attendanceRoutes");
+const announcementRouter = require("./routes/announcementRoutes");
 
 const AppError = require("./utils/appError");
 
@@ -93,6 +94,7 @@ app.use("/api/v1/assignments", assignmentRouter);
 app.use("/api/v1/feedback", feedbackRouter);
 app.use("/api/v1/inventory", inventoryRouter);
 app.use("/api/v1/attendance", attendanceRouter);
+app.use("/api/v1/announcements", announcementRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
