@@ -1,0 +1,164 @@
+.assDetails{
+    margin: 2%;
+    margin-left: 8%;
+    border-bottom: 1px solid  rgb(175, 173, 173);
+    padding-bottom: 30px;
+    margin-bottom: 10px;
+}
+
+.assDetails p{
+    margin: 0px;
+    padding: 0px;
+}
+
+.title{
+    display: flex;
+    flex-direction: row;
+    font-size: 30px;
+    margin: 1%;
+    margin-top: 10px; 
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgb(175, 173, 173);
+}
+.icons{
+    margin-top: 8px;
+  margin-right: 3%;
+  display: flex;
+  gap: 20px;
+}
+.icon2{
+   margin-top: 6px;
+   margin-right: 10px;
+}
+
+.assdet2{
+    margin-left:35px;
+}
+
+.desc{
+   
+    margin-left: 8%;
+    border-bottom: 1px solid  rgb(175, 173, 173);
+    padding-bottom: 20px;
+    height: 10vw;
+}
+
+.desc div{
+   margin-bottom: 4%;
+}
+
+.classComment{
+    margin-left: 8% ;
+    margin-top: 1%;
+}
+.classComment div{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.icon3{
+    margin-top: 3px;
+}
+
+.classComment input{
+    border-radius: 10px;
+    width: 55%;
+}
+
+.grandParent{
+    display: flex;
+}
+.parent{
+    width: 65%;
+}
+
+.smbx{
+     display: flex;
+     margin: 30px;
+     margin-bottom: 20px;
+     margin-top: 10px;
+     gap: 38%;
+     font-size: 20px;
+}
+
+.box1 {
+    border: 1px solid  rgb(175, 173, 173);
+    border-radius: 10px;
+    padding-bottom: 20px;
+    box-shadow:2px 4px 8px rgba(0,0,0,0.35); 
+    margin-bottom: 40px;
+
+}
+.parent2{
+    width: 22%;
+    margin-left: 20px;
+}
+
+.smbx2{
+    gap:10px;
+    font-size: 15px;
+    border:  1px solid  rgb(175, 173, 173);
+     text-align: center;
+     align-items: center;
+     justify-content: center;
+     height: 35px;
+     color: rgb(31, 130, 211);
+}
+
+.smbx3{
+    font-size: 17px;
+    border:  1px solid  rgb(175, 173, 173);
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    background-color: rgb(17, 80, 238);
+    color: white;
+}
+
+.box2{
+    border:  1px solid  rgb(175, 173, 173);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow:2px 4px 8px rgba(0,0,0,0.35);
+}
+
+.box2 div{
+    display: flex;
+}
+.icon5{
+    margin-top: 3px ;
+    margin-right: 10px;
+}
+.input2{
+    margin-top: 10px;
+    width: 88%;
+    border-radius: 8px;
+    border:1px solid  rgb(175, 173, 173) ;
+}
+.input1{
+    width: 50vw !important ;
+    border:1px solid  rgb(175, 173, 173) ;
+}
+
+@media screen and (max-width: 1000px) {
+    .grandParent {
+        display: flex;
+        flex-direction: column;
+         margin-left: 5vw;
+         
+    }
+    .desc{
+        height: 30%;
+    }
+    .box1{
+        width: 80vw;
+        margin-top: 30px;
+    }
+    .box2{
+        width: 80vw;
+        margin-top: 20px;
+        margin-bottom: 40px;
+    }
+}

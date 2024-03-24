@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react"
 import classes from "./signup.module.css";
-import DatePicker from 'react-date-picker'
 import { backendUrl } from "../constant.js";
 import axios from "axios";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
@@ -157,8 +156,8 @@ const SignupPage = () => {
     return (<div style={{
         display: "flex",
         justifyContent: "center",
-        width: "90vw",
-        height: "90vh",
+        // width: "100vw",
+        // height: "100vh",
     }}>
 
         <div className={classes.container}>

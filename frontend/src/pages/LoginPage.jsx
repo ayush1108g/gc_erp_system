@@ -110,7 +110,10 @@ const Login = (props) => {
   return (
     <div style={{
       // width: '100vw',
-      // height: '100vh',
+      height: '100vh',
+      display:'flex',
+      justifyContent:'center',
+      alignItems:'center'
     }}>
       <div className={`row d-flex align-items-center ${classes.container}`}>
         <motion.form
