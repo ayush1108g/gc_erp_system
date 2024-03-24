@@ -29,7 +29,6 @@ exports.getAllCourses = catchAsync(async (req, res) => {
 
 exports.getCourse = catchAsync(async (req, res, next) => {
   let doc = await Course.find({ _id: req.params.id });
-  // console.log(req.params.id);
   if (!doc) {
     return next(new AppError("No doc found with that ID", 404));
   }

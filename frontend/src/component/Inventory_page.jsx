@@ -4,6 +4,7 @@ import { FaPlus } from "react-icons/fa";
 import axios from 'axios';
 import {backendUrl} from "../constant";
 import LoginContext from "../store/context/loginContext";
+import { useNavigate} from "react-router"
 // const data = [
 //     {name:"Bat"},
 //     {name:"Football"},
@@ -14,8 +15,10 @@ import LoginContext from "../store/context/loginContext";
 
 
 const Invenotory_Page=()=>{
+
     const Loginctx = useContext(LoginContext);
     const [data,setData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(()=>{
 
@@ -36,14 +39,20 @@ const Invenotory_Page=()=>{
     }
 };
     fetchdata();
-    },[])
+    },[]);
+
+    const openInvetoryForm = (equipmentId) => {
+        navigate(`/inventory/${equipmentId}`);
+        console.log(equipmentId);
+    };
+
    return(<div className={classes.Body}>
          <h1 className={classes.title}>Welcome to SAC Inventory</h1>
          <div className={classes.eqp}>
             <h5 style={{margin:'30px'}}> <FaPlus color="blue" /> Add Equipment</h5>
              <ul>
                 {data.map((ele,ind)=>{
-                    return(<li key={ind}>{ele.equipment_name}</li>)
+                    return(<li onClick={()=>openInvetoryForm(ele._id)} key={ind}>{ele.equipment_name}</li>)
                 })}
              </ul>
          </div>

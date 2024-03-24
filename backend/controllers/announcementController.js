@@ -43,11 +43,12 @@ exports.createAnnouncement = async (req, res, next) => {
 // Update an announcement
 exports.updateAnnouncement = async (req, res, next) => {
   try {
+    const userId = req.user._id;
     const { announcementId } = req.params;
-    const { message, time, userId } = req.body;
+    const { message } = req.body;
     const updatedAnnouncement = await Announcement.findByIdAndUpdate(
       announcementId,
-      { message, time, userId },
+      { message, userId },
       { new: true }
     );
     res.status(200).json({ announcement: updatedAnnouncement });

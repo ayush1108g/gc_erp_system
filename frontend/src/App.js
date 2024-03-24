@@ -78,7 +78,10 @@ const RoutesWithAnimation = () => {
         />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/inventory" element={<Inventory_Page/>}/>
+        <Route path="/inventory/:equipmentId" element={<Inventory_form/>}/>
         <Route path="/my_courses" element={<Courses_page/>}/>
+        <Route path="/:courseId/assignment" element={<Assignment_page/>}/>
+        <Route path="/:courseId" element={<Courses_page2/>}/>
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
       </Routes>
@@ -111,8 +114,8 @@ const MainContent = () => {
       style={{
         width: "100vw",
         height: "100vh",
-        display: "flex",
-        justifyContent: "center",
+        //display: "flex",
+        //justifyContent: "center",
         // alignItems: "center",
       }}
     >

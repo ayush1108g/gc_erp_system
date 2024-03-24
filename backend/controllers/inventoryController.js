@@ -130,3 +130,18 @@ exports.updateInventoryItem = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getEquipmentById = async (req, res, next) => {
+  try {
+    const equipmentId = req.params.equipmentId;
+    const equipment = await Equipment.findById(equipmentId);
+    if (!equipment) {
+      return res.status(404).json({ message: 'Equipment not found' });
+    }
+
+    
+    res.status(200).json({ equipment });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -15,6 +15,7 @@ router.post('/add', inventoryController.addInventoryItem);
 // Route for deleting inventory item issue
 router
     .route('/:equipmentId')
+    .get(inventoryController.getEquipmentById)
     .delete(inventoryController.deleteInventoryIssue);
 
 module.exports = router;

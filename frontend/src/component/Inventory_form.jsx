@@ -1,6 +1,11 @@
 import React from "react";
 import classes from './inventoryform.module.css'
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
+import axios from 'axios';
+import LoginContext from "../store/context/loginContext";
+import {backendUrl} from "../constant";
+import { useParams } from 'react-router-dom';
+import { useNavigate} from "react-router"
 
 const data = [
   {
@@ -46,54 +51,101 @@ const data = [
 ];
 
 const Inventory_form = () => {
+  
+  const Loginctx = useContext(LoginContext);
+  const navigate = useNavigate();
+  const [equipmentData, setEquipmentData] = useState(null); 
+  const { equipmentId } = useParams();
+  let isadmin = Loginctx.role === 'admin';
 
+  useEffect(() => {
+    const fetchdata = async () => {
+      try {
+        const response = await axios.get(backendUrl + '/api/v1/inventory/' + equipmentId, {
+          headers: {
+            Authorization: `Bearer ${Loginctx.AccessToken}`
+          }
+        });
+        const equipment = response.data.equipment;
+        setEquipmentData(equipment);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchdata();
+  }, [equipmentId, Loginctx.AccessToken]);
 
+  const handleIssueEquipment = async () => {
+    console.log("Button Pressed")
+    try {
+      const response = await axios.post(
+        backendUrl + '/api/v1/inventory',
+        {
+          equipmentId: equipmentId,
+          issued_date: new Date().toISOString().slice(0, 10) // Format the date as YYYY-MM-DD
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${Loginctx.AccessToken}`
+          }
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error issuing equipment:', error);
+    }
 
-  console.log()
-  return (<>
-    <h1 className={classes.title}>Equipment Name</h1>
-    <div className={classes.gridContainer}>
-      <div class={classes.gridItem}>
-        <div>Sports : </div>
-        <div className={classes.yoyo}>Lorem, ipsum.</div>
-      </div>
-      <div class={classes.gridItem}>
-        <div> Quantity Available: </div>
-        <div className={classes.yoyo}>Lorem, ipsum.</div>
-      </div>
-      <div class={classes.gridItem}>
-        <div>Total Quanity : </div>
-        <div className={classes.yoyo}>Lorem, ipsum.</div>
-      </div>
-      <div class={classes.gridItem}>
-        <div>Last Updated : </div>
-        <div className={classes.yoyo}>Lorem, ipsum.</div>
-      </div>
-    </div>
+    navigate('/inventory');
+  };
 
-    <table className={classes.issueTable}>
-      <thead>
-        <th>Roll number</th>
-        <th>Quantity issued</th>
-      </thead>
-      <tbody>
+  return (
+    <>
+      {equipmentData && ( 
+        <>
+          <h1 className={classes.title}>{equipmentData.equipment_name}</h1>
+          <div className={classes.gridContainer}>
+            <div className={classes.gridItem}>
+              <div> Quantity Available: </div>
+              <div className={classes.yoyo}>{equipmentData.available_quantity}</div>
+            </div>
+            <div className={classes.gridItem}>
+              <div>Total Quantity : </div>
+              <div className={classes.yoyo}>{equipmentData.total_quantity}</div>
+            </div>
+            <div className={classes.gridItem}>
+              <div>Last Updated : </div>
+              <div className={classes.yoyo}>{new Date(equipmentData.last_updated).toLocaleString()}</div>
+            </div>
+          </div>
 
-        {data.map((item, index) => (
-          <tr key={index}>
-            <td>{item.roll_number}</td>
-            <td>{item.quantity_issued}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+          <table className={classes.issueTable}>
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Issue Date</th>
+              </tr>
+            </thead>
+            {isadmin && 
+              <tbody>
+                {equipmentData.issued_to.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.student_id}</td>
+                    <td>{item.issued_date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            }
+          </table>
 
-
-    <div className={classes.button}>
-      <h2 className={classes.title}>To Issuue the Component Click Below</h2>
-      <button type="button" class={` btn btn-success`}>Issue the Equipment</button>
-    </div>
-
-  </>)
-}
+          <div className={classes.button}>
+            <h2 className={classes.title}>To Issue the Equipment Click Below</h2>
+            <button type="button" className={`btn btn-success`} onClick={(handleIssueEquipment)}>Issue the Equipment</button>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
 
 export default Inventory_form;
+

@@ -5,6 +5,7 @@ import { MdAssignment } from "react-icons/md";
 import { BsPersonRaisedHand } from "react-icons/bs";
 import axios from 'axios';
 import {backendUrl} from "../constant";
+import { useNavigate} from "react-router"
 import LoginContext from "../store/context/loginContext";
 
 import image1 from  "../assets/1.jpg"
@@ -30,6 +31,7 @@ const linkarr = [image1,image2,image3,image4,image0]
 
 
 const Courses_page = () => {
+    const navigate = useNavigate();
     const Loginctx = useContext(LoginContext);
     const [coursesIds,setCoursesIds] = useState([]);
     const [courses,setCourses] = useState([]);
@@ -67,7 +69,17 @@ const Courses_page = () => {
             }
         };
         fetchdata();
-        },[])
+        },[]);
+
+    const assignmentPage = (courseId) => { 
+        navigate(`/${courseId}/assignment`);
+        console.log(courseId);
+    }
+
+    const coursePage = (courseId) => { 
+        navigate(`/${courseId}`);
+        console.log(courseId);
+    }
 
     return (<div className={classes.Body}>
         <h1 className={classes.title}><FaBookOpen color="Purple" /> &nbsp; Courses</h1>
@@ -75,7 +87,8 @@ const Courses_page = () => {
             <ul  className={classes.list}>
                 {courses.map((ele, ind) => {
                     return (<li key={ind}
-                    className={classes.listitem} >
+                    className={classes.listitem} 
+                    onClick={()=>{coursePage(ele._id)}}>
                       <img src={linkarr[ind%5]} alt=""
                         style={{
                             minHeight:'150px'
@@ -86,12 +99,11 @@ const Courses_page = () => {
                         <p className={classes.profName}>{ele.professor[0]}</p>
                         </div>
                         <div className={classes.listfooter}>
-                        <div className={classes.icons}>
-                            <div><MdAssignment color="blue" size={"25px"}/></div>
-                              <div><BsPersonRaisedHand color="Green" size={"25px"}/></div>
-                              </div>
-                              </div>
-                      
+                            <div className={classes.icons}>
+                                <div onClick={(e) => { e.stopPropagation(); assignmentPage(ele._id) }}><MdAssignment color="blue" size={"25px"}/></div>
+                                <div><BsPersonRaisedHand color="Green" size={"25px"}/></div>
+                            </div>
+                        </div>
                     </li>)
                 })}
             </ul>
