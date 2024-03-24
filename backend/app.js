@@ -14,8 +14,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-console.log("app");
-
 const globalErrorHandler = require("./controllers/errorController");
 const authController = require("./controllers/authentication");
 
@@ -79,8 +77,8 @@ cron.schedule("*/180 * * * * *", async function () {
       console.error("Error ", err.message);
     });
 });
+
 app.get("/", (req, res) => {
-  console.log("/ hi ");
   res.send("Hello");
 });
 

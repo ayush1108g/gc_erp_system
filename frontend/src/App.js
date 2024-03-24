@@ -1,27 +1,25 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Sign_up_page from "./component/Sign_up_Page";
-import React, { useEffect, useState, useContext } from "react";
-import { Route, Routes, useLocation, HashRouter } from "react-router-dom";
 
-import { useCookies } from "react-cookie";
+import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+
 import { AnimatePresence } from "framer-motion";
-import { LoginContextProvider } from "./store/context/loginContext";
-import { verifyToken, refreshAccessToken } from "./store/utils/auth";
-import LoginContext from "./store/context/loginContext";
-
 import Errorpage from "./pages/Errorpage";
-import FullAuthLoader from "./component/FullAuthLoader";
-import SignupPage from "./component/Sign_up_Page";
-import View_attendance from "./component/View_attendance";
 import Feedback_form from "./component/Feedback_form";
-import Inventory_form from "./component/Inventory_form";
+import FullAuthLoader from "./component/FullAuthLoader";
+import HomePage from "./pages/HomePage.js/HomePage";
 import Inventory_Page from "./component/Inventory_page";
 import Courses_page from "./component/Courses_page";
 import Courses_page2 from "./component/Courses_page2";
 import Assignment_page from "./component/Assignment_page";
 import Assignment_page2 from "./component/Assignment_page2";
 
+import Inventory_form from "./component/Inventory_form";
+import LoginContext from "./store/context/loginContext";
+import { LoginContextProvider } from "./store/context/loginContext";
+import SignupPage from "./component/SignupPage";
+import View_attendance from "./component/View_attendance";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -59,11 +57,10 @@ const RoutesWithAnimation = () => {
         <Route path="/login/forgotpassword" element={<ForgotPassPage />} />
         <Route path="/login/forgotpassword/:id" element={<ForgotPassIDPage />} />
         <Route path="/login/forgotpassword/:id/confirm" element={<ForgotPassConfirmPage />} />
+        <Route path="/signup" element={<SignupPage />} /> */}
+        <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/" element={<Homepage />} /> */}
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="*" element={<Assignment_page/>} />
-        
+        <Route path="*" element={<Assignment_page/>} />        
       </Routes>
     </>
   );
@@ -90,8 +87,13 @@ const MainContent = () => {
   //   return () => window.removeEventListener("scroll", handleScroll);
   // }, []);
   return (
-    <div style={{
-    }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       {loginCtx.loading && <FullAuthLoader />}
       <RoutesWithAnimation />
     </div>

@@ -4,7 +4,7 @@ const Course = require('../models/courseModel');
 
 exports.addAssignment = async (req, res, next) => {
   try {
-    const { name, courseId, due_date, total_marks } = req.body;
+    const { name, courseId, due_date, total_marks, questionFile, description } = req.body;
 
     // Check if the course exists
     const course = await Course.findById(courseId);
@@ -17,7 +17,9 @@ exports.addAssignment = async (req, res, next) => {
       name,
       courseId,
       due_date,
-      total_marks
+      total_marks,
+      questionFile,
+      description
     });
 
     // Save the assignment to the database
@@ -28,7 +30,9 @@ exports.addAssignment = async (req, res, next) => {
       assignment_id: assignment._id,
       name,
       due_date,
-      total_marks
+      total_marks,
+      questionFile,
+      description
     });
 
     // Save the updated course
@@ -44,6 +48,7 @@ exports.addAssignment = async (req, res, next) => {
 // Update student grade for an assignment
 exports.updateStudentGrade = async (req, res, next) => {
   try {
+    
     const { assignmentId, studentId, grade, comments } = req.body;
 
     // Check if the assignment exists
@@ -78,7 +83,8 @@ exports.updateStudentGrade = async (req, res, next) => {
 // Add submission file for an assignment
 exports.addSubmissionFile = async (req, res, next) => {
   try {
-    const { assignmentId, studentId, submissionFile } = req.body;
+    const studentId = req.user._id;
+    const { assignmentId, submissionFile } = req.body;
 
     // Check if the assignment exists
     const assignment = await Assignment.findById(assignmentId);
@@ -124,7 +130,8 @@ exports.addSubmissionFile = async (req, res, next) => {
 // Add doubt to the assignment question file
 exports.addDoubt = async (req, res, next) => {
   try {
-    const { assignmentId, studentId, message } = req.body;
+    const studentId = req.user._id;
+    const { assignmentId, message } = req.body;
 
     // Check if the assignment exists
     const assignment = await Assignment.findById(assignmentId);
