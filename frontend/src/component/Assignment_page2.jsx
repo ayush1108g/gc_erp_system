@@ -43,7 +43,7 @@ const Assignment_page2 = ()=>{
            Add class comment
        </div>
        </div>
-        <input type="text" placeholder="Add Class Comment" className={classes.input1}/>
+        <input type="text" placeholder="  Add Class Comment" className={classes.input1}/>
         <IoSend color="blue" size={'30px'} style={{marginBottom:"4px" ,marginLeft:"5px"}}/>
        </div>
        </div>
@@ -79,8 +79,8 @@ const Assignment_page2 = ()=>{
        </div>
        </div>
          <div>
-        <input type="text" placeholder="Add Private Comment" className={classes.input2}/>
-        <IoSend color="blue" size={'25px'} style={{marginBottom:"4px" ,marginLeft:"5px",marginTop:"12px"}}/>
+        <input type="text" placeholder="  Add Private Comment" className={classes.input2}/>
+        <IoSend color="blue" size={'25px'} style={{marginBottom:"4px" ,marginLeft:"5px",marginTop:"23px"}}/>
          </div>
          </div>
        </div>
