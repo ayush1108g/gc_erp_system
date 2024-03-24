@@ -1,7 +1,7 @@
 import React from "react"
 import classes from "./signup.module.css";
 
-const sign_up_page = () => {
+const SignupPage = () => {
     return (<>
         <h1 className={classes.h1}>Sign Up</h1><br /><br />
         <div class={classes.gridContainer}>
@@ -128,5 +128,5 @@ const sign_up_page = () => {
     </>)
 }
 
-export default sign_up_page
+export default SignupPage
 

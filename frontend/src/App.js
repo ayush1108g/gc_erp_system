@@ -1,17 +1,18 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import React, { useEffect, useState, useContext } from "react";
-import { Route, Routes, useLocation, HashRouter } from "react-router-dom";
+import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { refreshAccessToken, verifyToken } from "./store/utils/auth";
 
-import { useCookies } from "react-cookie";
 import { AnimatePresence } from "framer-motion";
-import { LoginContextProvider } from "./store/context/loginContext";
-import { verifyToken, refreshAccessToken } from "./store/utils/auth";
-import LoginContext from "./store/context/loginContext";
-
 import Errorpage from "./pages/Errorpage";
 import FullAuthLoader from "./component/FullAuthLoader";
+import HomePage from "./pages/HomePage.js/HomePage";
+import LoginContext from "./store/context/loginContext";
+import { LoginContextProvider } from "./store/context/loginContext";
+import SignupPage from "./component/SignupPage";
+import { useCookies } from "react-cookie";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -47,10 +48,16 @@ const RoutesWithAnimation = () => {
       <Routes location={location} key={location.key}>
         {/* <Route path="/login" element={<LoginPage />} />
         <Route path="/login/forgotpassword" element={<ForgotPassPage />} />
-        <Route path="/login/forgotpassword/:id" element={<ForgotPassIDPage />} />
-        <Route path="/login/forgotpassword/:id/confirm" element={<ForgotPassConfirmPage />} />
+        <Route
+          path="/login/forgotpassword/:id"
+          element={<ForgotPassIDPage />}
+        />
+        <Route
+          path="/login/forgotpassword/:id/confirm"
+          element={<ForgotPassConfirmPage />}
+        /> */}
+        <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/" element={<Homepage />} /> */}
         <Route path="*" element={<Errorpage />} />
       </Routes>
     </>
