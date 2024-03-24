@@ -1,5 +1,6 @@
 // addInventoryIssueController.js
 const Equipment = require('../models/inventoryModel');
+const User = require('../models/userModel'); 
 
 exports.addInventoryIssue = async (req, res, next) => {
   try {
@@ -22,11 +23,23 @@ exports.addInventoryIssue = async (req, res, next) => {
     equipment.issued_to.push({ student_id: studentId, issued_date });
     await equipment.save();
 
+    // Load the user based on studentId
+    const user = await User.findById(studentId);
+
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    // Update the user document to reflect the issued equipment
+    user.equipment_issued.push(equipmentId);
+    await user.save({ validateBeforeSave: false });
+
     res.status(200).json({ message: 'Inventory item issued successfully' });
   } catch (error) {
     next(error);
   }
 };
+
 
 exports.deleteInventoryIssue = async (req, res, next) => {
   try {

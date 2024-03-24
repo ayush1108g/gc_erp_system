@@ -7,6 +7,8 @@ const router = express.Router();
 router.get('/:courseId/assignments', courseController.getAllAssignments);
 router.get('/:courseId/feedback', courseController.getCourseFeedback);
 
+router.post('/:courseId', courseController.enrolCourse);
+
 router
     .route('/:id')
     .get(courseController.getCourse)
