@@ -49,7 +49,7 @@ app.use(
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", [
     // "https://ayush1108g.github.io",
-    "http://localhost:8000",
+    "http://localhost:3000",
   ]);
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -83,6 +83,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/submitAssignment", assignmentFileRouter);
 
 //middleware to check if the user is logged in
 app.use(authController.protect);
@@ -90,7 +91,6 @@ app.use(authController.protect);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/assignments", assignmentRouter);
 app.use("/api/v1/feedback", feedbackRouter);
-app.use("/api/v1/submitAssignment", assignmentFileRouter);
 app.use("/api/v1/inventory", inventoryRouter);
 app.use("/api/v1/attendance", attendanceRouter);
 

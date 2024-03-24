@@ -224,13 +224,6 @@ const userSchema = new Schema({
       ref: "Course",
     },
   ],
-  feedback_given: [
-    // feedback given by the user(student)
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Feedback",
-    },
-  ],
   equipment_issued: [
     // equipment issued to the student
     {

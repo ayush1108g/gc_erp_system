@@ -25,6 +25,7 @@ exports.signup = catchasync(async (req, res, next) => {
     return next(new AppError("please provide role", 400));
   }
   if (req?.body?.role === "student") {
+    req.body.isApproved = true;
     if (req.body.courses_taught) req.body.courses_taught = [];
 
     if (!req.body?.personal_info?.rollNumber) {
@@ -128,37 +129,38 @@ exports.updateuser = async (req, res, next) => {
 
     console.log(updateFields);
     // Extract only the allowed fields to update
-  //   let filteredUpdateFields; 
-  //  if (updateFields.personal_info) {
-  //     // Extract only the allowed fields to update
-  //     const allowedFields = ['personal_info'];
-  //     filteredUpdateFields = Object.keys(updateFields)
-  //       .filter(key => allowedFields.includes(key))
-  //       .reduce((obj, key) => {
-  //         obj[key] = updateFields[key];
-  //         return obj;
-  //       }, {});
+    //   let filteredUpdateFields;
+    //  if (updateFields.personal_info) {
+    //     // Extract only the allowed fields to update
+    //     const allowedFields = ['personal_info'];
+    //     filteredUpdateFields = Object.keys(updateFields)
+    //       .filter(key => allowedFields.includes(key))
+    //       .reduce((obj, key) => {
+    //         obj[key] = updateFields[key];
+    //         return obj;
+    //       }, {});
 
-  //     console.log(filteredUpdateFields);
-  //   } 
+    //     console.log(filteredUpdateFields);
+    //   }
 
     const filteredUpdateFields = {
-        personal_info: {
-          ...OLDpersonalInfo,
-          ...updateFields.personal_info
-        }
-      };
-      console.log(filteredUpdateFields);
-
+      personal_info: {
+        ...OLDpersonalInfo,
+        ...updateFields.personal_info,
+      },
+    };
+    console.log(filteredUpdateFields);
 
     // Find the user by ID and update only allowed fields
-    const user = await User.findByIdAndUpdate(userId, filteredUpdateFields, { new: true });
+    const user = await User.findByIdAndUpdate(userId, filteredUpdateFields, {
+      new: true,
+    });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ message: 'User updated successfully', user });
+    res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     next(error);
   }

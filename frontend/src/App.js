@@ -1,20 +1,30 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import React, { useContext, useEffect, useState } from "react";
-
 import { AnimatePresence } from "framer-motion";
-import Errorpage from "./pages/Errorpage";
-import Feedback_form from "./component/Feedback_form";
-import FullAuthLoader from "./component/FullAuthLoader";
-import HomePage from "./pages/HomePage.js/HomePage";
-import Inventory_Page from "./component/Inventory_page";
-import Inventory_form from "./component/Inventory_form";
+
 import LoginContext from "./store/context/loginContext";
 import { LoginContextProvider } from "./store/context/loginContext";
-import SignupPage from "./component/SignupPage";
-import View_attendance from "./component/View_attendance";
+
+import Errorpage from "./pages/Errorpage";
+import FullAuthLoader from "./component/FullAuthLoader";
+import HomePage from "./pages/HomePage.js/HomePage";
+
+// import Feedback_form from "./component/Feedback_form";
+// import Inventory_Page from "./component/Inventory_page";
+// import Inventory_form from "./component/Inventory_form";
+// import View_attendance from "./component/View_attendance";
+
+import { AlertProvider } from "./store/context/Alert-context";
+// import { verifyToken, refreshAccessToken } from "./store/utils/auth";
+
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+
+import ForgotPassPage from "./pages/ForgotPass/ForgotPassPage";
+import ForgotPassIDPage from "./pages/ForgotPass/ForgotPassIDPage";
+import ForgotPassConfirmPage from "./pages/ForgotPass/ForgotPassConfirmPage";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -48,13 +58,18 @@ const RoutesWithAnimation = () => {
   return (
     <>
       <Routes location={location} key={location.key}>
-        {/* <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/login/forgotpassword" element={<ForgotPassPage />} />
-        <Route path="/login/forgotpassword/:id" element={<ForgotPassIDPage />} />
-        <Route path="/login/forgotpassword/:id/confirm" element={<ForgotPassConfirmPage />} />
-        <Route path="/signup" element={<SignupPage />} /> */}
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/login/forgotpassword/:id"
+          element={<ForgotPassIDPage />}
+        />
+        <Route
+          path="/login/forgotpassword/:id/confirm"
+          element={<ForgotPassConfirmPage />}
+        />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
       </Routes>
     </>
@@ -84,9 +99,11 @@ const MainContent = () => {
   return (
     <div
       style={{
+        width: "100vw",
+        height: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        // alignItems: "center",
       }}
     >
       {loginCtx.loading && <FullAuthLoader />}
@@ -100,9 +117,11 @@ function App() {
     <div>
       <HashRouter>
         <AnimatePresence>
-          <LoginContextProvider>
-            <MainContent />
-          </LoginContextProvider>
+          <AlertProvider>
+            <LoginContextProvider>
+              <MainContent />
+            </LoginContextProvider>
+          </AlertProvider>
         </AnimatePresence>
       </HashRouter>
     </div>

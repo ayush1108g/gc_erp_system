@@ -83,9 +83,9 @@ const courseSchema = new Schema({
       submitted_at: {
         type: Date,
         default: Date.now,
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const Course = mongoose.model("Course", courseSchema);

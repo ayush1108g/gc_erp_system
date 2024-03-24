@@ -1,0 +1,93 @@
+.container {
+  margin: 30px 0 30px 0;
+  padding: 30px 0 30px 0;
+  width: 90%;
+  height: fit-content;
+  box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.65);
+  border-radius: 20px;
+  border: 0.5px solid black;
+}
+.form-control:focus {
+  box-shadow: none !important;
+}
+
+.h1 {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  /* margin: auto;
+    margin-left:55vw; */
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 10px;
+  font-size: larger;
+  margin: 20px;
+}
+
+.gridContainer input {
+  border: 2px solid rgb(109, 105, 105);
+}
+.gridContainer select {
+  border: 2px solid rgb(109, 105, 105);
+}
+
+.gridContainer span {
+  border: 2px solid rgb(109, 105, 105);
+}
+
+.inputs {
+  font-size: larger;
+  margin: 4vw;
+  margin-right: 10vw;
+}
+.spans {
+  border: 2px solid rgb(109, 105, 105);
+}
+.inputs {
+  width: 10vw;
+}
+.Container2 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 20px;
+  font-size: larger;
+  margin: 20px;
+}
+
+.photo {
+  /* border: 2px solid black; */
+  /* margin: 20vw; */
+  /* margin-top: 5vw; */
+  /* margin-bottom: 5vw; */
+  /* padding: 2vw; */
+  /* border-radius: 4vw; */
+  padding: 30px;
+  padding-top: 0px;
+}
+
+.button {
+  border-radius: 2vw;
+  font-size: larger;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading {
+  color: red;
+  display: block;
+  margin: 15px;
+  /* scale: 15%; */
+  /* border: 16px solid #f3f3f3; */
+  /* background-color: red; */
+}
+
+@media screen and (min-width: 700px) {
+  .gridContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}

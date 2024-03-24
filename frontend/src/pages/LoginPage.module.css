@@ -1,0 +1,76 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100vw;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 30rem;
+  border: 1px solid #413232;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: white;
+  /* padding: 1rem; */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  /* position: absolute; */
+  width: 22rem;
+  overflow: hidden;
+}
+
+.buttons {
+  display: flex;
+  padding: 10px;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.pagechange {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* width: 100%; */
+  height: auto;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0; /* Optional: You can adjust this to control spacing */
+}
+
+.box {
+  position: relative;
+  top: -100px;
+  left: -100px;
+  background-color: #d2c1d1;
+  padding: 20px;
+  /* width: auto; */
+  border-radius: 50%;
+  scale: 300%;
+  z-index: 1;
+}
+@media screen and (max-width: 1800px) {
+  .container {
+    width: 80vw;
+  }
+  p {
+    font-size: 1rem;
+  }
+}
+.loading {
+  color: red;
+  display: block;
+  margin: 15px;
+  /* scale: 15%; */
+  /* border: 16px solid #f3f3f3; */
+  /* background-color: red; */
+}

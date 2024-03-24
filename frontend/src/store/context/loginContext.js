@@ -7,6 +7,8 @@ const LoginContext = React.createContext({
   loading: false,
   isLoggedIn: false,
   name: null,
+  role: null,
+  setRole: () => {},
   login: () => {},
   logout: () => {},
   setAccessToken: () => {},
@@ -21,12 +23,14 @@ const LoginContextProvider = (props) => {
   const [RefreshToken, setRefreshToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [name, setName] = useState(null);
+  const [role, setRole] = useState(null);
 
-  const loginHandler = (AccessToken, RefreshToken, name) => {
+  const loginHandler = (AccessToken, RefreshToken, name, role) => {
     setAccessToken(AccessToken);
     setRefreshToken(RefreshToken);
     setIsLoggedIn(true);
     setName(name);
+    setRole(role);
   };
   const logoutHandler = () => {
     setAccessToken(null);
@@ -41,6 +45,7 @@ const LoginContextProvider = (props) => {
       path: "/",
       maxAge: 0,
     });
+    setRole(null);
   };
   const updateAccessToken = (newAccessToken) => {
     console.log(newAccessToken);
@@ -65,6 +70,8 @@ const LoginContextProvider = (props) => {
     loading: loading,
     AccessToken: AccessToken,
     RefreshToken: RefreshToken,
+    role: role,
+    setRole: setRole,
     setLoading: setLoading,
     setAccessToken: updateAccessToken,
     setRefreshToken: updateRefreshToken,
