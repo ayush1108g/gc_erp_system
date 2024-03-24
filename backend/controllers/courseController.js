@@ -41,6 +41,7 @@ exports.getCourse = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 exports.createCourse = catchAsync(async (req, res) => {
   const doc = await Course.create(req.body);
   res.status(201).json({
@@ -122,45 +123,44 @@ exports.getAllAssignments = async (req, res, next) => {
   }
 };
 
-exports.enrolCourse = async (req, res) => {
+exports.enrolCourse = async (req, res, next) => {
   try {
-    const userId = req.user._id;
-    const courseId  = req.params.courseId;
+    const userId = req.user._id; 
+    const courseId = req.params.courseId; 
 
-    // Check if the course exists
     const course = await Course.findById(courseId);
+
     if (!course) {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    // Check if the user exists
-    const user = await User.findById(userId);
-    if (!user) {
+    if (course.students_enrolled.includes(userId)) {
+      return res.status(400).json({ message: 'User is already enrolled in the course' });
+    }
+    
+    const enrollmentDate = new Date();
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { courses_enrolled: { course_id: courseId, enrollment_date: enrollmentDate } } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if the user is already enrolled in the course
-    const isEnrolled = course.students_enrolled.some(student => student.equals(userId));
-    if (isEnrolled) {
-      return res.status(400).json({ message: 'User is already enrolled in this course' });
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      { $push: { students_enrolled: userId } }
+    );
+
+    if (!updatedCourse) {
+      return res.status(404).json({ message: 'Course not found' });
     }
 
-    // Update the course model to add the user to the enrolled students list
-    course.students_enrolled.push(userId);
-    await course.save();
-
-    user.courses_enrolled.push({
-      course_id: courseId,
-      enrollment_date: new Date(),
-      status: 'enrolled'
-    });
-    await user.save({ validateBeforeSave: false });
-
-    res.status(200).json({ message: 'Enrollment successful', course, user });
+    res.status(200).json({ message: 'Enrollment successful', user: updatedUser });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
-
 

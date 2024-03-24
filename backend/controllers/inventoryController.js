@@ -4,7 +4,8 @@ const User = require('../models/userModel');
 
 exports.addInventoryIssue = async (req, res, next) => {
   try {
-    const { equipmentId, studentId, issued_date } = req.body;
+    const studentId = req.user._id;
+    const { equipmentId, issued_date } = req.body;
 
     // Find the equipment by its ID
     const equipment = await Equipment.findById(equipmentId);

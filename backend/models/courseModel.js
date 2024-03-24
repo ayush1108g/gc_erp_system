@@ -45,6 +45,8 @@ const courseSchema = new Schema({
       name: String,
       due_date: Date,
       total_marks: Number,
+      description: String,
+      questionFile: String
     },
   ],
   attendance_records: [

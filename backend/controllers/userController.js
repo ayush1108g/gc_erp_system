@@ -115,26 +115,42 @@ exports.resetPassword = catchasync(async (req, res, next) => {
   user.password = req.body.password;
   user.resetPasswordToken = undefined;
   user.passwordresetexpired = undefined;
-  await user.save({ validateBeforeSave: true });
+  await user.save({ validateBeforeSave: false });
   authentication.createSendToken(user, 200, res);
 });
 
 exports.updateuser = async (req, res, next) => {
   try {
     const userId = req.user._id; // Extract userId from request parameters
+    const OLDpersonalInfo = req.user.personal_info;
+
     const updateFields = req.body; // Get the fields to update from request body
 
     console.log(updateFields);
     // Extract only the allowed fields to update
-    const allowedFields = ['personal_info'];
-    const filteredUpdateFields = Object.keys(updateFields)
-      .filter(key => allowedFields.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = updateFields[key];
-        return obj;
-      }, {});
+  //   let filteredUpdateFields; 
+  //  if (updateFields.personal_info) {
+  //     // Extract only the allowed fields to update
+  //     const allowedFields = ['personal_info'];
+  //     filteredUpdateFields = Object.keys(updateFields)
+  //       .filter(key => allowedFields.includes(key))
+  //       .reduce((obj, key) => {
+  //         obj[key] = updateFields[key];
+  //         return obj;
+  //       }, {});
 
+  //     console.log(filteredUpdateFields);
+  //   } 
+
+    const filteredUpdateFields = {
+        personal_info: {
+          ...OLDpersonalInfo,
+          ...updateFields.personal_info
+        }
+      };
       console.log(filteredUpdateFields);
+
+
     // Find the user by ID and update only allowed fields
     const user = await User.findByIdAndUpdate(userId, filteredUpdateFields, { new: true });
 

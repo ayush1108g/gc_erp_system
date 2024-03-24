@@ -4,7 +4,8 @@ const Course = require('../models/courseModel');
 
 exports.writeFeedback = async (req, res, next) => {
   try {
-    const { student_id, course_id, rating, comments } = req.body;
+    const student_id = req.user._id;
+    const { course_id, rating, comments } = req.body;
 
     const feedback = new Feedback({
       student_id,
