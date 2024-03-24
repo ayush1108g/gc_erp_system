@@ -8,6 +8,7 @@ const submissionSchema = new Schema({
     ref: "User",
     required: true,
   },
+  rollNumber: String,
   submissionFile: String,
   grade: {
     type: Number,
@@ -50,6 +51,9 @@ const assignmentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
       },
+      student_name: {
+        type: String
+      }
     },
   ],
 });

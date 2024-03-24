@@ -193,3 +193,25 @@ exports.deleteAssignment = async (req, res, next) => {
   }
 };
 
+exports.getAssignmentByID = async (req, res) => {
+  const { assignmentId } = req.params;
+
+  try {
+    // Query the database for the assignment by its ID
+    const assignment = await Assignment.findById(assignmentId);
+
+    // Check if the assignment exists
+    if (!assignment) {
+      return res.status(404).json({ message: 'Assignment not found' });
+    }
+
+    // If the assignment exists, send it in the response
+    res.status(200).json({ assignment });
+  } catch (error) {
+    // Handle any errors that occur during the database query
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+module.exports = router;

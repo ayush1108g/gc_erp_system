@@ -10,6 +10,7 @@ router
 
 router
     .route("/:assignmentId")
+    .get(assignmentController.getAssignmentByID)
     .delete(assignmentController.deleteAssignment);
 
 router

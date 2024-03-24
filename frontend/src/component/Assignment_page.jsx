@@ -6,7 +6,8 @@ import axios from 'axios';
 import {backendUrl} from "../constant";
 import LoginContext from "../store/context/loginContext";
 import { useParams } from 'react-router-dom';
-import { useNavigate} from "react-router"
+import { useNavigate} from "react-router";
+import { useCookies } from "react-cookie";
   
 const Assignment_page= ()=>{
     const Loginctx = useContext(LoginContext);
@@ -14,13 +15,14 @@ const Assignment_page= ()=>{
     const [assignmentData, setAssignmentData] = useState([]);
     let isadmin = Loginctx.role === 'admin';
     const { courseId } = useParams();
+    const [cookie] = useCookies(["AccessToken", "RefreshToken"]);
 
     useEffect(() => {
         const fetchdata = async () => {
             try {
                 const response = await axios.get(backendUrl + '/api/v1/courses/' + courseId, {
                   headers:{
-                      Authorization:`Bearer ${Loginctx.AccessToken}`
+                      Authorization:`Bearer ${cookie.AccessToken}`
                   }
               });
                 const assignmentInfo = response.data.data.data[0].assignments;
@@ -29,7 +31,10 @@ const Assignment_page= ()=>{
                 console.log(err);
             }
         };
-        fetchdata();
+        setTimeout(()=>{
+
+          fetchdata();
+        },1000);
     }, [courseId]);
 
     const formatDate = dateString => {
@@ -69,12 +74,16 @@ const Assignment_page= ()=>{
   return ordinalDate;
 };
 
+  const openSpecificAssignmentPage = (assignmentId) => {
+    navigate(`/my_courses/${courseId}/assignments/${assignmentId}`)
+  }
+
     return(<div className={classes.Body}>
-         <h2 className={classes.title}><div>Course Name</div></h2>
+         <h2 className={classes.title}><div>Your Assignments</div></h2>
          {isadmin&&<h5 style={{margin:'30px' ,display:'flex'}}> <div><FaPlus color="blue" /></div><div>Add Assignments/Comments </div></h5>}
           {assignmentData.map((ele,ind)=>{
             return (<>
-        <div className={classes.a}>
+        <div className={classes.a} onClick={()=>openSpecificAssignmentPage(ele.assignment_id)}>
             <div>
              <MdAssignment color="blue" size={"25px"}/>  {ele.name}
             </div>

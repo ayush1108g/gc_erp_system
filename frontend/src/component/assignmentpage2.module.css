@@ -145,6 +145,14 @@
     padding: 10px;
 }
 
+.classComments{
+  margin-left: 8%;
+  margin-top: 2%;
+  border: 1px solid rgb(175, 173, 173);
+  padding: 10px;
+  border-radius: 20px;
+}
+
 @media screen and (max-width: 1000px) {
     .grandParent {
         display: flex;
