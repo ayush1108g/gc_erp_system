@@ -34,3 +34,8 @@
 .eqp ul li:hover {
   background-color: rgb(243, 221, 192);
 }
+
+.Body {
+  display: flex;
+  flex-direction: column;
+}

@@ -4,11 +4,19 @@ import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import React, { useContext, useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 
+import Feedback_form from "./component/Feedback_form";
+import FullAuthLoader from "./component/FullAuthLoader";
+import Inventory_Page from "./component/Inventory_page";
+import Courses_page from "./component/Courses_page";
+import Courses_page2 from "./component/Courses_page2";
+import Assignment_page from "./component/Assignment_page";
+import Assignment_page2 from "./component/Assignment_page2";
+
+import Inventory_form from "./component/Inventory_form";
 import LoginContext from "./store/context/loginContext";
 import { LoginContextProvider } from "./store/context/loginContext";
 
 import Errorpage from "./pages/Errorpage";
-import FullAuthLoader from "./component/FullAuthLoader";
 import HomePage from "./pages/HomePage.js/HomePage";
 
 // import Feedback_form from "./component/Feedback_form";

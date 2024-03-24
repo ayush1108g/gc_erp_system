@@ -1,5 +1,6 @@
 import React from "react";
 import classes from "./inventorypage.module.css"
+import { FaPlus } from "react-icons/fa";
 const data = [
     {name:"Bat"},
     {name:"Football"},
@@ -7,10 +8,10 @@ const data = [
     {name:"Table tennis"}
 ] ;
 const Invenotory_Page=()=>{
-   return(<>
+   return(<div className={classes.Body}>
          <h1 className={classes.title}>Welcome to SAC Inventory</h1>
          <div className={classes.eqp}>
-            <h2 style={{margin:'5vw'}}>Equipments list </h2>
+            <h5 style={{margin:'30px'}}> <FaPlus color="blue" /> Add Equipment</h5>
              <ul>
                 {data.map((ele,ind)=>{
                     return(<li key={ind}>{ele.name}</li>)
@@ -18,7 +19,7 @@ const Invenotory_Page=()=>{
              </ul>
          </div>
          
-   </>)
+   </div>)
 }
 
 export default Invenotory_Page;
