@@ -14,11 +14,11 @@ import Courses_page from "./component/Courses_page";
 import Courses_page2 from "./component/Courses_page2";
 import Assignment_page from "./component/Assignment_page";
 import Assignment_page2 from "./component/Assignment_page2";
-
+import Course_Registration from "./component/Course_Registration";
 import Inventory_form from "./component/Inventory_form";
 import LoginContext from "./store/context/loginContext";
 import { LoginContextProvider } from "./store/context/loginContext";
-
+import Profile_page from "./component/Profile_page";
 import Errorpage from "./pages/Errorpage";
 import HomePage from "./pages/HomePage.js/HomePage";
 
@@ -85,6 +85,8 @@ const RoutesWithAnimation = () => {
         <Route path="/inventory/:equipmentId" element={<Inventory_form />} />
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
+        <Route path="/registration" element={<Course_Registration />} />
+        <Route path="/profile" element={<Profile_page />} />
       </Routes>
     </>
   );
