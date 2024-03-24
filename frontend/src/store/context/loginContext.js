@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 const LoginContext = React.createContext({
@@ -8,6 +8,9 @@ const LoginContext = React.createContext({
   isLoggedIn: false,
   name: null,
   role: null,
+  user: null,
+  setUser: () => {},
+  setName: () => {},
   setRole: () => {},
   login: () => {},
   logout: () => {},
@@ -24,14 +27,22 @@ const LoginContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [name, setName] = useState(null);
   const [role, setRole] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const loginHandler = (AccessToken, RefreshToken, name, role) => {
+  const loginHandler = (AccessToken, RefreshToken, user) => {
     setAccessToken(AccessToken);
     setRefreshToken(RefreshToken);
     setIsLoggedIn(true);
-    setName(name);
-    setRole(role);
+    setUser(user);
   };
+
+  useEffect(() => {
+    if (user) {
+      setName(user.personal_info.name);
+      setRole(user.role);
+    }
+    console.log(user);
+  }, [user]);
   const logoutHandler = () => {
     setAccessToken(null);
     setRefreshToken(null);
@@ -46,6 +57,7 @@ const LoginContextProvider = (props) => {
       maxAge: 0,
     });
     setRole(null);
+    setUser(null);
   };
   const updateAccessToken = (newAccessToken) => {
     console.log(newAccessToken);
@@ -71,6 +83,9 @@ const LoginContextProvider = (props) => {
     AccessToken: AccessToken,
     RefreshToken: RefreshToken,
     role: role,
+    user,
+    setUser: setUser,
+    setName: setName,
     setRole: setRole,
     setLoading: setLoading,
     setAccessToken: updateAccessToken,

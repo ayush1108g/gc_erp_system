@@ -43,6 +43,10 @@ const SignupPage = () => {
         setShowPassword(!showPassword);
     };
 
+    const handleLogin = () => {
+        navigate("/login");
+    }
+
     const handleSubmitSignup = async () => {
         if (!role || !email || !name || !phone || !address)
             return Alertctx.showAlert("danger", "Please fill all the fields");
@@ -100,7 +104,7 @@ const SignupPage = () => {
                 setCookie("AccessToken", res.data.AccessToken, { path: "/", maxAge: 60 * 60 * 24 * 1 * 0.2 });
                 setCookie("RefreshToken", res.data.RefreshToken, { path: "/", maxAge: 60 * 60 * 24 * 30 * 0.6 });
 
-                Loginctx.login(res.data.AccessToken, res.data.RefreshToken, res.data.data.user.personal_info.name, res.data.data.user.role);
+                Loginctx.login(res.data.AccessToken, res.data.RefreshToken, res.data.data.user);
                 navigate("/");
             } else {
                 Alertctx.showAlert("success", "Signup successful please login to continue");
@@ -375,6 +379,15 @@ const SignupPage = () => {
                         </div>
                     )}
                 </button>
+                <div style={{
+                    // marginLeft: "25px",
+                    marginTop: "20px",
+                }}><p onClick={handleLogin}>
+
+                        Already have an account? <span style={{ color: "blue", cursor: "pointer" }}>Login</span>
+                    </p>
+                </div>
+
             </div>
         </div>
     </div>

@@ -5,11 +5,14 @@ export const refreshAccessToken = async (func, loginCtx) => {
   const rtoken = loginCtx.RefreshToken;
   loginCtx.setLoading(true);
   try {
-    const resp = await axios.get(`${backendUrl}/user/verifyrefreshtoken`, {
-      headers: {
-        Authorization: `Bearer ${rtoken}`,
-      },
-    });
+    const resp = await axios.get(
+      `${backendUrl}/api/v1/user/verifyrefreshtoken`,
+      {
+        headers: {
+          Authorization: `Bearer ${rtoken}`,
+        },
+      }
+    );
     console.log(resp);
     if (
       resp.status === 200 ||
@@ -37,7 +40,7 @@ export const refreshAccessToken = async (func, loginCtx) => {
 
 export const verifyToken = async (token) => {
   try {
-    const response = await axios.get(`${backendUrl}/user/verifytoken`, {
+    const response = await axios.get(`${backendUrl}/api/v1/users/verifytoken`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

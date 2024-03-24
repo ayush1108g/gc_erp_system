@@ -3,58 +3,17 @@ import classes from './inventoryform.module.css'
 import { useState, useContext, useEffect } from 'react'
 import axios from 'axios';
 import LoginContext from "../store/context/loginContext";
-import {backendUrl} from "../constant";
+import { backendUrl } from "../constant";
 import { useParams } from 'react-router-dom';
-import { useNavigate} from "react-router"
+import { useNavigate } from "react-router"
 
-const data = [
-  {
-    "roll_number": "001",
-    "quantity_issued": 5
-  },
-  {
-    "roll_number": "008",
-    "quantity_issued": 2
-  },
-  {
-    "roll_number": "002",
-    "quantity_issued": 5
-  },
-  {
-    "roll_number": "003",
-    "quantity_issued": 5
-  },
-  {
-    "roll_number": "009",
-    "quantity_issued": 8
-  },
-  {
-    "roll_number": "004",
-    "quantity_issued": 2
-  },
-  {
-    "roll_number": "005",
-    "quantity_issued": 5
-  },
-  {
-    "roll_number": "006",
-    "quantity_issued": 3
-  },
-  {
-    "roll_number": "007",
-    "quantity_issued": 5
-  },
-  {
-    "roll_number": "000",
-    "quantity_issued": 2
-  }
-];
+import { useAlert } from "../store/context/Alert-context";
 
 const Inventory_form = () => {
-  
+  const Alertctx = useAlert();
   const Loginctx = useContext(LoginContext);
   const navigate = useNavigate();
-  const [equipmentData, setEquipmentData] = useState(null); 
+  const [equipmentData, setEquipmentData] = useState(null);
   const { equipmentId } = useParams();
   let isadmin = Loginctx.role === 'admin';
 
@@ -68,15 +27,27 @@ const Inventory_form = () => {
         });
         const equipment = response.data.equipment;
         setEquipmentData(equipment);
+        console.log(equipment);
       } catch (err) {
         console.log(err);
       }
     };
     fetchdata();
+
   }, [equipmentId, Loginctx.AccessToken]);
 
   const handleIssueEquipment = async () => {
-    console.log("Button Pressed")
+    console.log("Button Pressed");
+    if (!Loginctx.isLoggedIn) {
+      Alertctx.showAlert("Please Login to Issue Equipment");
+      navigate('/login');
+      return;
+    }
+    if (equipmentData.available_quantity === 0) {
+      Alertctx.showAlert("No Equipment Available");
+      return;
+    }
+
     try {
       const response = await axios.post(
         backendUrl + '/api/v1/inventory',
@@ -91,16 +62,21 @@ const Inventory_form = () => {
         }
       );
       console.log(response.data);
+
+      Alertctx.showAlert("danger", "Equipment Issued Successfully");
+      setTimeout(() => {
+        navigate('/inventory');
+      }, 1000);
     } catch (error) {
       console.error('Error issuing equipment:', error);
+      Alertctx.showAlert("danger", "Error Issuing Equipment");
     }
 
-    navigate('/inventory');
   };
 
   return (
     <>
-      {equipmentData && ( 
+      {equipmentData && (
         <>
           <h1 className={classes.title}>{equipmentData.equipment_name}</h1>
           <div className={classes.gridContainer}>
@@ -118,24 +94,24 @@ const Inventory_form = () => {
             </div>
           </div>
 
-          <table className={classes.issueTable}>
+          {isadmin && <table className={classes.issueTable}>
             <thead>
               <tr>
                 <th>Student ID</th>
                 <th>Issue Date</th>
               </tr>
             </thead>
-            {isadmin && 
-              <tbody>
-                {equipmentData.issued_to.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.student_id}</td>
-                    <td>{item.issued_date}</td>
-                  </tr>
-                ))}
-              </tbody>
-            }
+
+            <tbody>
+              {equipmentData.issued_to.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.student_id}</td>
+                  <td>{item.issued_date}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
+          }
 
           <div className={classes.button}>
             <h2 className={classes.title}>To Issue the Equipment Click Below</h2>

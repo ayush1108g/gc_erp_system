@@ -8,14 +8,17 @@ import {
   MdInfo,
   MdInventory,
 } from "react-icons/md";
-
+import { BiLogOut } from "react-icons/bi";
 import { HiAcademicCap } from "react-icons/hi2";
 import { IoMdDoneAll } from "react-icons/io";
-import React from "react";
+import React, { useContext } from "react";
 import iitbbslogo from "../../assets/iitbbs_logo.jpeg";
 import { useNavigate } from "react-router";
+import LoginContext from "../../store/context/loginContext";
+
 
 function Navbar() {
+  const LoginCtx = useContext(LoginContext);
   const navigate = useNavigate();
   const navItems = [
     {
@@ -53,11 +56,11 @@ function Navbar() {
       path: "/profile",
       icon: <MdInfo />,
     },
-    {
-      name: "admin",
-      path: "/admin",
-      icon: <MdAdminPanelSettings />,
-    },
+    // {
+    //   name: "admin",
+    //   path: "/admin",
+    //   icon: <MdAdminPanelSettings />,
+    // },
   ];
   return (
     <div>
@@ -78,6 +81,13 @@ function Navbar() {
             </div>
           );
         })}
+        {LoginCtx.isLoggedIn && <div
+          className="navbar-item"
+          onClick={() => { LoginCtx.logout(); navigate("/login") }}
+        >
+          <div className="icon">{<BiLogOut />}</div>
+          <div className="name">{"Logout"}</div>
+        </div>}
       </div>
     </div>
   );

@@ -66,7 +66,7 @@ const Login = (props) => {
         setCookie("AccessToken", resp.data.AccessToken, { path: "/", maxAge: 60 * 60 * 24 * 1 * 0.2 });
         setCookie("RefreshToken", resp.data.RefreshToken, { path: "/", maxAge: 60 * 60 * 24 * 30 * 0.6 });
 
-        loginCtx.login(resp.data.AccessToken, resp.data.RefreshToken, resp.data.data.user.personal_info.name,resp.data.data.user.role);
+        loginCtx.login(resp.data.AccessToken, resp.data.RefreshToken, resp.data.data.user);
         setErrormsg("Success");
         // setTimeout(() => {
         // }, 1000);

@@ -4,6 +4,9 @@ import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import React, { useContext, useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 
+import { useCookies } from "react-cookie";
+import { verifyToken, refreshAccessToken } from "./store/utils/auth";
+
 import Feedback_form from "./component/Feedback_form";
 import FullAuthLoader from "./component/FullAuthLoader";
 import Inventory_Page from "./component/Inventory_page";
@@ -38,30 +41,31 @@ const RoutesWithAnimation = () => {
   const location = useLocation();
   console.log(location);
 
-  // const [cookie] = useCookies(["AccessToken", "RefreshToken"]);
-  // const authCtx = useContext(LoginContext);
+  const [cookie] = useCookies(["AccessToken", "RefreshToken"]);
+  const authCtx = useContext(LoginContext);
 
-  // useEffect(() => {
-  //   const asyncFunc = async (AccessToken) => {
-  //     try {
-  //       const token = AccessToken;
-  //       const response = await verifyToken(token);
-  //       if (response?.isLoggedin === true) {
-  //         authCtx.login(token, cookie?.RefreshToken, response?.name);
-  //       }
-  //     } catch (err) {
-  //       if (
-  //         err.message === "jwt expired" ||
-  //         err?.response?.data?.message === "jwt expired"
-  //       ) {
-  //         console.log("jwt expired");
-  //         return refreshAccessToken(asyncFunc, authCtx);
-  //       }
-  //       console.log(err);
-  //     }
-  //   };
-  //   asyncFunc(cookie.AccessToken);
-  // }, []);
+  useEffect(() => {
+    const asyncFunc = async (AccessToken) => {
+      try {
+        const token = AccessToken;
+        const response = await verifyToken(token);
+        if (response?.isLoggedin === true) {
+          authCtx.login(token, cookie?.RefreshToken, response?.name);
+        }
+      } catch (err) {
+        if (
+          err.message === "jwt expired" ||
+          err?.response?.data?.message === "jwt expired"
+        ) {
+          console.log("jwt expired");
+          return refreshAccessToken(asyncFunc, authCtx);
+        }
+        console.log(err);
+      }
+    };
+    console.log(cookie.AccessToken);
+    asyncFunc(cookie.AccessToken);
+  }, []);
 
   return (
     <>
@@ -77,11 +81,13 @@ const RoutesWithAnimation = () => {
           element={<ForgotPassConfirmPage />}
         />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/inventory" element={<Inventory_Page/>}/>
-        <Route path="/inventory/:equipmentId" element={<Inventory_form/>}/>
-        <Route path="/my_courses" element={<Courses_page/>}/>
-        <Route path="/:courseId/assignment" element={<Assignment_page/>}/>
-        <Route path="/:courseId" element={<Courses_page2/>}/>
+        <Route path="/inventory" element={<Inventory_Page />} />
+        <Route path="/inventory/:equipmentId" element={<Inventory_form />} />
+        <Route path="/my_courses" element={<Courses_page />} />
+        <Route path="/:courseId/assignment" element={<Assignment_page />} />
+        <Route path="/:courseId" element={<Courses_page2 />} />
+        <Route path="/inventory" element={<Inventory_Page />} />
+        <Route path="/my_courses" element={<Courses_page />} />
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
       </Routes>
@@ -112,11 +118,8 @@ const MainContent = () => {
   return (
     <div
       style={{
-        width: "100vw",
+        width: "98vw",
         height: "100vh",
-        //display: "flex",
-        //justifyContent: "center",
-        // alignItems: "center",
       }}
     >
       {loginCtx.loading && <FullAuthLoader />}
