@@ -4,8 +4,12 @@ const router = express.Router();
 const inventoryController = require('../controllers/inventoryController');
 
 // Route for adding inventory item issue
-router.post('/', inventoryController.addInventoryIssue);
-router.patch('/',inventoryController.updateInventoryItem);
+router
+    .route('/')
+    .get(inventoryController.getAllInventory)
+    .post(inventoryController.addInventoryIssue)
+    .patch(inventoryController.updateInventoryItem);
+
 router.post('/add', inventoryController.addInventoryItem);
 
 // Route for deleting inventory item issue

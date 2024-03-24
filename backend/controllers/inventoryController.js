@@ -2,6 +2,17 @@
 const Equipment = require('../models/inventoryModel');
 const User = require('../models/userModel'); 
 
+exports.getAllInventory = async (req, res, next) => {
+  try {
+    // Retrieve all inventory items
+    const inventoryItems = await Equipment.find();
+
+    res.status(200).json({ inventoryItems });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.addInventoryIssue = async (req, res, next) => {
   try {
     const studentId = req.user._id;
