@@ -179,14 +179,12 @@ exports.updatepass = catchasync(async (req, res) => {
 
 exports.getuserbyid = catchasync(async (req, res) => {
   const user = req.user;
-  const userData = {
-    name: user.name,
-    email: user.email,
-    address: user.address,
-  };
+  
+  user.password = undefined;
+
   res.status(200).json({
     status: "success",
-    data: userData,
+    data: user,
   });
 });
 

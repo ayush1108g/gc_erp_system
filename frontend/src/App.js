@@ -77,6 +77,8 @@ const RoutesWithAnimation = () => {
           element={<ForgotPassConfirmPage />}
         />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/inventory" element={<Inventory_Page/>}/>
+        <Route path="/my_courses" element={<Courses_page/>}/>
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
       </Routes>
