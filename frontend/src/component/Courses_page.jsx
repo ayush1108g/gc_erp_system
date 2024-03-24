@@ -72,7 +72,7 @@ const Courses_page = () => {
         },[]);
 
     const assignmentPage = (courseId) => { 
-        navigate(`/my_courses/${courseId}/assignment`);
+        navigate(`/my_courses/${courseId}/assignments`);
         console.log(courseId);
     }
 

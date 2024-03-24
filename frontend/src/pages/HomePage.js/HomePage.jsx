@@ -8,10 +8,12 @@ import axios from "axios";
 import { backendUrl } from "../../constant";
 import { useCookies } from "react-cookie";
 import { PieChart } from 'react-minimal-pie-chart';
+import { useNavigate } from "react-router";
 import Modal from "../../component/Modal";
 const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function HomePage() {
+  const navigate = useNavigate();
   const [cookies, setCookie] = useCookies(["AccessToken", "RefreshToken"]);
   const LoginCtx = useContext(LoginContext);
   const [todayTimetable, setTodayTimetable] = useState([]);
@@ -171,7 +173,11 @@ function HomePage() {
   const openModal = (route) => {
     setModalData(route);
     setModalisOpen(true);
-  }
+  };
+
+  const openMyCoursesPage = () => {
+    navigate('/my_courses');
+  };
 
   // console.log(LoginCtx.user);
   return (
@@ -228,7 +234,7 @@ function HomePage() {
                   <section className="materiais">
                     <h2>Materials</h2>
                     <div className="materiais-grid">
-                      <div className="materiais-card">
+                      <div className="materiais-card" onClick={openMyCoursesPage}>
                         <h3>Courses</h3>
                         <p>This Semester</p>
                       </div>

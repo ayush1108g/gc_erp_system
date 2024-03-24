@@ -80,8 +80,8 @@ const RoutesWithAnimation = () => {
         <Route path="/my_courses" element={<Courses_page />} />
         <Route path="/my_courses/:courseId" element={<Courses_page2 />} />
         <Route path="/my_courses/:courseId/feedback" element={<Feedback_form/>}/>
-        <Route path="/my_courses/:courseId/assignment" element={<Assignment_page/>}/>
-        <Route path="/my_courses/:courseId/assignment/:assignmentId" element={<Assignment_page2/>}/>
+        <Route path="/my_courses/:courseId/assignments" element={<Assignment_page/>}/>
+        <Route path="/my_courses/:courseId/assignments/:assignmentId" element={<Assignment_page2/>}/>
         <Route path="/inventory/:equipmentId" element={<Inventory_form />} />
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
