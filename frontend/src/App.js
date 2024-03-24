@@ -6,19 +6,23 @@ import { AnimatePresence } from "framer-motion";
 
 import { useCookies } from "react-cookie";
 import { verifyToken, refreshAccessToken } from "./store/utils/auth";
+import axios from "axios";
+import { backendUrl } from "./constant";
 
-import Feedback_form from "./component/Feedback_form";
+import FeedbackForm from "./component/Feedback_form";
 import FullAuthLoader from "./component/FullAuthLoader";
-import Inventory_Page from "./component/Inventory_page";
-import Courses_page from "./component/Courses_page";
-import Courses_page2 from "./component/Courses_page2";
-import Assignment_page from "./component/Assignment_page";
-import Assignment_page2 from "./component/Assignment_page2";
-import Course_Registration from "./component/Course_Registration";
-import Inventory_form from "./component/Inventory_form";
+import InventoryPage from "./component/Inventory_page";
+import CoursesPage from "./component/Courses_page";
+import CoursesPage2 from "./component/Courses_page2";
+import AssignmentPage from "./component/Assignment_page";
+import AssignmentPage2 from "./component/Assignment_page2";
+import AttendanceAdmin from "./component/View_attendance";
+import CourseRegistration from "./component/Course_Registration";
+
+import InventoryForm from "./component/Inventory_form";
 import LoginContext from "./store/context/loginContext";
 import { LoginContextProvider } from "./store/context/loginContext";
-import Profile_page from "./component/Profile_page";
+import ProfilePage from "./component/Profile_page";
 import Errorpage from "./pages/Errorpage";
 import HomePage from "./pages/HomePage.js/HomePage";
 
@@ -36,6 +40,7 @@ import LoginPage from "./pages/LoginPage";
 import ForgotPassPage from "./pages/ForgotPass/ForgotPassPage";
 import ForgotPassIDPage from "./pages/ForgotPass/ForgotPassIDPage";
 import ForgotPassConfirmPage from "./pages/ForgotPass/ForgotPassConfirmPage";
+import Attendance from "./pages/Attendance";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -67,28 +72,80 @@ const RoutesWithAnimation = () => {
     asyncFunc(cookie.AccessToken);
   }, []);
 
+  useEffect(() => {
+    const asyncFunc0 = async () => {
+      if (!authCtx.user) {
+        try {
+          const resp = await axios.get(`${backendUrl}/api/v1/users/update`, {
+            headers: {
+              Authorization: `Bearer ${cookie.AccessToken}`,
+            },
+          });
+          console.log(resp.data.data);
+          authCtx.setUser(resp.data.data);
+          console.log(resp);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    };
+    asyncFunc0();
+  }, []);
+
   return (
     <>
       <Routes location={location} key={location.key}>
-
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/login/forgotpassword" element={<ForgotPassPage />} />
-        <Route path="/login/forgotpassword/:id" element={<ForgotPassIDPage />} />
-        <Route path="/login/forgotpassword/:id/confirm" element={<ForgotPassConfirmPage />} />
+        <Route
+          path="/login/forgotpassword/:id"
+          element={<ForgotPassIDPage />}
+        />
+        <Route
+          path="/login/forgotpassword/:id/confirm"
+          element={<ForgotPassConfirmPage />}
+        />
 
-        <Route path="/my_courses" element={<Courses_page />} />
-        <Route path="/my_courses/:courseId" element={<Courses_page2 />} />
-        <Route path="/my_courses/:courseId/feedback" element={<Feedback_form/>}/>
-        <Route path="/my_courses/:courseId/assignments" element={<Assignment_page/>}/>
-        <Route path="/my_courses/:courseId/assignments/:assignmentId" element={<Assignment_page2/>}/>
-        <Route path="/inventory/:equipmentId" element={<Inventory_form />} />
-        <Route path="/inventory" element={<Inventory_Page />} />
+        <Route
+          path="/login/forgotpassword/:id"
+          element={<ForgotPassIDPage />}
+        />
+        <Route
+          path="/login/forgotpassword/:id/confirm"
+          element={<ForgotPassConfirmPage />}
+        />
+
+        <Route path="/my_courses" element={<CoursesPage />} />
+        <Route path="/my_courses/:courseId" element={<CoursesPage2 />} />
+
+        <Route
+          path="/my_courses/:courseId/feedback"
+          element={<FeedbackForm />}
+        />
+
+        <Route path="/inventory/:equipmentId" element={<InventoryForm />} />
+        <Route path="/inventory/:equipmentId" element={<InventoryForm />} />
+
+        <Route
+          path="/my_courses/:courseId/assignments"
+          element={<AssignmentPage />}
+        />
+        <Route
+          path="/my_courses/:courseId/assignments/:assignmentId"
+          element={<AssignmentPage2 />}
+        />
+        <Route path="/inventory" element={<InventoryPage />} />
+        <Route path="/attendance" element={<Attendance />} />
+        <Route
+          path="/attendance/admin/:courseId"
+          element={<AttendanceAdmin />}
+        />
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
-        <Route path="/registration" element={<Course_Registration />} />
-        <Route path="/profile" element={<Profile_page />} />
-        <Route path="/feedback" element={<Feedback_form />} />
+        <Route path="/registration" element={<CourseRegistration />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/feedback" element={<FeedbackForm />} />
       </Routes>
     </>
   );
@@ -114,6 +171,7 @@ const MainContent = () => {
   //   window.addEventListener("scroll", handleScroll);
   //   return () => window.removeEventListener("scroll", handleScroll);
   // }, []);
+
   return (
     <div
       style={{

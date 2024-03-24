@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react"
+import React, { useState, useRef, useContext } from "react"
 import classes from "./signup.module.css";
 import { backendUrl } from "../constant.js";
 import axios from "axios";

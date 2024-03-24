@@ -1,14 +1,14 @@
 import "./HomePage.css";
 
+import { useNavigate } from "react-router";
 import React, { useState, useContext, useEffect } from "react";
 import Navbar from "../../component/Navbar/Navbar";
-import demopic from "../../assets/demo_profile_photo.png";
+// import demopic from "../../assets/demo_profile_photo.png";
 import LoginContext from "../../store/context/loginContext";
 import axios from "axios";
 import { backendUrl } from "../../constant";
 import { useCookies } from "react-cookie";
 import { PieChart } from 'react-minimal-pie-chart';
-import { useNavigate } from "react-router";
 import Modal from "../../component/Modal";
 const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -30,26 +30,26 @@ function HomePage() {
   });
 
   console.log(day[today]);
-  useEffect(() => {
-    setTimeout(() => {
-      const asyncFunc0 = async () => {
-        if (LoginCtx.user === null) {
-          try {
-            const resp = await axios.get(`${backendUrl}/api/v1/users/update`, {
-              headers: {
-                Authorization: `Bearer ${cookies.AccessToken}`,
-              },
-            });
-            LoginCtx.setUser(resp.data.data);
-            console.log(resp);
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      }
-      asyncFunc0();
-    }, 1000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     const asyncFunc0 = async () => {
+  //       if (LoginCtx.user === null) {
+  //         try {
+  //           const resp = await axios.get(`${backendUrl}/api/v1/users/update`, {
+  //             headers: {
+  //               Authorization: `Bearer ${cookies.AccessToken}`,
+  //             },
+  //           });
+  //           LoginCtx.setUser(resp.data.data);
+  //           console.log(resp);
+  //         } catch (err) {
+  //           console.log(err);
+  //         }
+  //       }
+  //     }
+  //     asyncFunc0();
+  //   }, 1000);
+  // }, []);
 
   useEffect(() => {
     const asyncFunc1 = async () => {
@@ -58,12 +58,12 @@ function HomePage() {
       }
       let courseEnrolled;
       if (LoginCtx.role === "student") {
-        courseEnrolled = LoginCtx.user.courses_enrolled;
-        courseEnrolled = courseEnrolled.map((course) => {
+        courseEnrolled = LoginCtx.user?.courses_enrolled;
+        courseEnrolled = courseEnrolled?.map((course) => {
           return course.course_id;
         });
       } else if (LoginCtx.role === "teacher") {
-        courseEnrolled = LoginCtx.user.courses_taught;
+        courseEnrolled = LoginCtx?.user?.courses_taught;
       }
       courseEnrolled = Array.from(new Set(courseEnrolled));
 
@@ -88,7 +88,7 @@ function HomePage() {
 
       data = Array.from(new Set(data));
       setCourses(data);
-      const todayTimetable = data.map((course) => {
+      let todayTimetable = data.map((course) => {
         let schedule = course.schedule;
         schedule = Array.from(new Set(schedule));
         if (schedule.length === 0) {
@@ -112,13 +112,17 @@ function HomePage() {
           return null;
       });
       // console.log(todayTimetable);
+
+      // remove null values from the array
+      todayTimetable = todayTimetable.filter((course) => course !== null);
+      console.log(todayTimetable);
       setTodayTimetable(Array.from(new Set(todayTimetable)));
 
     }
 
 
     asyncFunc1();
-  }, [LoginCtx.user]);
+  }, [LoginCtx]);
 
   useEffect(() => {
     const asyncFunc = async () => {
@@ -169,6 +173,14 @@ function HomePage() {
     asyncFunc();
   }, [LoginCtx.user]);
 
+  const handleAttendance = () => {
+    if (LoginCtx.role === 'student') {
+      navigate('/attendance');
+    }
+    else {
+      openModal("attendance");
+    }
+  }
 
   const openModal = (route) => {
     setModalData(route);
@@ -179,12 +191,16 @@ function HomePage() {
     navigate('/my_courses');
   };
 
+  const closeModal = () => {
+    setModalisOpen(false);
+    setModalData(null);
+  }
   // console.log(LoginCtx.user);
   return (
     <>
       <Modal
         isOpen={modalisOpen}
-        close={setModalisOpen}
+        close={closeModal}
         courses={courses}
         data={modalData}
       />
@@ -201,7 +217,7 @@ function HomePage() {
                   </div>
                   <div className="header-profile">
                     <p>{LoginCtx.role}</p>
-                    <img src={demopic} alt="profile_photo" />
+                    <img src={LoginCtx?.user?.personal_info?.profile_picture} alt="profile_photo" />
                     <p>{LoginCtx.name}</p>
                   </div>
                 </header>
@@ -239,7 +255,7 @@ function HomePage() {
                         <p>This Semester</p>
                       </div>
                       <div className="materiais-card"
-                        onClick={() => openModal("attendance")}
+                        onClick={() => handleAttendance()}
                       >
                         <h3>Attendance</h3>
                         <p>This Semester: &nbsp;

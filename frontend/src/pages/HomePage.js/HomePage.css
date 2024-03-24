@@ -86,7 +86,8 @@
   margin-top: 2rem;
   display: flex;
   /* flex-direction: column; */
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 20px;
   margin-bottom: 2rem;
   overflow-x: scroll;
   scrollbar-width: none;

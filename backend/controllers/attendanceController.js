@@ -75,7 +75,12 @@ exports.isActive = catchasync(async (req, res, next) => {
     validtill: { $gt: Date.now() },
   });
   if (!attendance) {
-    return next(new AppError("Attendance is not active", 404));
+    return res.status(200).json({
+      status: "success",
+      data: {
+        isActive: false,
+      },
+    });
   }
   res.status(200).json({
     status: "success",
@@ -95,10 +100,14 @@ exports.markAttendance = catchasync(async (req, res, next) => {
     return next(new AppError("Attendance is expired", 400));
   }
 
+  const name = req.user?.personal_info?.name;
+  const rollNumber = req.user?.personal_info?.rollNumber;
   const student_id = req.user._id;
   const status = req.body.status;
   const attendanceRecord = {
     student_id,
+    name,
+    rollNumber,
     status,
   };
   attendance.attendance_records.push(attendanceRecord);
@@ -163,9 +172,11 @@ exports.getAttendancePercentStudent = catchasync(async (req, res, next) => {
     // Loop through each attendance record
     attendance.forEach((attend) => {
       // Check if the student's attendance record is present
+      let ps = false;
       attend.attendance_records.forEach((record) => {
-        if (record.student_id.toString() === student_id.toString()) {
+        if (!ps && record.student_id.toString() === student_id.toString()) {
           presentA += 1;
+          ps = true;
         }
       });
     });

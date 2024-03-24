@@ -9,11 +9,11 @@ router
   .route("/delete/:attendance_id")
   .delete(attendanceController.deleteAttendance);
 
-router.route("/isActive").get(attendanceController.isActive);
+router.route("/isActive").post(attendanceController.isActive);
 
 router.route("/mark").post(attendanceController.markAttendance);
 
-router.route("/getbycourse").get(attendanceController.getAttendancebyCourse);
+router.route("/getbycourse").post(attendanceController.getAttendancebyCourse);
 router
   .route("/getpercent")
   .get(attendanceController.getAttendancePercentStudent);
