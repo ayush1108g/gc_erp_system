@@ -72,12 +72,12 @@ const Courses_page = () => {
         },[]);
 
     const assignmentPage = (courseId) => { 
-        navigate(`/${courseId}/assignment`);
+        navigate(`/my_courses/${courseId}/assignment`);
         console.log(courseId);
     }
 
     const coursePage = (courseId) => { 
-        navigate(`/${courseId}`);
+        navigate(`/my_courses/${courseId}`);
         console.log(courseId);
     }
 

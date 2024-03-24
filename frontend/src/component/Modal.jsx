@@ -3,12 +3,17 @@ import LoginContext from '../store/context/loginContext';
 // import { useCookies } from "react-cookie";
 // import { backendUrl } from '../constant';
 // import axios from 'axios';
+import { useNavigate} from "react-router"
+import { useAlert } from '../store/context/Alert-context';
 
 const ModalA = (props) => {
     console.log(props);
+    const alertCtx = useAlert();
     const loginCtx = useContext(LoginContext);
     const userData = loginCtx.user;
     const courses = props.courses;
+    const [selectedCourse,setSelectedCourse] = useState(null);
+    const navigate = useNavigate();
 
     const outsideClickHandler = (event) => {
         console.log("outside click");
@@ -18,6 +23,15 @@ const ModalA = (props) => {
     const insideClickHandler = (event) => {
         event.stopPropagation();
         console.log("inside click");
+    }
+
+    const submitHandler=()=>{
+        console.log(selectedCourse);
+        if(selectedCourse === "Select Course" || selectedCourse ===null){
+            alertCtx.showAlert("danger","Select any course");
+            return;
+        }
+            navigate(`/my_courses/${selectedCourse}/feedback`) 
     }
 
     return (
@@ -54,11 +68,14 @@ const ModalA = (props) => {
                     <h3>{props.data.charAt(0).toUpperCase() + props.data.slice(1)} for</h3>
                     <div className={` input-group mb-3`}>
                         <span class="input-group-text" id="9">Course</span>
-                        <select class="form-control shadow-none" aria-label="Large select example" >
-                            <option selected>Select Course </option>
+                        <select class="form-control shadow-none" aria-label="Large select example" 
+                        value={selectedCourse}
+                        onChange={(e)=>{setSelectedCourse(e.target.value)}}
+                        >
+                            <option selected value={null}>Select Course </option>
                             {courses.map((course) => {
                                 return (
-                                    <option value={course.id}>{course.name}</option>
+                                    <option value={course._id}>{course.name}</option>
                                 )
                             })}
                         </select>
@@ -80,7 +97,7 @@ const ModalA = (props) => {
                         <button
                             type="button"
                             class="btn btn-primary"
-                            onClick={() => { }}
+                            onClick={() => submitHandler()}
                         >Submit</button>
                     </div>
 

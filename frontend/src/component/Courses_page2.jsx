@@ -35,8 +35,12 @@ const Courses_page2 = () => {
     }, [courseId]);
 
     const assignmentPage = (courseId) => { 
-        navigate(`/${courseId}/assignment`);
+        navigate(`/my_courses/${courseId}/assignment`);
         console.log(courseId);
+    }
+
+    const giveFeedback = (courseId) => {
+        navigate(`/my_courses/${courseId}/feedback`);
     }
 
     return (
@@ -67,7 +71,7 @@ const Courses_page2 = () => {
                     </div>
                     <div onClick={()=>{assignmentPage(courseData._id)}} className={classes.a}>Assignments</div>
                     <div className={classes.a}>Attendance record</div>
-                    {!isadmin && <div className={classes.a}>Give Feedback</div>}
+                    {!isadmin && <div onClick={()=>{giveFeedback(courseData._id)}} className={classes.a}>Give Feedback</div>}
                 </div>
             )}
         </>

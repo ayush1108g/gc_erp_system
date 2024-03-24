@@ -77,11 +77,10 @@ const RoutesWithAnimation = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/my_courses" element={<Courses_page />} />
         <Route path="/:courseId" element={<Courses_page2 />} />
-        <Route path="/:courseId/assignment" element={<Assignment_page />} />
-        <Route path="/inventory" element={<Inventory_Page />} />
-        <Route path="/inventory" element={<Inventory_Page />} />
+        <Route path="/my_courses/inventory" element={<Inventory_Page/>}/>
+        <Route path="/my_courses/:courseId/feedback" element={<Feedback_form/>}/>
         <Route path="/inventory/:equipmentId" element={<Inventory_form />} />
-        <Route path="/courses" element={<Courses_page />} />
+        <Route path="/courses/:courseId/assignment" element={<Assignment_page/>}/>
         <Route path="/courses/courses2" element={<Courses_page2 />} />
         <Route path="/courses/courses2/assignment/assignment2" element={<Assignment_page2 />} />
         <Route path="/courses/courses2/assignment" element={<Assignment_page/>}/>
