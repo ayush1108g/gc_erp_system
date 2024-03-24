@@ -119,16 +119,34 @@ exports.resetPassword = catchasync(async (req, res, next) => {
   authentication.createSendToken(user, 200, res);
 });
 
-exports.updateuser = catchasync(async (req, res) => {
-  const user = req.user;
-  user.name = req.body.name || user.name;
-  user.email = req.body.email || user.email;
-  user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
-  user.address = req.body.address || user.address;
+exports.updateuser = async (req, res, next) => {
+  try {
+    const userId = req.user._id; // Extract userId from request parameters
+    const updateFields = req.body; // Get the fields to update from request body
 
-  await user.save();
-  authentication.createSendToken(user, 200, res);
-});
+    console.log(updateFields);
+    // Extract only the allowed fields to update
+    const allowedFields = ['personal_info'];
+    const filteredUpdateFields = Object.keys(updateFields)
+      .filter(key => allowedFields.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = updateFields[key];
+        return obj;
+      }, {});
+
+      console.log(filteredUpdateFields);
+    // Find the user by ID and update only allowed fields
+    const user = await User.findByIdAndUpdate(userId, filteredUpdateFields, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User updated successfully', user });
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.updatepass = catchasync(async (req, res) => {
   const user = req.user;
@@ -146,12 +164,37 @@ exports.getuserbyid = catchasync(async (req, res) => {
   const userData = {
     name: user.name,
     email: user.email,
-    phoneNumber: user.phoneNumber,
     address: user.address,
   };
   res.status(200).json({
     status: "success",
     data: userData,
+  });
+});
+
+exports.tobeapproved = catchasync(async (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return next(new AppError("You are not authorized to approve users", 401));
+  }
+  const user = await User.find({ isApproved: false });
+  res.status(200).json({
+    status: "success",
+    data: user,
+    length: user.length,
+  });
+});
+
+exports.approveuser = catchasync(async (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return next(new AppError("You are not authorized to approve users", 401));
+  }
+  const user = await User.findById(req.params.id);
+  if (!user) return next(new AppError("User not found", 404));
+  user.isApproved = true;
+  await user.save();
+  res.status(200).json({
+    status: "success",
+    data: user,
   });
 });
 

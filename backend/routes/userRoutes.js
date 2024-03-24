@@ -25,5 +25,14 @@ router
   .route("/updatepassword")
   .put(authcontroller.protect, userController.updatepass);
 
+router
+  .route("/tobeapproved")
+  .get(authcontroller.protect, userController.tobeapproved);
+
+router
+  .route("/approve/:id")
+  .patch(authcontroller.protect, userController.approveuser);
+
 router.route("/getall").get(userController.getallusers);
+
 module.exports = router;

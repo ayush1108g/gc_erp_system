@@ -13,11 +13,6 @@ const feedbackSchema = new Schema({
     ref: "Course",
     required: true,
   },
-  feedback_type: {
-    type: String,
-    enum: "course",
-    required: true,
-  },
   rating: {
     type: Number,
     required: true,

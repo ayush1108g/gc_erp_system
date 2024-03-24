@@ -49,19 +49,8 @@ const courseSchema = new Schema({
   ],
   attendance_records: [
     {
-      date: Date,
-      present_students: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-      absent_students: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
+      type: Schema.Types.ObjectId,
+      ref: "Attendance",
     },
   ],
   grades: [
@@ -78,6 +67,23 @@ const courseSchema = new Schema({
       feedback: String,
     },
   ],
+  feedback: [
+    {
+      student_id: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+      rating: {
+        type: Number,
+        required: true,
+      },
+      comments: String,
+      submitted_at: {
+        type: Date,
+        default: Date.now,
+      }
+    }
+  ]
 });
 
 const Course = mongoose.model("Course", courseSchema);

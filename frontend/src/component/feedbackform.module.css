@@ -1,0 +1,24 @@
+.title{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 5vw;
+}
+.form{
+    margin: 5vw;
+
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    grid-gap: 10vw;
+    margin: 4vw;
+    
+}
+
+.gridItem {
+    background-color: #f0f0f0;
+    padding: 20px;
+    font-size: large;
+}
