@@ -25,7 +25,29 @@ const data = [
   { name: "Olivia", comment: "Easy to use and setup." }
 ];
 
-
+const dummydata= [
+    {
+      "rollnumber": "123456",
+      "link": "https://example.com/page1"
+    },
+    {
+      "rollnumber": "234567",
+      "link": "https://example.com/page2"
+    },
+    {
+      "rollnumber": "345678",
+      "link": "https://example.com/page3"
+    },
+    {
+      "rollnumber": "456789",
+      "link": "https://example.com/page4"
+    },
+    {
+      "rollnumber": "567890",
+      "link": "https://example.com/page5"
+    }
+  ]
+  
 
 const Assignment_page2 = () => {
   const Loginctx = useContext(LoginContext);
@@ -244,6 +266,23 @@ const Assignment_page2 = () => {
             }
         </div>
       </div>
+      <div className={classes.studentwork}>
+      {
+            dummydata.map((ele,ind)=>{
+                return(<div className={classes.student}>
+                   <div>
+                     {ele.rollnumber}
+                   </div>
+                   <div >
+                       {ele.link}
+                   </div>
+                   <input type="text" placeholder="Grade the Student" />
+                   <input type="text" placeholder="Add Comment" style={{width:'50vw'}}/>
+                   <button>Submit</button>
+                </div>)
+           })
+          }
+          </div>
     </>
   );
 };

@@ -4,9 +4,12 @@
     align-items: center;
     margin: 5vw;
 }
+.subtitle{
+    margin-left: 5vw;
+}
 .form{
     margin: 5vw;
-
+     margin-bottom: 20px;
 }
 
 .gridContainer {
@@ -14,7 +17,6 @@
     grid-template-columns: repeat(2, 1fr); 
     grid-gap: 10vw;
     margin: 4vw;
-    
 }
 
 .gridItem {

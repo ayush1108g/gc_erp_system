@@ -83,10 +83,12 @@ const RoutesWithAnimation = () => {
         <Route path="/my_courses/:courseId/assignments" element={<Assignment_page/>}/>
         <Route path="/my_courses/:courseId/assignments/:assignmentId" element={<Assignment_page2/>}/>
         <Route path="/inventory/:equipmentId" element={<Inventory_form />} />
+        <Route path="/inventory" element={<Inventory_Page />} />
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
         <Route path="/registration" element={<Course_Registration />} />
         <Route path="/profile" element={<Profile_page />} />
+        <Route path="/feedback" element={<Feedback_form />} />
       </Routes>
     </>
   );
