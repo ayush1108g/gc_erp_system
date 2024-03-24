@@ -17,6 +17,11 @@ import View_attendance from "./component/View_attendance";
 import Feedback_form from "./component/Feedback_form";
 import Inventory_form from "./component/Inventory_form";
 import Inventory_Page from "./component/Inventory_page";
+import Courses_page from "./component/Courses_page";
+import Courses_page2 from "./component/Courses_page2";
+import Assignment_page from "./component/Assignment_page";
+import Assignment_page2 from "./component/Assignment_page2";
+
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -57,7 +62,7 @@ const RoutesWithAnimation = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/" element={<Homepage />} /> */}
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="*" element={<Errorpage />} />
+        <Route path="*" element={<Assignment_page/>} />
         
       </Routes>
     </>
@@ -86,9 +91,6 @@ const MainContent = () => {
   // }, []);
   return (
     <div style={{
-      display:"flex",
-      justifyContent:"center",
-      alignItems:'center'
     }}>
       {loginCtx.loading && <FullAuthLoader />}
       <RoutesWithAnimation />
