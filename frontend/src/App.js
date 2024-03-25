@@ -25,6 +25,7 @@ import { LoginContextProvider } from "./store/context/loginContext";
 import ProfilePage from "./component/Profile_page";
 import Errorpage from "./pages/Errorpage";
 import HomePage from "./pages/HomePage.js/HomePage";
+import Assignment_upload from "./component/Assignment_upload";
 
 // import Feedback_form from "./component/Feedback_form";
 // import Inventory_Page from "./component/Inventory_page";
@@ -146,6 +147,7 @@ const RoutesWithAnimation = () => {
         <Route path="/registration" element={<CourseRegistration />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/feedback" element={<FeedbackForm />} />
+        <Route path="/assignment_upload" element={<Assignment_upload/>} />
       </Routes>
     </>
   );
