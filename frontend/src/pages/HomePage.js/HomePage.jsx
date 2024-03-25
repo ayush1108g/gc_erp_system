@@ -12,6 +12,9 @@ import { useAlert } from "../../store/context/Alert-context";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
+import { MdArrowBackIosNew } from "react-icons/md";
+import { MdArrowForwardIos } from "react-icons/md";
+
 const day = [
   "Sunday",
   "Monday",
@@ -23,6 +26,7 @@ const day = [
 ];
 
 function HomePage() {
+  const [isSidebarOpen, setIsSideBarOpen] = useState(true);
   const navigate = useNavigate();
   const [cookies] = useCookies(["AccessToken", "RefreshToken"]);
   const alertCtx = useAlert();
@@ -218,6 +222,10 @@ function HomePage() {
   const openProfilePage = () => {
     navigate("/profile");
   };
+
+  const handleSidebar = () => {
+    setIsSideBarOpen(!isSidebarOpen);
+  }
   // console.log(LoginCtx.user);
   return (
     <>
@@ -291,7 +299,7 @@ function HomePage() {
                           {Attendance.total === 0
                             ? 0
                             : (Attendance.present / Attendance.total) *
-                              100}{" "}
+                            100}{" "}
                           %
                         </p>
                         <div

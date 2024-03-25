@@ -39,11 +39,9 @@ import ForgotPassConfirmPage from "./pages/ForgotPass/ForgotPassConfirmPage";
 import Attendance from "./pages/Attendance";
 import AddCourses from "./component/Add_courses";
 import AddAnnouncement from "./component/Add_announcement";
+import AdminDashBoard from "./component/AdminDashboard";
 
 import { useNavigate } from "react-router-dom";
-import Add_courses from "./component/Add_courses";
-import Add_announcement from "./component/Add_announcement";
-import AdminDashBoard from "./component/AdminDashboard";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -143,7 +141,6 @@ const RoutesWithAnimation = () => {
         />
 
         <Route path="/inventory/:equipmentId" element={<InventoryForm />} />
-        <Route path="/inventory/:equipmentId" element={<InventoryForm />} />
 
         <Route path="/registration" element={<CourseRegistration />} />
         <Route
@@ -176,6 +173,7 @@ const RoutesWithAnimation = () => {
           element={<AssignmentUpload />}
         />
 
+        <Route path="/admin" element={<AdminDashBoard />} />
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
         <Route path="/admin" element={<AdminDashBoard />} />

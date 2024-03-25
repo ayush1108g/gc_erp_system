@@ -67,10 +67,11 @@ const View_attendance = () => {
                         })
                     })
                 });
+
                 setAttendanceData(attendance);
 
                 let nameObj = attendance.reduce((obj, ele) => {
-                    obj[ele.student_id] = obj[ele.student_id] || ele?.name + " " + ele?.rollNumber || null;
+                    obj[ele.student_id] = obj[ele.student_id] || ele?.name || ele?.rollNumber || null;
                     return obj;
                 }, {});
                 setNames(nameObj);
