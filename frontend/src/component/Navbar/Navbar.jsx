@@ -7,6 +7,7 @@ import {
   MdHome,
   MdInfo,
   MdInventory,
+  MdAppRegistration
 } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import { HiAcademicCap } from "react-icons/hi2";
@@ -44,7 +45,7 @@ function Navbar() {
     {
       name: "registration",
       path: "/registration",
-      icon: <MdFeedback />,
+      icon: <MdAppRegistration />,
     },
     {
       name: "inventory",
