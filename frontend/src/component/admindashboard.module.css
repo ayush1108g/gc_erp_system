@@ -80,14 +80,33 @@
     top:48vh;
 }
 
-@media screen and (max-width:1300px){
-    .navbar2{
-        /* width: 5vw !important;
-        overflow: hidden; */
-    }
-    /* .navbar{
-        width: 5vw !important;
-        overflow: hidden;
-        display: 'none';
-    } */
+
+
+@media screen and (max-width:900px){
+   .parent1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+   }
+   .parent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+   }
+   .parent div{
+    width: 60vw ;
+    height: 30vh;
+    margin: 20px;
+   }
+   .parent1 div{
+    width: 60vw;
+    height: 30vh;
+    margin: 20px;
+   }
+   
+   
 }

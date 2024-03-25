@@ -178,6 +178,7 @@ const RoutesWithAnimation = () => {
 
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Errorpage />} />
+        <Route path="/admin" element={<AdminDashBoard />} />
       </Routes>
     </>
   );

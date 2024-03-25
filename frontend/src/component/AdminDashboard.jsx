@@ -59,13 +59,7 @@ const AdminDashBoard = ()=>{
             <h1 className={classes.title}>Admin Dashboard</h1>
             <div className={classes.grandParent}>
                 <div className={classes.parent}>
-                  <div className={classes.box1}>
-
-                  </div>
-                  <div className={classes.box1} >
-
-                  </div>
-                  <div className={classes.recent}>
+                <div className={classes.recent}>
                        <h3 className={classes.recenttitle}>Recent Updates</h3>
                        <ul>
                        {
@@ -75,6 +69,13 @@ const AdminDashBoard = ()=>{
                        }
                        </ul>
                   </div>
+                  <div className={classes.box1}>
+
+                  </div>
+                  <div className={classes.box1} >
+
+                  </div>
+               
                 </div>
                 <div className={classes.parent1}>
                     <div>
