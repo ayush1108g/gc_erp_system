@@ -6,8 +6,10 @@ import { useParams } from 'react-router';
 import axios from 'axios';
 import { backendUrl } from "../constant";
 import LoginContext from '../store/context/loginContext';
+import { useAlert } from '../store/context/Alert-context';
 
 const View_attendance = () => {
+    const Alertctx = useAlert();
     const Loginctx = useContext(LoginContext);
     const { courseId } = useParams();
     console.log(courseId);
@@ -27,10 +29,10 @@ const View_attendance = () => {
                         Authorization: `Bearer ${Loginctx.AccessToken}`
                     }
                 });
-                console.log(response.data.data.data[0]);
                 setCourseData(response.data.data.data[0]);
             } catch (err) {
                 console.log(err);
+                Alertctx.showAlert("danger", "Error Fetching Data");
             }
         };
 
@@ -46,7 +48,6 @@ const View_attendance = () => {
                         Authorization: `Bearer ${Loginctx.AccessToken}`
                     }
                 });
-                console.log(response.data.data?.attendance);
                 // setAttendanceData(response.data.data?.attendance);
                 const data = response.data.data?.attendance;
 
@@ -62,18 +63,17 @@ const View_attendance = () => {
                         })
                     })
                 });
-                console.log(attendance);
                 setAttendanceData(attendance);
 
                 let nameObj = attendance.reduce((obj, ele) => {
-                    obj[ele.student_id] = obj[ele.student_id] || ele.name || ele.rollNumber || null;
+                    obj[ele.student_id] = obj[ele.student_id] || ele?.name + " " + ele?.rollNumber || null;
                     return obj;
                 }, {});
-                console.log(nameObj);
                 setNames(nameObj);
 
             } catch (err) {
                 console.log(err);
+                Alertctx.showAlert("danger", "Error Fetching Data");
             }
         };
 
@@ -106,6 +106,47 @@ const View_attendance = () => {
             ))}
         </tr>
     ));
+
+    const createAttendanceHandler = async () => {
+        const course_id = courseId;
+        let location = { lat: 0, long: 0 };
+
+        try {
+            const locationPermission = await navigator.permissions.query({ name: 'geolocation' });
+            if (locationPermission.state === 'denied') {
+                console.log(locationPermission.state);
+                Alertctx.showAlert("danger", "Please enable location services");
+                return;
+            }
+
+            const position = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+            });
+            location = await { lat: position.coords.latitude, long: position.coords.longitude };
+            console.log(location);
+
+            if (location.lat === 0 && location.long === 0) {
+                Alertctx.showAlert("danger", "Please fix location services");
+                return;
+            }
+
+            console.log(location);
+            const response = await axios.post(backendUrl + '/api/v1/attendance/createAttendence', {
+                course_id: course_id,
+                location: location
+            }, {
+                headers: {
+                    Authorization: `Bearer ${Loginctx.AccessToken}`
+                }
+            });
+            Alertctx.showAlert("success", "Attendance Created Successfully");
+        } catch (err) {
+            console.log(err);
+            Alertctx.showAlert("danger", "Error Creating Attendance");
+        }
+    };
+
+
     return (<>
         <div style={{
             maxWidth: '100vw'
@@ -130,10 +171,17 @@ const View_attendance = () => {
                     <div>Students Enrolled : </div>
                     <div className={classes.yoyo}>{courseData?.students_enrolled.length}</div>
                 </div>
+
+                <div class={classes.gridItem}>
+                    <div>Create Attendance : </div>
+                    <button className="btn btn-primary"
+                        onClick={createAttendanceHandler}
+                    >Start Attendance</button>
+                </div>
             </div>
 
             <div className={classes.attendanceGrid}>
-                <table>
+                {<table>
                     <thead>
                         <tr>
                             <th style={{
@@ -147,7 +195,7 @@ const View_attendance = () => {
                     <tbody>
                         {tableRows}
                     </tbody>
-                </table>
+                </table>}
             </div>
         </div>
     </>)

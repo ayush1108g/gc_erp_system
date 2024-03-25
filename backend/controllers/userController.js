@@ -221,6 +221,32 @@ exports.deleteUser = catchasync(async (req, res) => {
   authentication.createSendToken(user, 200, res);
 });
 
+exports.getalluserstats = catchasync(async (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return next(new AppError("You are not authorized to get user stats", 401));
+  }
+  try {
+    const stats = await User.aggregate([
+      //find no of users in each role
+      {
+        $group: {
+          _id: "$role",
+          numUsers: { $sum: 1 },
+        },
+      },
+    ]);
+    res.status(200).json({
+      status: "success",
+      data: stats,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
+});
+
 exports.getallusers = async (req, res) => {
   try {
     const users = await usersignup.find();

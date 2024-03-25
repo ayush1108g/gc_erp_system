@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import classes from "./LoginPage.module.css";
 import axios from "axios";
 import LoginContext from "../store/context/loginContext.js";
@@ -32,9 +33,12 @@ const Login = (props) => {
   const forgotPasswordHandler = () => {
     navigate("forgotpassword");
   };
-  if (loginCtx.isLoggedIn) {
-    navigate("/");
-  }
+
+  useEffect(() => {
+    if (loginCtx.isLoggedIn) {
+      navigate("/");
+    }
+  }, [loginCtx.isLoggedIn, navigate]);
 
 
 
@@ -111,9 +115,9 @@ const Login = (props) => {
     <div style={{
       // width: '100vw',
       height: '100vh',
-      display:'flex',
-      justifyContent:'center',
-      alignItems:'center'
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
     }}>
       <div className={`row d-flex align-items-center ${classes.container}`}>
         <motion.form

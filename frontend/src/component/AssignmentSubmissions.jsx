@@ -10,27 +10,27 @@ const AssignmentSubmissions = (props) => {
     const Loginctx = useContext(LoginContext);
 
     const submitStudentGradeAndComment = async (studentId) => {
-    try {
-        const requestBody = {
-            assignmentId: props.assignmentId,
-            studentId: studentId,
-            grade: studentGrade, 
-            comments: messageOfTeacher, 
-        };
+        try {
+            const requestBody = {
+                assignmentId: props.assignmentId,
+                studentId: studentId,
+                grade: studentGrade,
+                comments: messageOfTeacher,
+            };
 
-        const response = await axios.patch(backendUrl+'/api/v1/assignments', requestBody, {
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Loginctx.AccessToken}`, // Include the bearer token in the headers
-        },
-        });
+            const response = await axios.patch(backendUrl + '/api/v1/assignments', requestBody, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Loginctx.AccessToken}`, // Include the bearer token in the headers
+                },
+            });
 
-        console.log('Grade and comment submitted successfully:', response.data);
-        setStudentGrade(null);
-        setMessageOfTeacher('');
-    } catch (error) {
-        console.error('Error submitting grade and comment:', error);
-    }
+            console.log('Grade and comment submitted successfully:', response.data);
+            setStudentGrade(null);
+            setMessageOfTeacher('');
+        } catch (error) {
+            console.error('Error submitting grade and comment:', error);
+        }
     };
 
     return (
@@ -39,22 +39,24 @@ const AssignmentSubmissions = (props) => {
                 {props.rollNumber}
             </div>
             <div >
-                <a href={props.submissionFile}>View Submission</a>
+                <a href={props.submissionFile}
+                    target="_blank" rel="noopener noreferrer"
+                >View Submission</a>
             </div>
-            <input 
-                type="text" 
-                placeholder="Grade the Student" 
+            <input
+                type="text"
+                placeholder="Grade the Student"
                 value={studentGrade}
                 onChange={(e) => setStudentGrade(e.target.value)}
             />
-            <input 
-                type="text" 
-                placeholder="Add Comment" 
-                style={{width:'50vw'}}
+            <input
+                type="text"
+                placeholder="Add Comment"
+                style={{ width: '50vw' }}
                 value={messageOfTeacher}
                 onChange={(e) => setMessageOfTeacher(e.target.value)}
             />
-            <button onClick = {()=>submitStudentGradeAndComment(props.studentId)}>Submit</button>
+            <button onClick={() => submitStudentGradeAndComment(props.studentId)}>Submit</button>
         </div>
     );
 }

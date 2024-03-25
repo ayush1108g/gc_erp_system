@@ -1,10 +1,10 @@
-import React , { useState , useEffect , useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import classes from './coursespage2.module.css'
 import axios from 'axios';
-import {backendUrl} from "../constant";
+import { backendUrl } from "../constant";
 import LoginContext from "../store/context/loginContext";
 import { useParams } from 'react-router-dom';
-import { useNavigate} from "react-router"
+import { useNavigate } from "react-router"
 
 import image0 from '../assets/0.jpg'
 import image1 from '../assets/1.jpg'
@@ -21,10 +21,10 @@ const Courses_page2 = () => {
         const fetchdata = async () => {
             try {
                 const response = await axios.get(backendUrl + '/api/v1/courses/' + courseId, {
-                  headers:{
-                      Authorization:`Bearer ${Loginctx.AccessToken}`
-                  }
-              });
+                    headers: {
+                        Authorization: `Bearer ${Loginctx.AccessToken}`
+                    }
+                });
                 const courseInfo = response.data.data.data[0];
                 setCourseData(courseInfo);
             } catch (err) {
@@ -34,7 +34,7 @@ const Courses_page2 = () => {
         fetchdata();
     }, [courseId]);
 
-    const assignmentPage = (courseId) => { 
+    const assignmentPage = (courseId) => {
         navigate(`/my_courses/${courseId}/assignments`);
         console.log(courseId);
     }
@@ -43,8 +43,21 @@ const Courses_page2 = () => {
         navigate(`/my_courses/${courseId}/feedback`);
     }
 
+    const attendanceHandler = () => {
+        const role = Loginctx?.role;
+        if (!role) {
+            navigate('/login');
+            return;
+        }
+        if (role === 'student') {
+            navigate('/attendance');
+        } else {
+            navigate(`/attendance/admin/${courseId}`);
+        }
+
+    }
     return (
-        
+
         <>
             {courseData && (
                 <div>
@@ -69,9 +82,13 @@ const Courses_page2 = () => {
                             </div>
                         </div>
                     </div>
-                    <div onClick={()=>{assignmentPage(courseData._id)}} className={classes.a}>Assignments</div>
-                    <div className={classes.a}>Attendance record</div>
-                    {!isadmin && <div onClick={()=>{giveFeedback(courseData._id)}} className={classes.a}>Give Feedback</div>}
+                    <div onClick={() => { assignmentPage(courseData._id) }} className={classes.a}>Assignments</div>
+
+                    <div className={classes.a}
+                        onClick={attendanceHandler}
+                    >Attendance record</div>
+
+                    {!isadmin && <div onClick={() => { giveFeedback(courseData._id) }} className={classes.a}>Give Feedback</div>}
                 </div>
             )}
         </>

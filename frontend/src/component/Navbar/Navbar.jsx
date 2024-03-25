@@ -28,8 +28,8 @@ function Navbar() {
       icon: <MdHome />,
     },
     {
-      name: "attendence",
-      path: "/attendence",
+      name: "attendance",
+      path: "/attendance",
       icon: <MdBarChart />,
     },
     {
@@ -43,7 +43,7 @@ function Navbar() {
       icon: <MdFeedback />,
     },
     {
-      name: "registration",
+      name: "Course_Registration",
       path: "/registration",
       icon: <MdAppRegistration />,
     },
@@ -76,6 +76,7 @@ function Navbar() {
           <h3>IIT BBS</h3>
         </div>
         {navItems.map((item, index) => {
+
           return (
             <div
               className="navbar-item"

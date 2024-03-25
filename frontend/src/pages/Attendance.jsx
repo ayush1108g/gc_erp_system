@@ -17,7 +17,7 @@ const Attendance = () => {
     const courses = loginCtx?.user?.courses_enrolled;
     const [load, setLoad] = useState(false);
     const [isActiveAttendance, setIsActiveAttendance] = useState([]);
-
+    console.log(loginCtx)
     console.log(courses);
     useEffect(() => {
         const fetchData = async () => {
@@ -25,7 +25,6 @@ const Attendance = () => {
                 try {
                     console.log(loginCtx.AccessToken);
                     const resp = await Promise.all(courses.map(async (course) => {
-                        console.log(course);
                         const body = {
                             course_id: course.course_id
                         };
@@ -49,11 +48,9 @@ const Attendance = () => {
                         let total = item.length;
                         let present = 0;
                         item?.forEach((ele) => {
-                            console.log(ele);
                             const record = ele?.attendance_records;
                             let prnt = false;
                             record?.forEach((rec) => {
-                                console.log(rec);
                                 if (!prnt && rec?.student_id === userid) {
                                     present++;
                                     prnt = true;
@@ -125,7 +122,7 @@ const Attendance = () => {
         fetchData();
         fetchData1();
 
-    }, [courses, load]);
+    }, [courses, load, loginCtx]);
 
     const handleMark = async (index) => {
         const attendanceid = isActiveAttendance[index]?.attendance?._id;
@@ -270,7 +267,8 @@ const Attendance = () => {
                             />
                         </div>
 
-                        <p>Attendence Percent: {item.total === 0 ? 0 : item.present * 100 / item.total}</p>
+                        <p>Attendence Percent: {item.total === 0 ? 0 : (item.present * 100 / item.total).toFixed(2)}
+                        </p>
 
                         <hr style={{
                             width: '90%',

@@ -25,16 +25,10 @@ import { LoginContextProvider } from "./store/context/loginContext";
 import ProfilePage from "./component/Profile_page";
 import Errorpage from "./pages/Errorpage";
 import HomePage from "./pages/HomePage.js/HomePage";
-import Assignment_upload from "./component/Assignment_upload";
-import Add_inventory_item from "./component/Add_inventory_item";
-
-// import Feedback_form from "./component/Feedback_form";
-// import Inventory_Page from "./component/Inventory_page";
-// import Inventory_form from "./component/Inventory_form";
-// import View_attendance from "./component/View_attendance";
+import AssignmentUpload from "./component/Assignment_upload";
+import AddInventoryItem from "./component/Add_inventory_item";
 
 import { AlertProvider } from "./store/context/Alert-context";
-// import { verifyToken, refreshAccessToken } from "./store/utils/auth";
 
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
@@ -43,11 +37,14 @@ import ForgotPassPage from "./pages/ForgotPass/ForgotPassPage";
 import ForgotPassIDPage from "./pages/ForgotPass/ForgotPassIDPage";
 import ForgotPassConfirmPage from "./pages/ForgotPass/ForgotPassConfirmPage";
 import Attendance from "./pages/Attendance";
-import Add_courses from "./component/Add_courses";
-import Add_announcement from "./component/Add_announcement";
+import AddCourses from "./component/Add_courses";
+import AddAnnouncement from "./component/Add_announcement";
+
+import { useNavigate } from "react-router-dom";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   console.log(location);
 
   const [cookie] = useCookies(["AccessToken", "RefreshToken"]);
@@ -77,6 +74,14 @@ const RoutesWithAnimation = () => {
   }, []);
 
   useEffect(() => {
+    setTimeout(() => {
+      if (authCtx.isLoggedIn === false) {
+        navigate("/login");
+      }
+    }, 2000);
+  }, [authCtx.isLoggedIn]);
+
+  useEffect(() => {
     const asyncFunc0 = async () => {
       if (!authCtx.user) {
         try {
@@ -94,7 +99,7 @@ const RoutesWithAnimation = () => {
       }
     };
     asyncFunc0();
-  }, []);
+  }, [authCtx, cookie.AccessToken]);
 
   return (
     <>
@@ -131,6 +136,7 @@ const RoutesWithAnimation = () => {
         <Route path="/inventory/:equipmentId" element={<InventoryForm />} />
         <Route path="/inventory/:equipmentId" element={<InventoryForm />} />
 
+        <Route path="/registration" element={<CourseRegistration />} />
         <Route
           path="/my_courses/:courseId/assignments"
           element={<AssignmentPage />}
@@ -145,21 +151,24 @@ const RoutesWithAnimation = () => {
           path="/attendance/admin/:courseId"
           element={<AttendanceAdmin />}
         />
-        <Route path="/" element={<HomePage />} />
-        <Route path="*" element={<Errorpage />} />
-        <Route path="/registration" element={<CourseRegistration />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/feedback" element={<FeedbackForm />} />
-        <Route path="/assignment_upload" element={<Assignment_upload/>} />
-        {
-          // Loginctx.user.role==='admin' && 
+        <Route path="/assignment_upload" element={<AssignmentUpload />} />
+
+        {authCtx.role === "admin" && (
           <>
-            <Route path="/add_inventory_item" element={<Add_inventory_item/>} />
-            <Route path="/add_courses" element={<Add_courses/>} />
-            <Route path="/add_announcement" element={<Add_announcement/>} />
+            <Route path="/add_inventory_item" element={<AddInventoryItem />} />
+            <Route path="/add_courses" element={<AddCourses />} />
+            <Route path="/add_announcement" element={<AddAnnouncement />} />
           </>
-        }
-        <Route path="/:courseId/assignment_upload" element={<Assignment_upload/>} />
+        )}
+        <Route
+          path="/:courseId/assignment_upload"
+          element={<AssignmentUpload />}
+        />
+
+        <Route path="/" element={<HomePage />} />
+        <Route path="*" element={<Errorpage />} />
       </Routes>
     </>
   );
