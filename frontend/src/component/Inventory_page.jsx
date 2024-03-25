@@ -51,6 +51,10 @@ const Invenotory_Page = () => {
         console.log(equipmentId);
     };
 
+    const addInvetoryForm = () => {
+        navigate('/add_inventory_item');
+    };
+
     return (<div className={classes.Body}>
         <h1 className={classes.title}>Welcome to SAC Inventory</h1>
         <div className={classes.eqp}>

@@ -85,10 +85,12 @@
 .box1 {
     border: 1px solid  rgb(175, 173, 173);
     border-radius: 10px;
+    padding: 1vw;
     padding-bottom: 20px;
     box-shadow:2px 4px 8px rgba(0,0,0,0.35); 
     margin-bottom: 40px;
-
+    width: 25vw;
+    
 }
 .parent2{
     width: 22%;

@@ -16,6 +16,7 @@ const Courses_page2 = () => {
     const Loginctx = useContext(LoginContext);
     const navigate = useNavigate();
     const [courseData, setCourseData] = useState(null);
+    const [feedback, setFeedback] = useState(null);
     let isadmin = Loginctx.role === 'admin';
     const { courseId } = useParams();
 
@@ -29,6 +30,7 @@ const Courses_page2 = () => {
                 });
                 const courseInfo = response.data.data.data[0];
                 setCourseData(courseInfo);
+                setFeedback(courseInfo.feedback);
             } catch (err) {
                 if (err?.response?.data?.message) {
                     alertCtx.showAlert("danger", err.response.data.message);
@@ -109,6 +111,21 @@ const Courses_page2 = () => {
                         </div>
                         }
                     </div>
+                    {
+                        isadmin && 
+                        <>
+                        <h1 className={classes.title}>FeedBacks</h1>
+                        <div className={classes.gridContainer}>
+                        {   
+                            feedback.map((ele,ind)=> {
+                                return(
+                                    <div className={classes.gridItem}>Comments: {ele.comments}  ;  Ratings: {ele.rating}</div>
+                                );
+                            })
+                        }
+                        </div>
+                        </>
+                    }
                 </div>
             )}
         </>

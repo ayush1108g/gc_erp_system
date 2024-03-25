@@ -168,6 +168,27 @@ const AdminDashBoard = () => {
     const openProfilePage = () => {
         navigate('/profile');
     }
+
+    const openAddCourse = () => {
+        navigate('/add_courses');
+    }
+
+    const openAddAnnouncements = () => {
+        navigate('/add_announcement');
+    }
+
+    const openAddEquipment = () => {
+        navigate('/add_inventory_item')
+    }
+
+    const openAllCourses = () => {
+        navigate('/registration')
+    }
+
+    const openApproveUser = () => {
+        navigate('/approve')
+    }
+
     return (<>
         <Modal
             isOpen={modalisOpen}
@@ -236,31 +257,25 @@ const AdminDashBoard = () => {
                             </ul>
                         </div>
                         <div className={classes.box1}>
-
+                                
                         </div>
-                        <div className={classes.box1} >
-
+                        <div className={classes.box1} onClick={()=>openApproveUser()}>
+                                Approve Users
                         </div>
 
                     </div>
                     <div className={classes.parent1}>
-                        <div>
-                            Card1
+                        <div onClick={()=>openAddCourse()}>
+                            Add Courses
                         </div>
-                        <div>
-                            Card2
+                        <div onClick={()=>openAddAnnouncements()}>
+                            Add Anouncements
                         </div>
-                        <div>
-                            Card3
+                        <div onClick={()=>openAddEquipment()}>
+                            Add SAC Items
                         </div>
-                        <div>
-                            Card4
-                        </div>
-                        <div>
-                            Card5
-                        </div>
-                        <div>
-                            Card6
+                        <div onClick={()=>openAllCourses()}>
+                            View All Courses 
                         </div>
                     </div>
 

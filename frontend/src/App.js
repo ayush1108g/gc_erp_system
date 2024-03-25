@@ -27,6 +27,7 @@ import Errorpage from "./pages/Errorpage";
 import HomePage from "./pages/HomePage.js/HomePage";
 import AssignmentUpload from "./component/Assignment_upload";
 import AddInventoryItem from "./component/Add_inventory_item";
+import UpdateInventoryItem from "./component/UpdateInventoryItem";
 
 import { AlertProvider } from "./store/context/Alert-context";
 
@@ -40,6 +41,7 @@ import Attendance from "./pages/Attendance";
 import AddCourses from "./component/Add_courses";
 import AddAnnouncement from "./component/Add_announcement";
 import AdminDashBoard from "./component/AdminDashboard";
+import ApproveUser  from "./component/ApproveUser";
 
 import { useNavigate } from "react-router-dom";
 
@@ -159,13 +161,14 @@ const RoutesWithAnimation = () => {
         />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/feedback" element={<FeedbackForm />} />
-        <Route path="/assignment_upload" element={<AssignmentUpload />} />
 
         {authCtx.role === "admin" && (
           <>
             <Route path="/add_inventory_item" element={<AddInventoryItem />} />
+            <Route path="/approve" element={<ApproveUser />} />
             <Route path="/add_courses" element={<AddCourses />} />
             <Route path="/add_announcement" element={<AddAnnouncement />} />
+            <Route path="/:equipmentId/update_inventory_item" element={<UpdateInventoryItem />} />
           </>
         )}
         <Route

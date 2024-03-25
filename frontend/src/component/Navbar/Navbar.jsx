@@ -43,7 +43,7 @@ function Navbar(props) {
       icon: <MdFeedback />,
     },
     {
-      name: "Course_Registration",
+      name: "Registration",
       path: "/registration",
       icon: <MdAppRegistration />,
     },

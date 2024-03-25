@@ -74,6 +74,10 @@ const Inventory_form = () => {
 
   };
 
+  const openUpdateItemPage = () => {
+    navigate(`/${equipmentId}/update_inventory_item`)
+  }
+
   return (
     <>
       {equipmentData && (
@@ -83,6 +87,10 @@ const Inventory_form = () => {
             <div className={classes.gridItem}>
               <div> Quantity Available: </div>
               <div className={classes.yoyo}>{equipmentData.available_quantity}</div>
+              {
+                isadmin &&
+                 <button type="button" class="btn btn-success" onClick={()=>openUpdateItemPage()}>Update</button>
+              }
             </div>
             <div className={classes.gridItem}>
               <div>Total Quantity : </div>
