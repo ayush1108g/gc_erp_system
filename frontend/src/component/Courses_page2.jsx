@@ -6,9 +6,9 @@ import LoginContext from "../store/context/loginContext";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router"
 
-import image0 from '../assets/0.jpg'
-import image1 from '../assets/1.jpg'
-import image2 from '../assets/2.jpg'
+import image10 from '../assets/10.jpg'
+import image11 from '../assets/11.jpg'
+import image12 from '../assets/12.jpg'
 
 const Courses_page2 = () => {
     const Loginctx = useContext(LoginContext);
@@ -82,13 +82,27 @@ const Courses_page2 = () => {
                             </div>
                         </div>
                     </div>
-                    <div onClick={() => { assignmentPage(courseData._id) }} className={classes.a}>Assignments</div>
-
-                    <div className={classes.a}
-                        onClick={attendanceHandler}
-                    >Attendance record</div>
-
-                    {!isadmin && <div onClick={() => { giveFeedback(courseData._id) }} className={classes.a}>Give Feedback</div>}
+                    <div className={classes.b}>
+                    <div onClick={()=>{assignmentPage(courseData._id)}} className={classes.a}>
+                        <img src={image10} alt="" className={classes.img} />
+                        <div className={classes.c}>
+                        Assignments
+                        </div>
+                        </div>
+                    <div className={classes.a}>
+                    <img src={image11} alt="" className={classes.img} />
+                        <div className={classes.c}>
+                        Attendance
+                        </div>
+                    </div>
+                    {!isadmin && <div onClick={()=>{giveFeedback(courseData._id)}} className={classes.a}>
+                    <img src={image12} alt="" className={classes.img} />
+                        <div className={classes.c}>
+                        FeedBack
+                        </div>
+                    </div>
+                    }
+                    </div>
                 </div>
             )}
         </>

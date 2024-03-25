@@ -18,7 +18,7 @@ import { useNavigate } from "react-router";
 import LoginContext from "../../store/context/loginContext";
 
 
-function Navbar() {
+function Navbar(props) {
   const LoginCtx = useContext(LoginContext);
   const navigate = useNavigate();
   const navItems = [
@@ -70,7 +70,7 @@ function Navbar() {
   ];
   return (
     <div>
-      <div className="navbar">
+      <div className={`navbar ${props.className}`} style={props.style}>
         <div className="iitbbs" onClick={() => navigate("/")}>
           <img src={iitbbslogo} alt="" />
           <h3>IIT BBS</h3>

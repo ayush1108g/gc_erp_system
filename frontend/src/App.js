@@ -41,6 +41,9 @@ import AddCourses from "./component/Add_courses";
 import AddAnnouncement from "./component/Add_announcement";
 
 import { useNavigate } from "react-router-dom";
+import Add_courses from "./component/Add_courses";
+import Add_announcement from "./component/Add_announcement";
+import AdminDashBoard from "./component/AdminDashboard";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
