@@ -33,7 +33,7 @@ function Navbar() {
     },
     {
       name: "courses",
-      path: "/courses",
+      path: "/my_courses",
       icon: <HiAcademicCap />,
     },
     {

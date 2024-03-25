@@ -1,27 +1,61 @@
-import React from "react";
+import React, { useContext } from "react";
 import classes from "./profilepage.module.css"
 import image0 from "../assets/0.jpg"
+import LoginContext from "../store/context/loginContext";
 
 let isStudent = true ;
 const Profile_page = () => {
+    const Loginctx = useContext(LoginContext);
+    const user = Loginctx.user;
+    console.log(Loginctx.user);
+    const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    const formattedDate = date.toLocaleDateString("en-US", options);
+    const day = date.getDate();
+    let suffix;
+    if (day >= 11 && day <= 13) {
+      suffix = "th";
+    } else {
+      switch (day % 10) {
+        case 1:
+          suffix = "st";
+          break;
+        case 2:
+          suffix = "nd";
+          break;
+        case 3:
+          suffix = "rd";
+          break;
+        default:
+          suffix = "th";
+      }
+    }
+    const ordinalDate = formattedDate.replace(
+      /\b\d{1,2}\b/,
+      (match) => match + suffix
+    );
+    return ordinalDate;
+  };
+
     return (<body className={classes.body}>
           
         <div className={classes.title}>
-            <h2 className={classes.h2}> Profile Page </h2>
+            <h2 className={classes.h2}> Your Profile </h2>
         </div>
         <div className={classes.grandParent}>
             <div className={classes.parent1}>
-                <img class={classes.circularBox}  src={image0}/>
+                <img class={classes.circularBox}  src={user.personal_info.profile_picture}/>
            
             <div className={classes.details}>
              <div>
-                Phunsuk Wanguru
+                {user.personal_info.name}
              </div>
              <div>
-                Role : Student
+                Role : {user.role}
              </div>
              {
-               isStudent&&<div>Roll number : 29RR01099 </div>
+               isStudent&&<div>{user.personal_info.rollNumber} </div>
              }
             </div>
             </div>
@@ -31,7 +65,7 @@ const Profile_page = () => {
                        Semester
                     </div>
                     <div className={classes.c2}>
-                      :  4
+                      :  {user.academic_info.semester[0]}
                     </div>
                 </div>
                 }
@@ -40,7 +74,7 @@ const Profile_page = () => {
                         Email
                     </div>
                     <div className={classes.c2}>
-                       : xyz@gmail.com
+                       : {user.email}
                     </div>
                 </div>
                 <div className={classes.lines}>
@@ -48,7 +82,7 @@ const Profile_page = () => {
                         Phone
                     </div>
                     <div className={classes.c2}>
-                         : 99999999999
+                         : {user.personal_info.phone}
                     </div>
                 </div>
                 <div className={classes.lines}>
@@ -56,7 +90,7 @@ const Profile_page = () => {
                             Gender
                     </div>
                     <div className={classes.c2}>
-                          : Male
+                          : {user.personal_info.gender}
                     </div>
                 </div>
                 <div className={classes.lines}>
@@ -64,7 +98,7 @@ const Profile_page = () => {
                              Date of Birth
                     </div>
                     <div className={classes.c2}>
-                            : 19-04-2099
+                            : {formatDate(user.personal_info.date_of_birth)}
                     </div>
                 </div>
                 <div className={classes.lines}>
@@ -72,7 +106,7 @@ const Profile_page = () => {
                                Department
                     </div>
                     <div className={classes.c2}>
-                            : Science
+                            : {user.academic_info.department}
                     </div>
                 </div>
                
@@ -81,7 +115,7 @@ const Profile_page = () => {
                                Program
                     </div>
                     <div className={classes.c2}>
-                            : Engineering
+                            : {user.academic_info.program}
                     </div>
                 </div>
                 <div className={classes.lines}>
@@ -89,7 +123,7 @@ const Profile_page = () => {
                                Address
                     </div>
                     <div className={classes.c2}>
-                            : Yasnaya Polyana , Erangel
+                            : {user.personal_info.address}
                     </div>
                 </div>
                

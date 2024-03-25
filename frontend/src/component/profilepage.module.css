@@ -60,7 +60,7 @@
     background-color: white ;
     padding: 20px;
     border-radius: 20px;
-    width: 30vw;
+    width: 33vw;
     
     box-shadow:4px 4px 8px rgba(0,0,0,0.35);
     
@@ -75,7 +75,7 @@
    @media screen and (min-width: 1000px){
        .body{
         width: 100vw;
-        height: 100vh;
+        height: 120vh;
        }
    }
   
