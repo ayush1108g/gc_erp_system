@@ -142,6 +142,7 @@
   }
   .materiais-card p{
     color: #555555;
+    margin-top: 10px;
     font-size: 14px;
     font-weight: 500;
   }
@@ -171,4 +172,122 @@
   justify-content: space-evenly}
 .update-items li{
   margin-top: 10px;
+}
+
+@media only screen and (max-width:768px){
+  .items{
+    flex-direction: column;
+    /* border: 2px solid red; */
+    width: 100%;
+    align-items: center;
+  }
+   h2{
+    text-align: center;
+  }
+  .timetable-card:nth-child(n+1):nth-child(-n+4) {
+    margin-left: 0px;
+    width: 350px;
+  }
+  .materiais-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(250px, 1fr));
+  /* border: 2px solid red; */
+  width: 350px;
+  height: 500px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  gap: 20px;
+  }
+  .update {
+  border: 2px solid #F3F2FF;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  height: 570px;
+  /* margin-top: 0.5rem; */
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  }
+  .today-timetable {
+  width: 89%;
+  height: 542px;
+  /* border: 2px solid red; */
+  margin-top: 2.5rem;
+  }
+  .update{
+    margin-bottom: 50px;
+  }
+  .header{
+    width: 80%;
+    
+    height: 85px;
+  }
+  .header-text h1{
+      font-size: calc(1.375rem + -0.5vw);
+      margin-bottom: -0.5rem;
+      font-weight: 800;
+  }
+  .header-profile p {
+    margin-bottom: -0.5rem;
+    font-weight: 800;
+    height: 100%;
+  }
+}
+
+@media only screen and (max-width: 375px){
+  .header{
+    width: 100%;
+  }
+  .header-text h1{
+      font-size: calc(1.375rem + -0.5vw);
+      margin-bottom: -0.5rem;
+      font-weight: 800;
+    }
+    .header-profile p {
+      margin-bottom: -0.5rem;
+      font-weight: 800;
+    height: 100%;
+    }
+.header{
+  height: 128px;
+}
+.main {
+  width: 89%;
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.update{
+  margin-bottom: 50px;
+}
+  .timetable-card:nth-child(n+1):nth-child(-n+4) {
+      margin-left: 0px;
+      width:100%;
+  }
+  .materiais-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    /* border: 2px solid red; */
+    width: 250px;
+    height: 300px;
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+    gap: 14px;
+}
+.materiais-card  h3 {
+  font-weight: 500;
+  font-size: 16px;
+}
+  .materiais{
+    width: 100%;
+  }
+  .today-timetable {
+      width: 89%;
+      height: 542px;
+      /* border: 2px solid red; */
+      margin-top: 2.5rem;
+  }
+
 }

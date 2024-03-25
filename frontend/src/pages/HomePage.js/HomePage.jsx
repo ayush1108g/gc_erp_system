@@ -17,7 +17,7 @@ function HomePage() {
               </div>
               <div className="header-profile">
                 <img src={demopic} alt="profile_photo" />
-                <p>Meenal Nimje</p>
+                <p>userName</p>
               </div>
             </header>
             <section className="today-timetable">
