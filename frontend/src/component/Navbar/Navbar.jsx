@@ -1,7 +1,7 @@
 import "./Navbar.css";
 
 import {
-  MdAdminPanelSettings,
+  // MdAdminPanelSettings,
   MdBarChart,
   MdFeedback,
   MdHome,
@@ -11,7 +11,7 @@ import {
 } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import { HiAcademicCap } from "react-icons/hi2";
-import { IoMdDoneAll } from "react-icons/io";
+// import { IoMdDoneAll } from "react-icons/io";
 import React, { useContext } from "react";
 import iitbbslogo from "../../assets/iitbbs_logo.jpeg";
 import { useNavigate } from "react-router";
@@ -68,6 +68,20 @@ function Navbar(props) {
     //   icon: <MdAdminPanelSettings />,
     // },
   ];
+
+  const navigateHandler = (path) => {
+    console.log(path);
+    // const role = LoginCtx?.role;
+    if (path === '/attendance') {
+      props.handleAttendance();
+      return;
+    } else if (path === '/feedback') {
+      props.openModal('feedback');
+      return;
+    }
+    navigate(path);
+  }
+
   return (
     <div>
       <div className={`navbar ${props.className}`} style={props.style}>
@@ -81,7 +95,7 @@ function Navbar(props) {
             <div
               className="navbar-item"
               key={index}
-              onClick={() => navigate(`${item.path}`)}
+              onClick={() => navigateHandler(item.path)}
             >
               <div className="icon">{item.icon}</div>
               <div className="name">{item.name}</div>

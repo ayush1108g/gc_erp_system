@@ -4,13 +4,15 @@ import axios from 'axios';
 import { backendUrl } from "../constant";
 import LoginContext from "../store/context/loginContext";
 import { useParams } from 'react-router-dom';
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router";
+import { useAlert } from '../store/context/Alert-context';
 
 import image10 from '../assets/10.jpg'
 import image11 from '../assets/11.jpg'
 import image12 from '../assets/12.jpg'
 
 const Courses_page2 = () => {
+    const alertCtx = useAlert();
     const Loginctx = useContext(LoginContext);
     const navigate = useNavigate();
     const [courseData, setCourseData] = useState(null);
@@ -28,6 +30,10 @@ const Courses_page2 = () => {
                 const courseInfo = response.data.data.data[0];
                 setCourseData(courseInfo);
             } catch (err) {
+                if (err?.response?.data?.message) {
+                    alertCtx.showAlert("danger", err.response.data.message);
+                    return
+                }
                 console.log(err);
             }
         };
@@ -83,25 +89,25 @@ const Courses_page2 = () => {
                         </div>
                     </div>
                     <div className={classes.b}>
-                    <div onClick={()=>{assignmentPage(courseData._id)}} className={classes.a}>
-                        <img src={image10} alt="" className={classes.img} />
-                        <div className={classes.c}>
-                        Assignments
+                        <div onClick={() => { assignmentPage(courseData._id) }} className={classes.a}>
+                            <img src={image10} alt="" className={classes.img} />
+                            <div className={classes.c}>
+                                Assignments
+                            </div>
                         </div>
+                        <div className={classes.a}>
+                            <img src={image11} alt="" className={classes.img} />
+                            <div className={classes.c} onClick={attendanceHandler}>
+                                Attendance
+                            </div>
                         </div>
-                    <div className={classes.a}>
-                    <img src={image11} alt="" className={classes.img} />
-                        <div className={classes.c}>
-                        Attendance
+                        {!isadmin && <div onClick={() => { giveFeedback(courseData._id) }} className={classes.a}>
+                            <img src={image12} alt="" className={classes.img} />
+                            <div className={classes.c}>
+                                FeedBack
+                            </div>
                         </div>
-                    </div>
-                    {!isadmin && <div onClick={()=>{giveFeedback(courseData._id)}} className={classes.a}>
-                    <img src={image12} alt="" className={classes.img} />
-                        <div className={classes.c}>
-                        FeedBack
-                        </div>
-                    </div>
-                    }
+                        }
                     </div>
                 </div>
             )}

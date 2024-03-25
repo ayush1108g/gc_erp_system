@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import classes from "./profilepage.module.css"
-import image0 from "../assets/0.jpg"
+// import image0 from "../assets/0.jpg"
 import LoginContext from "../store/context/loginContext";
 
 const Profile_page = () => {
@@ -8,35 +8,35 @@ const Profile_page = () => {
     const user = Loginctx.user;
     console.log(Loginctx.user);
     const isStudent = Loginctx?.role === "student";
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const options = { day: "numeric", month: "long", year: "numeric" };
-        const formattedDate = date.toLocaleDateString("en-US", options);
-        const day = date.getDate();
-        let suffix;
-        if (day >= 11 && day <= 13) {
-            suffix = "th";
-        } else {
-            switch (day % 10) {
-                case 1:
-                    suffix = "st";
-                    break;
-                case 2:
-                    suffix = "nd";
-                    break;
-                case 3:
-                    suffix = "rd";
-                    break;
-                default:
-                    suffix = "th";
-            }
-        }
-        const ordinalDate = formattedDate.replace(
-            /\b\d{1,2}\b/,
-            (match) => match + suffix
-        );
-        return ordinalDate;
-    };
+    // const formatDate = (dateString) => {
+    //     const date = new Date(dateString);
+    //     const options = { day: "numeric", month: "long", year: "numeric" };
+    //     const formattedDate = date.toLocaleDateString("en-US", options);
+    //     const day = date.getDate();
+    //     let suffix;
+    //     if (day >= 11 && day <= 13) {
+    //         suffix = "th";
+    //     } else {
+    //         switch (day % 10) {
+    //             case 1:
+    //                 suffix = "st";
+    //                 break;
+    //             case 2:
+    //                 suffix = "nd";
+    //                 break;
+    //             case 3:
+    //                 suffix = "rd";
+    //                 break;
+    //             default:
+    //                 suffix = "th";
+    //         }
+    //     }
+    //     const ordinalDate = formattedDate.replace(
+    //         /\b\d{1,2}\b/,
+    //         (match) => match + suffix
+    //     );
+    //     return ordinalDate;
+    // };
 
     return (<body className={classes.body}>
 
@@ -67,7 +67,7 @@ const Profile_page = () => {
                         Semester
                     </div>
                     <div className={classes.c2}>
-                        :  {Loginctx?.user?.academic_info?.semester || "Semester"}
+                        :  {Loginctx?.user?.academic_info?.semester.join(', ') || "Semester"}
                     </div>
                 </div>
                 }
@@ -108,7 +108,7 @@ const Profile_page = () => {
                         Department
                     </div>
                     <div className={classes.c2}>
-                        : {Loginctx?.user?.academic_info?.department || "Department"}
+                        : {Loginctx?.user?.academic_info?.department.join(', ') || "Department"}
                     </div>
                 </div>
 
@@ -117,7 +117,7 @@ const Profile_page = () => {
                         Program
                     </div>
                     <div className={classes.c2}>
-                        : {Loginctx?.user?.academic_info?.program || "Program"}
+                        : {Loginctx?.user?.academic_info?.program.join(', ') || "Program"}
                     </div>
                 </div>
                 <div className={classes.lines}>

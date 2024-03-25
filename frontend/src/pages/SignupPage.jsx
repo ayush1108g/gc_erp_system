@@ -58,11 +58,11 @@ const SignupPage = () => {
         const password = passwordInputRef.current.value;
 
         if (dob === "" || dob === null || dob === undefined || dob.split('-').length !== 3) {
-            alert("Please enter a valid date of birth");
+            Alertctx.showAlert("danger", "Please enter a valid date of birth");
             return;
         }
         if (password.length < 8 || !password) {
-            alert("Password must be at least 8 characters long");
+            Alertctx.showAlert("danger", "Password must be at least 8 characters long");
             return;
         }
         setLoading(true);
@@ -110,8 +110,11 @@ const SignupPage = () => {
             }
         } catch (err) {
             console.log(err);
-            if (err?.response?.data?.message)
+            if (err?.response?.data?.message) {
                 setError(err?.response?.data?.message);
+                Alertctx.showAlert("danger", err?.response?.data?.message);
+                return;
+            }
             else
                 setError("Something went wrong");
         } finally {
@@ -122,11 +125,11 @@ const SignupPage = () => {
 
     const uploadHandler = async () => {
         if (fileuploading) {
-            alert("File is uploading, please wait");
+            Alertctx.showAlert("danger", "Please wait while the file is uploading");
             return;
         }
         if (!profile) {
-            alert("Please select a file");
+            Alertctx.showAlert("danger", "Please select a file");
             return;
         }
         console.log('Selected file:', profile);
@@ -146,8 +149,13 @@ const SignupPage = () => {
             const id = res.data.data.id;
             const url = `https://drive.google.com/file/d/${id}/view?usp=sharing`;
             setProfileUrl(url);
+            Alertctx.showAlert('success', 'File uploaded successfully');
         } catch (err) {
             console.log(err);
+            if (err.response?.data?.message) {
+                setError(err.response.data.message);
+                Alertctx.showAlert('error', err.response.data.message);
+            }
             setError("Error uploading file");
         } finally {
             setFileuploading(false);

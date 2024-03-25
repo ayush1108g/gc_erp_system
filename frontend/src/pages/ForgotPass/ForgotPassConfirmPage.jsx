@@ -10,7 +10,6 @@ import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
 import { useAlert } from "../../store/context/Alert-context.js";
 import LoginContext from "../../store/context/loginContext.js";
 
-
 const ForgotPassConfirmPage = () => {
   const loginctx = useContext(LoginContext);
   const alertCtx = useAlert();
@@ -72,9 +71,14 @@ const ForgotPassConfirmPage = () => {
       console.log(resp);
     } catch (error) {
       console.log(error);
+      if (error.response?.data?.message) {
+        setErrormsg(error.response.data.message);
+        return;
+      }
       setErrormsg("Something went wrong. Please try again");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const isValid = localStorage.getItem("Passcode2");

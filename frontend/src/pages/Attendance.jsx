@@ -90,6 +90,11 @@ const Attendance = () => {
                 } catch (err) {
                     // Handle error
                     console.error('Error fetching data:', err);
+                    if (err?.response?.data?.message) {
+                        alertCtx.showAlert("danger", err.response.data.message);
+                        return;
+                    }
+                    alertCtx.showAlert("danger", "Error fetching data");
                 }
             }
         };
@@ -116,6 +121,11 @@ const Attendance = () => {
                 setIsActiveAttendance(results);
             } catch (err) {
                 console.error('Error fetching data:', err);
+                if (err?.response?.data?.message) {
+                    alertCtx.showAlert("danger", err.response.data.message);
+                    return;
+                }
+                alertCtx.showAlert("danger", "Error fetching data");
             }
         };
 
@@ -191,6 +201,10 @@ const Attendance = () => {
             alertCtx.showAlert("success", "Attendance Marked");
         } catch (err) {
             console.error('Error marking attendance:', err);
+            if (err?.response?.data?.message) {
+                alertCtx.showAlert("danger", err.response.data.message);
+                return;
+            }
             alertCtx.showAlert("danger", "Error marking attendance");
         } finally {
             setLoad(!load);

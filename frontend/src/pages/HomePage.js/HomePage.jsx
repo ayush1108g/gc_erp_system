@@ -9,20 +9,14 @@ import { PieChart } from 'react-minimal-pie-chart';
 import axios from "axios";
 import { backendUrl } from "../../constant";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router";
-
-// import demopic from "../../assets/demo_profile_photo.png";
-
-
-
-
-
-
+import { PieChart } from 'react-minimal-pie-chart';
+import Modal from "../../component/Modal";
 const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function HomePage() {
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(["AccessToken", "RefreshToken"]);
+  const [cookies] = useCookies(["AccessToken", "RefreshToken"]);
+  const alertCtx = useAlert();
   const LoginCtx = useContext(LoginContext);
   const [todayTimetable, setTodayTimetable] = useState([]);
   const [announcement, setAnnouncement] = useState([]);
@@ -88,7 +82,13 @@ function HomePage() {
             );
             return response.data.data.data[0];
           } catch (err) {
+
             console.log(err);
+            if (err?.response?.data?.message) {
+              alertCtx.showAlert("danger", err.response.data.message);
+              return;
+            }
+            alertCtx.showAlert("danger", "Something went wrong");
           }
         })
       );
@@ -150,6 +150,10 @@ function HomePage() {
       }
       catch (err) {
         console.log(err);
+        if (err?.response?.data?.message) {
+          alertCtx.showAlert("danger", err.response.data.message);
+          return;
+        }
       }
     }
     asyncFunc();
@@ -175,6 +179,10 @@ function HomePage() {
           setAttendance(att);
         } catch (err) {
           console.log(err);
+          if (err?.response?.data?.message) {
+            alertCtx.showAlert("danger", err.response.data.message);
+            return;
+          }
         }
       }
     }
@@ -218,7 +226,10 @@ function HomePage() {
       />
       <div>
         <div>
-          <Navbar />
+          <Navbar
+            handleAttendance={handleAttendance}
+            openModal={openModal}
+          />
           <div className="maincontainer">
             <main className="main">
               <div className="container">

@@ -92,7 +92,7 @@ exports.getCourseFeedback = async (req, res, next) => {
     const course = await Course.findById(courseId);
 
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
 
     // Extract feedback from the course object
@@ -103,7 +103,6 @@ exports.getCourseFeedback = async (req, res, next) => {
     next(error);
   }
 };
-
 
 exports.getAllAssignments = async (req, res, next) => {
   try {
@@ -124,51 +123,60 @@ exports.getAllAssignments = async (req, res, next) => {
 
 exports.enrolCourse = async (req, res, next) => {
   try {
-    const userId = req.user._id; 
-    const courseId = req.params.courseId; 
+    const userId = req.user._id;
+    const courseId = req.params.courseId;
 
     const course = await Course.findById(courseId);
 
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
 
     if (course.students_enrolled.includes(userId)) {
-      return res.status(400).json({ message: 'User is already enrolled in the course' });
+      return res
+        .status(400)
+        .json({ message: "User is already enrolled in the course" });
     }
-    
+
     const enrollmentDate = new Date();
-    
+
     let updatedUser;
-    if(req.user.role === "student"){
+    if (req.user.role === "student") {
       // Update courses_enrolled for student
       updatedUser = await User.findByIdAndUpdate(
         userId,
-        { $push: { courses_enrolled: { course_id: courseId, enrollment_date: enrollmentDate } } },
+        {
+          $push: {
+            courses_enrolled: {
+              course_id: courseId,
+              enrollment_date: enrollmentDate,
+            },
+          },
+        },
         { new: true }
       );
-    } else if(req.user.role === "teacher"){
+    } else if (req.user.role === "teacher" || req.user.role === "admin") {
       // Update courses_taught for teacher
       updatedUser = await User.findByIdAndUpdate(
         userId,
         { $push: { courses_taught: courseId } },
         { new: true }
       );
-      
+
       // Add teacher's name to professor field in course model
       const updatedCourse = await Course.findByIdAndUpdate(
         courseId,
         { $push: { professor: req.user.personal_info.name } },
         { new: true }
       );
-      
+
       if (!updatedCourse) {
-        return res.status(404).json({ message: 'Course not found' });
+        return res.status(404).json({ message: "Course not found" });
       }
     }
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Update students_enrolled for the course
@@ -179,20 +187,21 @@ exports.enrolCourse = async (req, res, next) => {
     );
 
     if (!updatedCourse) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
 
-    res.status(200).json({ message: 'Enrollment successful', user: updatedUser });
+    res
+      .status(200)
+      .json({ message: "Enrollment successful", user: updatedUser });
   } catch (error) {
     next(error);
   }
 };
 
-
 // exports.enrolCourse = async (req, res, next) => {
 //   try {
-//     const userId = req.user._id; 
-//     const courseId = req.params.courseId; 
+//     const userId = req.user._id;
+//     const courseId = req.params.courseId;
 
 //     const course = await Course.findById(courseId);
 
@@ -203,7 +212,7 @@ exports.enrolCourse = async (req, res, next) => {
 //     if (course.students_enrolled.includes(userId)) {
 //       return res.status(400).json({ message: 'User is already enrolled in the course' });
 //     }
-    
+
 //     const enrollmentDate = new Date();
 
 //     if(req.user.role === "student"){
@@ -213,7 +222,7 @@ exports.enrolCourse = async (req, res, next) => {
 //       { new: true }
 //     );
 //     }else if(req.user.role === "teacher"){
-      
+
 //     }
 
 //     if (!updatedUser) {
@@ -234,4 +243,3 @@ exports.enrolCourse = async (req, res, next) => {
 //     next(error);
 //   }
 // };
-

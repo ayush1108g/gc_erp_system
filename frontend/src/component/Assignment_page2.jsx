@@ -5,7 +5,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { MdAssignment } from "react-icons/md";
 import { SlPeople } from "react-icons/sl";
 import { IoSend } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa";
+// import { FaPlus } from "react-icons/fa";
 import axios from "axios";
 import { backendUrl } from "../constant";
 import LoginContext from "../store/context/loginContext";
@@ -16,7 +16,7 @@ import { useAlert } from "../store/context/Alert-context";
 
 const Assignment_page2 = () => {
   const alertCtx = useAlert();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [profile, setProfile] = useState(null);
@@ -24,7 +24,7 @@ const Assignment_page2 = () => {
   const [fileuploading, setFileuploading] = useState(false);
 
   const Loginctx = useContext(LoginContext);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [courseData, setCourseData] = useState(null);
   const [assignmentData, setAssignmentData] = useState(null);
   const [submissions, setSubmissions] = useState([]);
@@ -71,6 +71,11 @@ const Assignment_page2 = () => {
         console.log(Loginctx.user);
       } catch (err) {
         console.log(err);
+        if (err?.response?.data?.message) {
+          alertCtx.showAlert("danger", err.response.data.message);
+          return;
+        }
+        alertCtx.showAlert("danger", "Error Fetching Data");
       }
     };
     fetchData();
@@ -177,6 +182,11 @@ const Assignment_page2 = () => {
       setLoadupdate(!loadupdate);
     } catch (error) {
       console.error("Error posting doubt:", error);
+      if (error.response?.data?.message) {
+        alertCtx.showAlert("danger", error.response.data.message);
+        return;
+      }
+
       alertCtx.showAlert("danger", "Error posting doubt");
     }
   };
@@ -201,6 +211,10 @@ const Assignment_page2 = () => {
       alertCtx.showAlert("success", "Assignment Submitted Successfully");
     } catch (err) {
       console.log(err);
+      if (err.response?.data?.message) {
+        alertCtx.showAlert("danger", err.response.data.message);
+        return;
+      }
       alertCtx.showAlert("danger", "Error Submitting Assignment");
     }
 

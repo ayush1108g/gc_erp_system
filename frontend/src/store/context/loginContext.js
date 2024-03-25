@@ -88,6 +88,7 @@ const LoginContextProvider = (props) => {
     setName: setName,
     setRole: setRole,
     setLoading: setLoading,
+    setIsLoggedIn: setIsLoggedIn,
     setAccessToken: updateAccessToken,
     setRefreshToken: updateRefreshToken,
     login: loginHandler,
