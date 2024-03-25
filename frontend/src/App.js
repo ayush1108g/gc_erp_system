@@ -151,9 +151,14 @@ const RoutesWithAnimation = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/feedback" element={<FeedbackForm />} />
         <Route path="/assignment_upload" element={<Assignment_upload/>} />
-        <Route path="/add_inventory_item" element={<Add_inventory_item/>} />
-        <Route path="/add_courses" element={<Add_courses/>} />
-        <Route path="/add_announcement" element={<Add_announcement/>} />
+        {
+          // Loginctx.user.role==='admin' && 
+          <>
+            <Route path="/add_inventory_item" element={<Add_inventory_item/>} />
+            <Route path="/add_courses" element={<Add_courses/>} />
+            <Route path="/add_announcement" element={<Add_announcement/>} />
+          </>
+        }
         <Route path="/:courseId/assignment_upload" element={<Assignment_upload/>} />
       </Routes>
     </>
