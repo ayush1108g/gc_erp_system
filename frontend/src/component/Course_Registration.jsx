@@ -14,19 +14,6 @@ import image3 from  "../assets/3.jpg"
 import image4 from  "../assets/4.jpg"
 import image0 from  "../assets/0.jpg"
 
-const data = [
-    { "courseName": "Mathematics", "professorName": "Dr. Smith" },
-    { "courseName": "Physics", "professorName": "Prof. Johnson" },
-    { "courseName": "Biology", "professorName": "Dr. Anderson" },
-    { "courseName": "Chemistry", "professorName": "Prof. Wilson" },
-    { "courseName": "English", "professorName": "Dr. Brown" },
-    { "courseName": "History", "professorName": "Prof. Martinez" },
-    { "courseName": "Computer Science", "professorName": "Dr. Thompson" },
-    { "courseName": "Economics", "professorName": "Prof. Garcia" },
-    { "courseName": "Psychology", "professorName": "Dr. Lee" },
-    { "courseName": "Sociology", "professorName": "Prof. Davis" }
-];
-
 const linkarr = [image1,image2,image3,image4,image0]
 
 
@@ -40,30 +27,15 @@ const Courses_Registration = () => {
 
         const fetchdata = async () => {
             try {
-                const resp = await axios.get(backendUrl + '/api/v1/users/update',{
+                const resp = await axios.get(backendUrl + '/api/v1/courses',{
                     headers:{
                         Authorization:`Bearer ${Loginctx.AccessToken}`
                     }
                 });
                 console.log(resp.data);
-                const data = resp.data;
-                const userCoursesIds = data.data.courses_enrolled;
-                console.log("userCoursesIds", userCoursesIds);
-
-                const courseNamePromises = userCoursesIds.map(courseId =>
-                    axios.get(backendUrl + `/api/v1/courses/${courseId.course_id}`, {
-                    headers: {
-                        Authorization: `Bearer ${Loginctx.AccessToken}`
-                    }
-                    }).then(courseResp => courseResp.data.data.data[0])
-                );
-
-                const courseNames = await Promise.all(courseNamePromises);
-                    console.log(courseNames);
-                setCoursesIds(userCoursesIds);
-                setCourses(courseNames);
-
-                return courses;
+                const allCourses = resp.data.data.data;
+                setCourses(allCourses);
+                return allCourses;
             } catch(err) {
                 console.log(err);
             }
@@ -71,16 +43,27 @@ const Courses_Registration = () => {
         fetchdata();
         },[]);
 
-    const assignmentPage = (courseId) => { 
-        navigate(`/${courseId}/assignment`);
-        console.log(courseId);
-    }
+        const registerCourseHandler = async (courseId) => {
+            try {
+                const response = await axios.post(
+                    backendUrl+`/api/v1/courses/${courseId}`,
+                {},
+                {
+                    headers: {
+                    Authorization: `Bearer ${Loginctx.AccessToken}`,
+                    },
+                }
+                );
 
-    const coursePage = (courseId) => { 
-        navigate(`/${courseId}`);
-        console.log(courseId);
-    }
+                console.log(response.data);
+                // Alert.alert("Registration success!");
+                navigate('/my_courses');
+            } catch (error) {
+                console.error('Error registering for the course:', error);
+            }
+            };
 
+    
     return (<div className={classes.Body}>
         <h1 className={classes.title}><FaBookOpen color="Purple" /> &nbsp; Registration</h1>
         <div className={classes.eqp}>
@@ -88,7 +71,7 @@ const Courses_Registration = () => {
                 {courses.map((ele, ind) => {
                     return (<li key={ind}
                     className={classes.listitem} 
-                    onClick={()=>{coursePage(ele._id)}}>
+                    >
                       <img src={linkarr[ind%5]} alt=""
                         style={{
                             minHeight:'150px'
@@ -100,7 +83,7 @@ const Courses_Registration = () => {
                         </div>
                         <div className={classes.listfooter}>
                             <div className={classes.icons}>
-                                <button className={classes.btn}>Register</button>
+                                <button className={classes.btn} onClick={()=>registerCourseHandler(ele._id)}>Register</button>
                             </div>
                         </div>
                     </li>)

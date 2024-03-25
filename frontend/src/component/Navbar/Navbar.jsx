@@ -42,15 +42,20 @@ function Navbar() {
       icon: <MdFeedback />,
     },
     {
+      name: "registration",
+      path: "/registration",
+      icon: <MdFeedback />,
+    },
+    {
       name: "inventory",
       path: "/inventory",
       icon: <MdInventory />,
     },
-    {
-      name: "results",
-      path: "/results",
-      icon: <IoMdDoneAll />,
-    },
+    // {
+    //   name: "results",
+    //   path: "/results",
+    //   icon: <IoMdDoneAll />,
+    // },
     {
       name: "profile",
       path: "/profile",
