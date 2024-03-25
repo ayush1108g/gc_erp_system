@@ -1,6 +1,5 @@
 // const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
 
 // const userSchema = new mongoose.Schema({
 //   name: {
@@ -192,7 +191,8 @@ const userSchema = new Schema({
     gender: String,
     profile_picture: {
       type: String,
-      default: "default.jpg",
+      default:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
   },
   academic_info: {
@@ -223,13 +223,6 @@ const userSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "Course",
-    },
-  ],
-  feedback_given: [
-    // feedback given by the user(student)
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Feedback",
     },
   ],
   equipment_issued: [

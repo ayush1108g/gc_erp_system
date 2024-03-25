@@ -8,6 +8,12 @@ const attendanceRecordSchema = new Schema({
     ref: "User",
     required: true,
   },
+  name: {
+    type: String,
+  },
+  rollNumber: {
+    type: String,
+  },
   status: {
     type: String,
     enum: ["present", "absent"],

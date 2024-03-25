@@ -45,6 +45,8 @@ const courseSchema = new Schema({
       name: String,
       due_date: Date,
       total_marks: Number,
+      description: String,
+      questionFile: String
     },
   ],
   attendance_records: [
@@ -81,9 +83,9 @@ const courseSchema = new Schema({
       submitted_at: {
         type: Date,
         default: Date.now,
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const Course = mongoose.model("Course", courseSchema);

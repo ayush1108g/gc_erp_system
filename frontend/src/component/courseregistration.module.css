@@ -1,0 +1,104 @@
+.Body{
+    display: flex;
+    flex-direction: column;
+   
+}
+
+.title{
+  
+    margin: 1vw;
+    margin-left: 35px;
+
+}
+.eqp{
+    padding: 0px;
+    margin: 0px;
+}
+.list{
+   
+    justify-content: center;
+     list-style: none;
+     display: flex;
+     align-items: center;
+     flex-wrap:wrap;
+     border: 2px solid rgb(205, 204, 204);
+     margin: 20px;
+     margin-bottom: 0px;
+     border-radius: 10px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+ .listitem{
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    width: 300px;
+    height: 250px;
+    border: 2px solid rgb(205, 204, 204);
+    background-color: white ;
+    border-radius: 15px;
+    text-decoration: solid;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
+    font-size:larger;
+    padding: 0px;
+    position: relative;
+ 
+}
+
+.eqp ul li:hover{
+     background-color: rgb(234, 208, 237);
+}
+
+.courceName{
+    margin-top: 10px;
+    margin-left:20px;
+}
+.profName{
+    font-size: medium;
+    margin-left:20px;
+}
+
+
+.listfooter{
+    position: absolute;
+    bottom: 5px;
+    margin-top: 0px;
+    padding: 0px;
+      width: 100%;
+      
+}
+
+.icons{
+   margin-left: 70%;
+    padding: 6px;
+    display: flex;
+    gap: 20px;
+    
+}
+
+.details{
+    border-bottom: 2px solid  rgb(205, 204, 204);
+          height: 80%;
+     
+}
+
+.img{
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   height: 80%;
+   z-index: 1;
+}
+
+
+.btn{
+    border-radius: 8px;
+    margin-right: 100px !important;
+    background-color: rgb(29, 196, 3);
+    font-size: medium;
+    color: white;
+    border: none;
+    padding: 10px;
+}

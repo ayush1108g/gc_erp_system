@@ -35,4 +35,8 @@ router
 
 router.route("/getall").get(userController.getallusers);
 
+router
+  .route("/getalluserstats")
+  .get(authcontroller.protect, userController.getalluserstats);
+
 module.exports = router;

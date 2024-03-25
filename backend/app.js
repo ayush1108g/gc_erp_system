@@ -14,8 +14,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-console.log("app");
-
 const globalErrorHandler = require("./controllers/errorController");
 const authController = require("./controllers/authentication");
 
@@ -26,6 +24,7 @@ const assignmentRouter = require("./routes/assignmentRoutes");
 const assignmentFileRouter = require("./routes/assignmentFileRoutes");
 const inventoryRouter = require("./routes/inventoryRoutes");
 const attendanceRouter = require("./routes/attendanceRoutes");
+const announcementRouter = require("./routes/announcementRoutes");
 
 const AppError = require("./utils/appError");
 
@@ -51,7 +50,7 @@ app.use(
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", [
     // "https://ayush1108g.github.io",
-    "http://localhost:8000",
+    "http://localhost:3000",
   ]);
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -79,12 +78,13 @@ cron.schedule("*/180 * * * * *", async function () {
       console.error("Error ", err.message);
     });
 });
+
 app.get("/", (req, res) => {
-  console.log("/ hi ");
   res.send("Hello");
 });
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/submitAssignment", assignmentFileRouter);
 
 //middleware to check if the user is logged in
 app.use(authController.protect);
@@ -92,9 +92,9 @@ app.use(authController.protect);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/assignments", assignmentRouter);
 app.use("/api/v1/feedback", feedbackRouter);
-app.use("/api/v1/submitAssignment", assignmentFileRouter);
 app.use("/api/v1/inventory", inventoryRouter);
 app.use("/api/v1/attendance", attendanceRouter);
+app.use("/api/v1/announcements", announcementRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

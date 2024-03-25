@@ -29,7 +29,6 @@
   }
   .navbar-item {
     padding: 12px 24px;
-    /* border: 2px solid red; */
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -45,8 +44,4 @@
     background-color: #F3F2FF; /* Change background on hover */
     border:none;
     border-radius: 5px;
-  }
-
-  @media only screen and (max-width:768px){
-    
   }

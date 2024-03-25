@@ -7,15 +7,19 @@ import {
   MdHome,
   MdInfo,
   MdInventory,
+  MdAppRegistration
 } from "react-icons/md";
-
+import { BiLogOut } from "react-icons/bi";
 import { HiAcademicCap } from "react-icons/hi2";
 import { IoMdDoneAll } from "react-icons/io";
-import React from "react";
+import React, { useContext } from "react";
 import iitbbslogo from "../../assets/iitbbs_logo.jpeg";
 import { useNavigate } from "react-router";
+import LoginContext from "../../store/context/loginContext";
 
-function Navbar() {
+
+function Navbar(props) {
+  const LoginCtx = useContext(LoginContext);
   const navigate = useNavigate();
   const navItems = [
     {
@@ -24,13 +28,13 @@ function Navbar() {
       icon: <MdHome />,
     },
     {
-      name: "attendence",
-      path: "/attendence",
+      name: "attendance",
+      path: "/attendance",
       icon: <MdBarChart />,
     },
     {
       name: "courses",
-      path: "/courses",
+      path: "/my_courses",
       icon: <HiAcademicCap />,
     },
     {
@@ -39,34 +43,40 @@ function Navbar() {
       icon: <MdFeedback />,
     },
     {
+      name: "Course_Registration",
+      path: "/registration",
+      icon: <MdAppRegistration />,
+    },
+    {
       name: "inventory",
       path: "/inventory",
       icon: <MdInventory />,
     },
-    {
-      name: "results",
-      path: "/results",
-      icon: <IoMdDoneAll />,
-    },
+    // {
+    //   name: "results",
+    //   path: "/results",
+    //   icon: <IoMdDoneAll />,
+    // },
     {
       name: "profile",
       path: "/profile",
       icon: <MdInfo />,
     },
-    {
-      name: "admin",
-      path: "/admin",
-      icon: <MdAdminPanelSettings />,
-    },
+    // {
+    //   name: "admin",
+    //   path: "/admin",
+    //   icon: <MdAdminPanelSettings />,
+    // },
   ];
   return (
     <div>
-      <div className="navbar">
+      <div className={`navbar ${props.className}`} style={props.style}>
         <div className="iitbbs" onClick={() => navigate("/")}>
           <img src={iitbbslogo} alt="" />
           <h3>IIT BBS</h3>
         </div>
         {navItems.map((item, index) => {
+
           return (
             <div
               className="navbar-item"
@@ -78,6 +88,13 @@ function Navbar() {
             </div>
           );
         })}
+        {LoginCtx.isLoggedIn && <div
+          className="navbar-item"
+          onClick={() => { LoginCtx.logout(); navigate("/login") }}
+        >
+          <div className="icon">{<BiLogOut />}</div>
+          <div className="name">{"Logout"}</div>
+        </div>}
       </div>
     </div>
   );

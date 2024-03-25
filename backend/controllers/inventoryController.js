@@ -2,9 +2,21 @@
 const Equipment = require('../models/inventoryModel');
 const User = require('../models/userModel'); 
 
+exports.getAllInventory = async (req, res, next) => {
+  try {
+    // Retrieve all inventory items
+    const inventoryItems = await Equipment.find();
+
+    res.status(200).json({ inventoryItems });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.addInventoryIssue = async (req, res, next) => {
   try {
-    const { equipmentId, studentId, issued_date } = req.body;
+    const studentId = req.user._id;
+    const { equipmentId, issued_date } = req.body;
 
     // Find the equipment by its ID
     const equipment = await Equipment.findById(equipmentId);
@@ -114,6 +126,21 @@ exports.updateInventoryItem = async (req, res, next) => {
     await equipment.save();
 
     res.status(200).json({ message: 'Inventory item quantities updated successfully', equipment });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getEquipmentById = async (req, res, next) => {
+  try {
+    const equipmentId = req.params.equipmentId;
+    const equipment = await Equipment.findById(equipmentId);
+    if (!equipment) {
+      return res.status(404).json({ message: 'Equipment not found' });
+    }
+
+    
+    res.status(200).json({ equipment });
   } catch (error) {
     next(error);
   }

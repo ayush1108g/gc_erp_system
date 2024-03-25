@@ -21,8 +21,13 @@ exports.createAttendence = catchasync(async (req, res, next) => {
     validtill: validtill || Date.now() + 1000 * 60 * 60,
   });
 
-  Course.attendance_records.push(attendance._id);
-  await Course.save({
+  if (course?.attendance_records && course.attendance_records.length > 0) {
+    course.attendance_records.push(attendance._id);
+  } else {
+    course.attendance_records = [attendance._id];
+  }
+
+  await course.save({
     validateBeforeSave: false,
   });
 
@@ -70,7 +75,12 @@ exports.isActive = catchasync(async (req, res, next) => {
     validtill: { $gt: Date.now() },
   });
   if (!attendance) {
-    return next(new AppError("Attendance is not active", 404));
+    return res.status(200).json({
+      status: "success",
+      data: {
+        isActive: false,
+      },
+    });
   }
   res.status(200).json({
     status: "success",
@@ -90,10 +100,14 @@ exports.markAttendance = catchasync(async (req, res, next) => {
     return next(new AppError("Attendance is expired", 400));
   }
 
+  const name = req.user?.personal_info?.name;
+  const rollNumber = req.user?.personal_info?.rollNumber;
   const student_id = req.user._id;
   const status = req.body.status;
   const attendanceRecord = {
     student_id,
+    name,
+    rollNumber,
     status,
   };
   attendance.attendance_records.push(attendanceRecord);
@@ -106,5 +120,81 @@ exports.markAttendance = catchasync(async (req, res, next) => {
       attendance,
     },
     message: "Attendance marked",
+  });
+});
+
+exports.getAttendancebyCourse = catchasync(async (req, res, next) => {
+  const course_id = req.body.course_id;
+  const attendance = await Attendance.find({ course_id });
+  if (!attendance) {
+    return next(new AppError("Attendance not found", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    length: attendance.length,
+    data: {
+      attendance,
+    },
+  });
+});
+exports.getAttendancePercentStudent = catchasync(async (req, res, next) => {
+  const student_id = req.user._id;
+  const student = req.user;
+
+  // Check if the student is enrolled in any courses
+  if (student.courses_enrolled.length === 0) {
+    return res.status(200).json({
+      status: "success",
+      data: {
+        percentage: 0,
+      },
+    });
+  }
+
+  let totalA = 0; // Total attendance records
+  let presentA = 0; // Attendance records where the student is present
+
+  // Map over each course the student is enrolled in
+  const TotalAttendance = student.courses_enrolled.map(async (course) => {
+    // Find attendance records for the current course
+    const attendance = await Attendance.find({
+      course_id: course.course_id,
+    });
+
+    // If no attendance records found for the course, return 0 attendance
+    if (!attendance || attendance.length === 0) {
+      return 0;
+    }
+
+    // Increment the total attendance records
+    totalA += attendance.length;
+
+    // Loop through each attendance record
+    attendance.forEach((attend) => {
+      // Check if the student's attendance record is present
+      let ps = false;
+      attend.attendance_records.forEach((record) => {
+        if (!ps && record.student_id.toString() === student_id.toString()) {
+          presentA += 1;
+          ps = true;
+        }
+      });
+    });
+
+    // Return the attendance percentage for the current course
+    return presentA / totalA;
+  });
+
+  // Wait for all the attendance percentage calculations to complete
+  const percentage = await Promise.all(TotalAttendance);
+
+  // Send the response with the attendance data
+  res.status(200).json({
+    status: "success",
+    data: {
+      percentage,
+      totalA,
+      presentA,
+    },
   });
 });

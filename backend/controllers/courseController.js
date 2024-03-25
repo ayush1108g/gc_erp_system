@@ -29,7 +29,6 @@ exports.getAllCourses = catchAsync(async (req, res) => {
 
 exports.getCourse = catchAsync(async (req, res, next) => {
   let doc = await Course.find({ _id: req.params.id });
-  // console.log(req.params.id);
   if (!doc) {
     return next(new AppError("No doc found with that ID", 404));
   }
@@ -41,6 +40,7 @@ exports.getCourse = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 exports.createCourse = catchAsync(async (req, res) => {
   const doc = await Course.create(req.body);
   res.status(201).json({
@@ -122,45 +122,116 @@ exports.getAllAssignments = async (req, res, next) => {
   }
 };
 
-exports.enrolCourse = async (req, res) => {
+exports.enrolCourse = async (req, res, next) => {
   try {
-    const userId = req.user._id;
-    const courseId  = req.params.courseId;
+    const userId = req.user._id; 
+    const courseId = req.params.courseId; 
 
-    // Check if the course exists
     const course = await Course.findById(courseId);
+
     if (!course) {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    // Check if the user exists
-    const user = await User.findById(userId);
-    if (!user) {
+    if (course.students_enrolled.includes(userId)) {
+      return res.status(400).json({ message: 'User is already enrolled in the course' });
+    }
+    
+    const enrollmentDate = new Date();
+    
+    let updatedUser;
+    if(req.user.role === "student"){
+      // Update courses_enrolled for student
+      updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { $push: { courses_enrolled: { course_id: courseId, enrollment_date: enrollmentDate } } },
+        { new: true }
+      );
+    } else if(req.user.role === "teacher"){
+      // Update courses_taught for teacher
+      updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { $push: { courses_taught: courseId } },
+        { new: true }
+      );
+      
+      // Add teacher's name to professor field in course model
+      const updatedCourse = await Course.findByIdAndUpdate(
+        courseId,
+        { $push: { professor: req.user.personal_info.name } },
+        { new: true }
+      );
+      
+      if (!updatedCourse) {
+        return res.status(404).json({ message: 'Course not found' });
+      }
+    }
+
+    if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if the user is already enrolled in the course
-    const isEnrolled = course.students_enrolled.some(student => student.equals(userId));
-    if (isEnrolled) {
-      return res.status(400).json({ message: 'User is already enrolled in this course' });
+    // Update students_enrolled for the course
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      { $push: { students_enrolled: userId } },
+      { new: true }
+    );
+
+    if (!updatedCourse) {
+      return res.status(404).json({ message: 'Course not found' });
     }
 
-    // Update the course model to add the user to the enrolled students list
-    course.students_enrolled.push(userId);
-    await course.save();
-
-    user.courses_enrolled.push({
-      course_id: courseId,
-      enrollment_date: new Date(),
-      status: 'enrolled'
-    });
-    await user.save({ validateBeforeSave: false });
-
-    res.status(200).json({ message: 'Enrollment successful', course, user });
+    res.status(200).json({ message: 'Enrollment successful', user: updatedUser });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
+
+// exports.enrolCourse = async (req, res, next) => {
+//   try {
+//     const userId = req.user._id; 
+//     const courseId = req.params.courseId; 
+
+//     const course = await Course.findById(courseId);
+
+//     if (!course) {
+//       return res.status(404).json({ message: 'Course not found' });
+//     }
+
+//     if (course.students_enrolled.includes(userId)) {
+//       return res.status(400).json({ message: 'User is already enrolled in the course' });
+//     }
+    
+//     const enrollmentDate = new Date();
+
+//     if(req.user.role === "student"){
+//     const updatedUser = await User.findByIdAndUpdate(
+//       userId,
+//       { $push: { courses_enrolled: { course_id: courseId, enrollment_date: enrollmentDate } } },
+//       { new: true }
+//     );
+//     }else if(req.user.role === "teacher"){
+      
+//     }
+
+//     if (!updatedUser) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     const updatedCourse = await Course.findByIdAndUpdate(
+//       courseId,
+//       { $push: { students_enrolled: userId } }
+//     );
+
+//     if (!updatedCourse) {
+//       return res.status(404).json({ message: 'Course not found' });
+//     }
+
+//     res.status(200).json({ message: 'Enrollment successful', user: updatedUser });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 

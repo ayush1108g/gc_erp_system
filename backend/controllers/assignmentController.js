@@ -1,15 +1,16 @@
-const Assignment = require('../models/assignmentModel');
-const Student = require('../models/userModel');
-const Course = require('../models/courseModel');
+const Assignment = require("../models/assignmentModel");
+const Student = require("../models/userModel");
+const Course = require("../models/courseModel");
 
 exports.addAssignment = async (req, res, next) => {
   try {
-    const { name, courseId, due_date, total_marks } = req.body;
+    const { name, courseId, due_date, total_marks, questionFile, description } =
+      req.body;
 
     // Check if the course exists
     const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
 
     // Create the assignment
@@ -17,7 +18,9 @@ exports.addAssignment = async (req, res, next) => {
       name,
       courseId,
       due_date,
-      total_marks
+      total_marks,
+      questionFile,
+      description,
     });
 
     // Save the assignment to the database
@@ -28,18 +31,21 @@ exports.addAssignment = async (req, res, next) => {
       assignment_id: assignment._id,
       name,
       due_date,
-      total_marks
+      total_marks,
+      questionFile,
+      description,
     });
 
     // Save the updated course
     await course.save();
 
-    res.status(201).json({ message: 'Assignment added successfully', assignment });
+    res
+      .status(201)
+      .json({ message: "Assignment added successfully", assignment });
   } catch (error) {
     next(error);
   }
 };
-
 
 // Update student grade for an assignment
 exports.updateStudentGrade = async (req, res, next) => {
@@ -49,19 +55,21 @@ exports.updateStudentGrade = async (req, res, next) => {
     // Check if the assignment exists
     const assignment = await Assignment.findById(assignmentId);
     if (!assignment) {
-      return res.status(404).json({ message: 'Assignment not found' });
+      return res.status(404).json({ message: "Assignment not found" });
     }
 
     // Check if the student exists
     const student = await Student.findById(studentId);
     if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
+      return res.status(404).json({ message: "Student not found" });
     }
 
     // Update the student's grade and comments for the assignment
-    const submissionIndex = assignment.submissions.findIndex(submission => submission.studentId.toString() === studentId);
+    const submissionIndex = assignment.submissions.findIndex(
+      (submission) => submission.studentId.toString() === studentId
+    );
     if (submissionIndex === -1) {
-      return res.status(404).json({ message: 'Submission not found' });
+      return res.status(404).json({ message: "Submission not found" });
     }
 
     assignment.submissions[submissionIndex].grade = grade;
@@ -69,7 +77,7 @@ exports.updateStudentGrade = async (req, res, next) => {
 
     await assignment.save();
 
-    res.json({ message: 'Student grade updated successfully', assignment });
+    res.json({ message: "Student grade updated successfully", assignment });
   } catch (error) {
     next(error);
   }
@@ -78,18 +86,20 @@ exports.updateStudentGrade = async (req, res, next) => {
 // Add submission file for an assignment
 exports.addSubmissionFile = async (req, res, next) => {
   try {
-    const { assignmentId, studentId, submissionFile } = req.body;
+    const studentId = req.user._id;
+    const rollNumber = req.user.personal_info.rollNumber;
+    const { assignmentId, submissionFile } = req.body;
 
     // Check if the assignment exists
     const assignment = await Assignment.findById(assignmentId);
     if (!assignment) {
-      return res.status(404).json({ message: 'Assignment not found' });
+      return res.status(404).json({ message: "Assignment not found" });
     }
 
     // Check if the student exists
     const student = await Student.findById(studentId);
     if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
+      return res.status(404).json({ message: "Student not found" });
     }
 
     // // Check if the student is enrolled in the course
@@ -99,13 +109,16 @@ exports.addSubmissionFile = async (req, res, next) => {
     // }
 
     // Find the submission index for the student
-    const submissionIndex = assignment.submissions.findIndex(submission => submission.studentId.equals(studentId));
+    const submissionIndex = assignment.submissions.findIndex((submission) =>
+      submission.studentId.equals(studentId)
+    );
 
     // If the student hasn't submitted yet, add a new submission object
     if (submissionIndex === -1) {
       assignment.submissions.push({
         studentId,
-        submissionFile
+        submissionFile,
+        rollNumber
       });
     } else {
       // If the student has already submitted, update the submission file
@@ -115,7 +128,10 @@ exports.addSubmissionFile = async (req, res, next) => {
     // Save the updated assignment
     await assignment.save();
 
-    res.json({ message: 'Submission file added/updated successfully', assignment });
+    res.json({
+      message: "Submission file added/updated successfully",
+      assignment,
+    });
   } catch (error) {
     next(error);
   }
@@ -124,30 +140,33 @@ exports.addSubmissionFile = async (req, res, next) => {
 // Add doubt to the assignment question file
 exports.addDoubt = async (req, res, next) => {
   try {
-    const { assignmentId, studentId, message } = req.body;
+    const studentId = req.user._id;
+    const student_name = req.user.personal_info.name;
+    const { assignmentId, message } = req.body;
 
     // Check if the assignment exists
     const assignment = await Assignment.findById(assignmentId);
     if (!assignment) {
-      return res.status(404).json({ message: 'Assignment not found' });
+      return res.status(404).json({ message: "Assignment not found" });
     }
 
     // Check if the student exists
     const student = await Student.findById(studentId);
     if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
+      return res.status(404).json({ message: "Student not found" });
     }
 
     // Add the doubt to the assignment
     assignment.doubts.push({
       message,
-      student_id: studentId
+      student_id: studentId,
+      student_name
     });
 
     // Save the updated assignment
     await assignment.save();
 
-    res.json({ message: 'Doubt added successfully', assignment });
+    res.json({ message: "Doubt added successfully", assignment });
   } catch (error) {
     next(error);
   }
@@ -161,17 +180,19 @@ exports.deleteAssignment = async (req, res, next) => {
     // Check if the assignment exists
     const assignment = await Assignment.findById(assignmentId);
     if (!assignment) {
-      return res.status(404).json({ message: 'Assignment not found' });
+      return res.status(404).json({ message: "Assignment not found" });
     }
 
     // Remove the assignment from the Course model
     const courseId = assignment.courseId;
     const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
 
-    const assignmentIndex = course.assignments.findIndex(a => a.assignment_id.equals(assignmentId));
+    const assignmentIndex = course.assignments.findIndex((a) =>
+      a.assignment_id.equals(assignmentId)
+    );
     if (assignmentIndex !== -1) {
       course.assignments.splice(assignmentIndex, 1);
       await course.save();
@@ -180,9 +201,30 @@ exports.deleteAssignment = async (req, res, next) => {
     // Delete the assignment
     await Assignment.findByIdAndDelete(assignmentId);
 
-    res.json({ message: 'Assignment deleted successfully' });
+    res.json({ message: "Assignment deleted successfully" });
   } catch (error) {
     next(error);
+  }
+};
+
+exports.getAssignmentByID = async (req, res) => {
+  const { assignmentId } = req.params;
+
+  try {
+    // Query the database for the assignment by its ID
+    const assignment = await Assignment.findById(assignmentId);
+
+    // Check if the assignment exists
+    if (!assignment) {
+      return res.status(404).json({ message: "Assignment not found" });
+    }
+
+    // If the assignment exists, send it in the response
+    res.status(200).json({ assignment });
+  } catch (error) {
+    // Handle any errors that occur during the database query
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

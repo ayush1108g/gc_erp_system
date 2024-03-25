@@ -25,6 +25,7 @@ exports.signup = catchasync(async (req, res, next) => {
     return next(new AppError("please provide role", 400));
   }
   if (req?.body?.role === "student") {
+    req.body.isApproved = true;
     if (req.body.courses_taught) req.body.courses_taught = [];
 
     if (!req.body?.personal_info?.rollNumber) {
@@ -115,34 +116,51 @@ exports.resetPassword = catchasync(async (req, res, next) => {
   user.password = req.body.password;
   user.resetPasswordToken = undefined;
   user.passwordresetexpired = undefined;
-  await user.save({ validateBeforeSave: true });
+  await user.save({ validateBeforeSave: false });
   authentication.createSendToken(user, 200, res);
 });
 
 exports.updateuser = async (req, res, next) => {
   try {
     const userId = req.user._id; // Extract userId from request parameters
+    const OLDpersonalInfo = req.user.personal_info;
+
     const updateFields = req.body; // Get the fields to update from request body
 
     console.log(updateFields);
     // Extract only the allowed fields to update
-    const allowedFields = ['personal_info'];
-    const filteredUpdateFields = Object.keys(updateFields)
-      .filter(key => allowedFields.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = updateFields[key];
-        return obj;
-      }, {});
+    //   let filteredUpdateFields;
+    //  if (updateFields.personal_info) {
+    //     // Extract only the allowed fields to update
+    //     const allowedFields = ['personal_info'];
+    //     filteredUpdateFields = Object.keys(updateFields)
+    //       .filter(key => allowedFields.includes(key))
+    //       .reduce((obj, key) => {
+    //         obj[key] = updateFields[key];
+    //         return obj;
+    //       }, {});
 
-      console.log(filteredUpdateFields);
+    //     console.log(filteredUpdateFields);
+    //   }
+
+    const filteredUpdateFields = {
+      personal_info: {
+        ...OLDpersonalInfo,
+        ...updateFields.personal_info,
+      },
+    };
+    console.log(filteredUpdateFields);
+
     // Find the user by ID and update only allowed fields
-    const user = await User.findByIdAndUpdate(userId, filteredUpdateFields, { new: true });
+    const user = await User.findByIdAndUpdate(userId, filteredUpdateFields, {
+      new: true,
+    });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ message: 'User updated successfully', user });
+    res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     next(error);
   }
@@ -161,14 +179,12 @@ exports.updatepass = catchasync(async (req, res) => {
 
 exports.getuserbyid = catchasync(async (req, res) => {
   const user = req.user;
-  const userData = {
-    name: user.name,
-    email: user.email,
-    address: user.address,
-  };
+
+  user.password = undefined;
+
   res.status(200).json({
     status: "success",
-    data: userData,
+    data: user,
   });
 });
 
@@ -203,6 +219,32 @@ exports.deleteUser = catchasync(async (req, res) => {
   user.isActive = false;
   await user.save();
   authentication.createSendToken(user, 200, res);
+});
+
+exports.getalluserstats = catchasync(async (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return next(new AppError("You are not authorized to get user stats", 401));
+  }
+  try {
+    const stats = await User.aggregate([
+      //find no of users in each role
+      {
+        $group: {
+          _id: "$role",
+          numUsers: { $sum: 1 },
+        },
+      },
+    ]);
+    res.status(200).json({
+      status: "success",
+      data: stats,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
 });
 
 exports.getallusers = async (req, res) => {
