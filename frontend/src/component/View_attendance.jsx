@@ -32,6 +32,10 @@ const View_attendance = () => {
                 setCourseData(response.data.data.data[0]);
             } catch (err) {
                 console.log(err);
+                if (err?.response?.data?.message) {
+                    Alertctx.showAlert("danger", err.response.data.message);
+                    return;
+                }
                 Alertctx.showAlert("danger", "Error Fetching Data");
             }
         };
@@ -73,6 +77,9 @@ const View_attendance = () => {
 
             } catch (err) {
                 console.log(err);
+                if (err?.response?.data?.message) {
+                    return Alertctx.showAlert("danger", err.response.data.message);
+                }
                 Alertctx.showAlert("danger", "Error Fetching Data");
             }
         };
@@ -139,9 +146,13 @@ const View_attendance = () => {
                     Authorization: `Bearer ${Loginctx.AccessToken}`
                 }
             });
+            console.log(response);
             Alertctx.showAlert("success", "Attendance Created Successfully");
         } catch (err) {
             console.log(err);
+            if (err?.response?.data?.message) {
+                return Alertctx.showAlert("danger", err.response.data.message);
+            }
             Alertctx.showAlert("danger", "Error Creating Attendance");
         }
     };

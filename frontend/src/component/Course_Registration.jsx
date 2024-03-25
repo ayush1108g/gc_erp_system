@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import classes from "./courseregistration.module.css"
 import { FaBookOpen } from "react-icons/fa";
-import { MdAssignment } from "react-icons/md";
-import { BsPersonRaisedHand } from "react-icons/bs";
+// import { MdAssignment } from "react-icons/md";
+// import { BsPersonRaisedHand } from "react-icons/bs";
 import axios from 'axios';
 import { backendUrl } from "../constant";
 import { useNavigate } from "react-router"
@@ -22,7 +22,7 @@ const Courses_Registration = () => {
     const alertCtx = useAlert();
     const navigate = useNavigate();
     const Loginctx = useContext(LoginContext);
-    const [coursesIds, setCoursesIds] = useState([]);
+    // const [coursesIds, setCoursesIds] = useState([]);
     const [courses, setCourses] = useState([]);
 
     useEffect(() => {
@@ -62,7 +62,7 @@ const Courses_Registration = () => {
                 }
             );
 
-            alertCtx.shxowAlert("success", "Registration success!");
+            alertCtx.showAlert("success", "Registration success!");
             console.log(response.data);
             // Alert.alert("Registration success!");
             navigate('/my_courses');

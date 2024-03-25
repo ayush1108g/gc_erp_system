@@ -45,8 +45,10 @@ const ForgotPassPage = () => {
       } else {
         setErrormsg("Something went wrong. Please try again");
       }
+    } finally {
+
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const animateVariants = {

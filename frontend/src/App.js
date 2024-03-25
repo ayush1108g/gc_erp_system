@@ -1,7 +1,7 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 
 import { useCookies } from "react-cookie";
@@ -58,8 +58,14 @@ const RoutesWithAnimation = () => {
       try {
         const token = AccessToken;
         const response = await verifyToken(token);
+        console.log(response);
         if (response?.isLoggedin === true) {
-          authCtx.login(token, cookie?.RefreshToken, response?.name);
+          // authCtx.login(token, cookie?.RefreshToken, response?.name);
+          authCtx.setAccessToken(token);
+          authCtx.setRefreshToken(cookie?.RefreshToken);
+          authCtx.setIsLoggedIn(true);
+          authCtx.setName(response?.name);
+          authCtx.setLoading(false);
         }
       } catch (err) {
         if (
@@ -81,7 +87,7 @@ const RoutesWithAnimation = () => {
       if (authCtx.isLoggedIn === false) {
         navigate("/login");
       }
-    }, 2000);
+    }, 1000);
   }, [authCtx.isLoggedIn]);
 
   useEffect(() => {
