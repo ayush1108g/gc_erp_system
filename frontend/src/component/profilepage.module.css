@@ -14,14 +14,9 @@
 .h2 {
   background: transparent;
 }
-<<<<<<< HEAD
 .body{
   background: radial-gradient(circle at 10% 20%, rgb(186, 190, 245) 0%, rgb(192, 192, 245) 33.1%, rgb(218, 203, 246) 90%);
     
-=======
-.body {
-  background: linear-gradient(135deg, #7edcb8, #fbb362);
->>>>>>> e57183b28ca0b19c8842317ff8084d47c186c1e5
 }
 .circularBox {
   width: 12vw;

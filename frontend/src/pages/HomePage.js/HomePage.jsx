@@ -5,13 +5,22 @@ import React, { useContext, useEffect, useState } from "react";
 import LoginContext from "../../store/context/loginContext";
 import Modal from "../../component/Modal";
 import Navbar from "../../component/Navbar/Navbar";
-import { PieChart } from 'react-minimal-pie-chart';
+import { PieChart } from "react-minimal-pie-chart";
 import axios from "axios";
 import { backendUrl } from "../../constant";
+import { useAlert } from "../../store/context/Alert-context";
 import { useCookies } from "react-cookie";
-import { PieChart } from 'react-minimal-pie-chart';
-import Modal from "../../component/Modal";
-const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+import { useNavigate } from "react-router-dom";
+
+const day = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 function HomePage() {
   const navigate = useNavigate();
@@ -82,7 +91,6 @@ function HomePage() {
             );
             return response.data.data.data[0];
           } catch (err) {
-
             console.log(err);
             if (err?.response?.data?.message) {
               alertCtx.showAlert("danger", err.response.data.message);
@@ -105,19 +113,15 @@ function HomePage() {
         let ifToday = schedule.map((obj) => {
           if (obj.day === day[today]) {
             return obj;
-          }
-          else
-            return null;
-        })
+          } else return null;
+        });
         ifToday = ifToday.filter((obj) => obj !== null);
 
         // console.log(ifToday);
         if (ifToday.length !== 0) {
           course.schedule = ifToday;
           return course;
-        }
-        else
-          return null;
+        } else return null;
       });
       // console.log(todayTimetable);
 
@@ -125,9 +129,7 @@ function HomePage() {
       todayTimetable = todayTimetable.filter((course) => course !== null);
       console.log(todayTimetable);
       setTodayTimetable(Array.from(new Set(todayTimetable)));
-
-    }
-
+    };
 
     asyncFunc1();
   }, [LoginCtx]);
@@ -144,18 +146,17 @@ function HomePage() {
         const data = resp.data.announcements;
         data.sort((a, b) => {
           return new Date(b.date) - new Date(a.date);
-        }) // sort by date in descending order
+        }); // sort by date in descending order
 
         setAnnouncement(data);
-      }
-      catch (err) {
+      } catch (err) {
         console.log(err);
         if (err?.response?.data?.message) {
           alertCtx.showAlert("danger", err.response.data.message);
           return;
         }
       }
-    }
+    };
     asyncFunc();
   }, []);
 
@@ -163,18 +164,21 @@ function HomePage() {
     const asyncFunc = async () => {
       if (LoginCtx.role === "student") {
         try {
-          const resp = await axios.get(`${backendUrl}/api/v1/attendance/getpercent`, {
-            headers: {
-              Authorization: `Bearer ${cookies.AccessToken}`,
-            },
-          });
+          const resp = await axios.get(
+            `${backendUrl}/api/v1/attendance/getpercent`,
+            {
+              headers: {
+                Authorization: `Bearer ${cookies.AccessToken}`,
+              },
+            }
+          );
           console.log(resp);
           const data = resp.data.data;
           const att = {
             total: data.totalA,
             present: data.presentA,
             absent: data.totalA - data.presentA,
-          }
+          };
           console.log(att);
           setAttendance(att);
         } catch (err) {
@@ -185,18 +189,17 @@ function HomePage() {
           }
         }
       }
-    }
+    };
     asyncFunc();
   }, [LoginCtx.user]);
 
   const handleAttendance = () => {
-    if (LoginCtx.role === 'student') {
-      navigate('/attendance');
-    }
-    else {
+    if (LoginCtx.role === "student") {
+      navigate("/attendance");
+    } else {
       openModal("attendance");
     }
-  }
+  };
 
   const openModal = (route) => {
     setModalData(route);
@@ -204,17 +207,17 @@ function HomePage() {
   };
 
   const openMyCoursesPage = () => {
-    navigate('/my_courses');
+    navigate("/my_courses");
   };
 
   const closeModal = () => {
     setModalisOpen(false);
     setModalData(null);
-  }
+  };
 
   const openProfilePage = () => {
-    navigate('/profile');
-  }
+    navigate("/profile");
+  };
   // console.log(LoginCtx.user);
   return (
     <>
@@ -226,10 +229,7 @@ function HomePage() {
       />
       <div>
         <div>
-          <Navbar
-            handleAttendance={handleAttendance}
-            openModal={openModal}
-          />
+          <Navbar handleAttendance={handleAttendance} openModal={openModal} />
           <div className="maincontainer">
             <main className="main">
               <div className="container">
@@ -239,28 +239,30 @@ function HomePage() {
                   </div>
                   <div className="header-profile" onClick={openProfilePage}>
                     <p>{LoginCtx.role}</p>
-                    <img src={LoginCtx?.user?.personal_info?.profile_picture} alt="profile_photo" />
+                    <img
+                      src={LoginCtx?.user?.personal_info?.profile_picture}
+                      alt="profile_photo"
+                    />
                     <p>{LoginCtx.name}</p>
                   </div>
                 </header>
                 <section className="today-timetable">
                   <h2>Today's Timetable</h2>
                   <div className="items">
-
-                    {
-                      todayTimetable.map((course, index) => {
-                        if (course === null) {
-                          return null;
-                        }
-                        return (
-                          <div className="timetable-card" key={index}>
-                            <div className="time">{course.schedule[0].time}</div>
-                            <div className="subject">{course.name}</div>
-                            <div className="topic-name">{course.professor[0]}</div>
+                    {todayTimetable.map((course, index) => {
+                      if (course === null) {
+                        return null;
+                      }
+                      return (
+                        <div className="timetable-card" key={index}>
+                          <div className="time">{course.schedule[0].time}</div>
+                          <div className="subject">{course.name}</div>
+                          <div className="topic-name">
+                            {course.professor[0]}
                           </div>
-                        );
-                      })
-                    }
+                        </div>
+                      );
+                    })}
                     {/* <div className="timetable-card">
                     <div className="time">9:00 AM - 10:00 AM</div>
                     <div className="subject">DBMS</div>
@@ -272,29 +274,40 @@ function HomePage() {
                   <section className="materiais">
                     <h2>Materials</h2>
                     <div className="materiais-grid">
-                      <div className="materiais-card" onClick={openMyCoursesPage}>
+                      <div
+                        className="materiais-card"
+                        onClick={openMyCoursesPage}
+                      >
                         <h3>Courses</h3>
                         <p>This Semester</p>
                       </div>
-                      <div className="materiais-card"
+                      <div
+                        className="materiais-card"
                         onClick={() => handleAttendance()}
                       >
                         <h3>Attendance</h3>
-                        <p>This Semester: &nbsp;
-                          {Attendance.total === 0 ? 0 : (Attendance.present / Attendance.total) * 100} %
+                        <p>
+                          This Semester: &nbsp;
+                          {Attendance.total === 0
+                            ? 0
+                            : (Attendance.present / Attendance.total) *
+                              100}{" "}
+                          %
                         </p>
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}>
-                          <div style={{
-                            maxWidth: '150px',
-                            maxHeight: '200px',
-                          }}>
-
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <div
+                            style={{
+                              maxWidth: "150px",
+                              maxHeight: "200px",
+                            }}
+                          >
                             <PieChart
-
                               startAngle={-90}
                               lengthAngle={-360}
                               lineWidth={50}
@@ -303,39 +316,44 @@ function HomePage() {
                                 if (dataEntry.value === 0) {
                                   return null;
                                 }
-                                return `${dataEntry.title}: ${dataEntry.value}`
+                                return `${dataEntry.title}: ${dataEntry.value}`;
                               }}
                               labelStyle={{
-                                fontSize: '8px',
-                                fontFamily: 'sans-serif',
-                                fill: '#121212',
+                                fontSize: "8px",
+                                fontFamily: "sans-serif",
+                                fill: "#121212",
                                 // color: 'cyan'
                               }}
                               labelPosition={50}
                               data={[
                                 {
-                                  title: 'Present',
+                                  title: "Present",
                                   value: Attendance.present,
                                   // value: 7,
-                                  color: '#D2DAFF'
+                                  color: "#D2DAFF",
                                 },
-                                { title: 'Absent', value: Attendance.absent, color: '#B1B2FF' },
+                                {
+                                  title: "Absent",
+                                  value: Attendance.absent,
+                                  color: "#B1B2FF",
+                                },
                               ]}
                             />
                           </div>
                         </div>
                         <p>Total : {Attendance.total}</p>
-
                       </div>
 
-                      <div className="materiais-card"
+                      <div
+                        className="materiais-card"
                         onClick={() => openModal("assignment")}
                       >
                         <h3>Assignment Completion</h3>
                         <p>This Semester</p>
                       </div>
 
-                      <div className="materiais-card"
+                      <div
+                        className="materiais-card"
                         onClick={() => openModal("feedback")}
                       >
                         <h3>Feedback</h3>
@@ -346,18 +364,14 @@ function HomePage() {
                   <section className="update">
                     <h2>Recent Updates</h2>
                     <div className="update-items">
-                      {
-                        announcement.map((item, index) => {
-                          return (
-                            <li key={index}>{item.time}
-                              <p>
-
-                                {item.message}
-                              </p>
-                            </li>
-                          );
-                        })
-                      }
+                      {announcement.map((item, index) => {
+                        return (
+                          <li key={index}>
+                            {item.time}
+                            <p>{item.message}</p>
+                          </li>
+                        );
+                      })}
                     </div>
                   </section>
                 </main>
@@ -365,12 +379,8 @@ function HomePage() {
             </main>
           </div>
         </div>
-
-
-
       </div>
     </>
-
   );
 }
 
