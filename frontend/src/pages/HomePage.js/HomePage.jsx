@@ -332,14 +332,14 @@ function HomePage() {
                         onClick={() => handleAttendance()}
                       >
                         <h3>Attendance</h3>
-                        <p>
+                        {LoginCtx?.role === "student" && <p>
                           This Semester: &nbsp;
                           {Attendance.total === 0
                             ? 0
                             : (Attendance.present / Attendance.total) *
                             100}{" "}
                           %
-                        </p>
+                        </p>}
                         <div
                           style={{
                             display: "flex",
@@ -387,14 +387,14 @@ function HomePage() {
                             />
                           </div>
                         </div>
-                        <p>Total : {Attendance.total}</p>
+                        {LoginCtx?.role === "student" && <p>Total : {Attendance.total}</p>}
                       </div>
 
                       <div
                         className="materiais-card"
                         onClick={() => openModal("assignment")}
                       >
-                        <h3>Assignment Completion</h3>
+                        <h3>Assignment</h3>
                         <p>This Semester</p>
                       </div>
 

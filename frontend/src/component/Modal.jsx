@@ -38,6 +38,9 @@ const ModalA = (props) => {
         else if (props.data === "attendance") {
             props.close(false);
             navigate(`/attendance/admin/${selectedCourse}`);
+        } else if (props.data === "assignment") {
+            props.close(false);
+            navigate(`/my_courses/${selectedCourse}/assignments`);
         }
     }
 
