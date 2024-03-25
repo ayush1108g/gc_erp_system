@@ -26,6 +26,7 @@ import ProfilePage from "./component/Profile_page";
 import Errorpage from "./pages/Errorpage";
 import HomePage from "./pages/HomePage.js/HomePage";
 import Assignment_upload from "./component/Assignment_upload";
+import Add_inventory_item from "./component/Add_inventory_item";
 
 // import Feedback_form from "./component/Feedback_form";
 // import Inventory_Page from "./component/Inventory_page";
@@ -42,6 +43,8 @@ import ForgotPassPage from "./pages/ForgotPass/ForgotPassPage";
 import ForgotPassIDPage from "./pages/ForgotPass/ForgotPassIDPage";
 import ForgotPassConfirmPage from "./pages/ForgotPass/ForgotPassConfirmPage";
 import Attendance from "./pages/Attendance";
+import Add_courses from "./component/Add_courses";
+import Add_announcement from "./component/Add_announcement";
 
 const RoutesWithAnimation = () => {
   const location = useLocation();
@@ -148,6 +151,9 @@ const RoutesWithAnimation = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/feedback" element={<FeedbackForm />} />
         <Route path="/assignment_upload" element={<Assignment_upload/>} />
+        <Route path="/add_inventory_item" element={<Add_inventory_item/>} />
+        <Route path="/add_courses" element={<Add_courses/>} />
+        <Route path="/add_announcement" element={<Add_announcement/>} />
       </Routes>
     </>
   );
