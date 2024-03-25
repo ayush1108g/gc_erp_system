@@ -11,7 +11,7 @@ import { backendUrl } from "../../constant";
 import { useAlert } from "../../store/context/Alert-context";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-
+import classes from '../../component/admindashboard.module.css';
 import { MdArrowBackIosNew } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 
@@ -43,6 +43,12 @@ function HomePage() {
     present: 0,
     absent: 0,
   });
+
+  useEffect(() => {
+    if (LoginCtx.role === 'admin') {
+      navigate('/admin');
+    }
+  }, [LoginCtx, navigate]);
 
   console.log(day[today]);
   // useEffect(() => {
@@ -237,10 +243,42 @@ function HomePage() {
       />
       <div>
         <div>
-          <Navbar handleAttendance={handleAttendance} openModal={openModal} />
+          <div className={classes.navbar}
+            style={{
+              width: isSidebarOpen ? '200px' : '20px'
+            }}
+          >
+
+            <Navbar className={classes.navbar2}
+              style={{
+                width: isSidebarOpen ? '200px' : '0px',
+                display: isSidebarOpen ? 'block' : 'none'
+              }}
+              handleAttendance={handleAttendance}
+              openModal={openModal} />
+
+            <div className={classes.icon}
+              style={{
+                left: isSidebarOpen ? '203px' : '5px',
+                zIndex: 10
+              }}
+              onClick={handleSidebar}
+            >
+              {isSidebarOpen && <MdArrowBackIosNew />}
+              {!isSidebarOpen && <>
+                <MdArrowForwardIos style={{ boxShadow: "0 0 10px #00ff00" }} />
+                <MdArrowForwardIos style={{ boxShadow: "0 0 10px #00ff00" }} />
+              </>}
+            </div>
+          </div>
           <div className="maincontainer">
             <main className="main">
-              <div className="container">
+              <div className="container"
+                style={{
+                  left: isSidebarOpen ? '200px' : '0px',
+                  // width: isSidebarOpen ? 'calc(100% - 50px)' : '100%'
+                }}
+              >
                 <header className="header">
                   <div className="header-text">
                     <h1>Welcome,👋🏽</h1>

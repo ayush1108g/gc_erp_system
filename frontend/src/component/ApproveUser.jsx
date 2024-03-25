@@ -36,23 +36,23 @@ const ApproveUser = () => {
     const Loginctx = useContext(LoginContext);
     const [data, setData] = useState([]);
     const [message, setMessage] = useState('Loading...');
-    const [approve,setapprove] = useState(false); 
+    const [approve, setapprove] = useState(false);
 
-    useEffect(()=>{
-        const fetch = async ()=>{
-            try{
+    useEffect(() => {
+        const fetch = async () => {
+            try {
                 const resp = await axios.get(backendUrl + "/api/v1/users/tobeapproved",
-                {
-                    headers: {
-                        Authorization: `Bearer ${Loginctx?.AccessToken}`,
-                    },
-                })
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Loginctx?.AccessToken}`,
+                        },
+                    })
                 console.log(resp);
                 setData(resp.data.data);
                 setMessage('');
-            }catch(err){
+            } catch (err) {
                 console.log(err);
-                 if (err?.response?.data?.message) {
+                if (err?.response?.data?.message) {
                     alertCtx.showAlert("danger", err.response.data.message);
                     return;
                 }
@@ -61,28 +61,30 @@ const ApproveUser = () => {
         }
         fetch();
 
-    },[Loginctx]);
+    }, [Loginctx, approve]);
 
-  const approveHandler = async(id)=>{
-    console.log(Loginctx?.AccessToken);
-    try{
-        const resp = await axios.patch(backendUrl + "/api/v1/users/approve/" + id,
-         {
+    const approveHandler = async (id) => {
+        console.log(Loginctx?.AccessToken);
+        console.log(id);
+        console.log(backendUrl + "/api/v1/users/approve/" + id);
+        try {
+            const resp = await axios.get(backendUrl + "/api/v1/users/approve/" + id,
+                {
                     headers: {
                         Authorization: `Bearer ${Loginctx?.AccessToken}`,
                     },
                 })
-        setapprove(!approve);
-        alertCtx.showAlert("success","approved");
-    }catch(err){
-         console.log(err);
+            setapprove(!approve);
+            alertCtx.showAlert("success", "approved");
+        } catch (err) {
+            console.log(err);
             if (err?.response?.data?.message) {
-            alertCtx.showAlert("danger", err.response.data.message);
-            return;
+                alertCtx.showAlert("danger", err.response.data.message);
+                return;
+            }
+            alertCtx.showAlert("danger", "Something went wrong");
         }
-        alertCtx.showAlert("danger", "Something went wrong");
     }
-  }
 
     return (<div className={classes.Body}>
         <h1 className={classes.title}><FaBookOpen color="Purple" /> &nbsp; Approve Users</h1>
@@ -92,25 +94,25 @@ const ApproveUser = () => {
                 {data.map((ele, ind) => {
                     return (<li key={ind}
                         className={classes.listitem}
-                        >
+                    >
                         <img src={ele?.personal_info?.profile_picture} alt=""
                             style={{
-                                minHeight: '150px'
+                                minHeight: '120px'
                             }}
                         />
-                        <div className={classes.details} >
-                            <h4 className={classes.courceName}>{ele?.personal_info?.name}</h4>
+                        <div className={classes.details1} >
+                            <p className={classes.courceName}>{ele?.personal_info?.name}</p>
                             <p className={classes.profName}>{ele?.role}</p>
-                             <p className={classes.profName}>{ele?.email}</p>
-                             <p className={classes.profName}>{ele?.phoneNumber}</p>
+                            <p className={classes.profName}>{ele?.email}</p>
+                            <p className={classes.profName}>{ele?.phoneNumber}</p>
                         </div>
                         <div className={classes.listfooter}>
                             <div className={classes.icons}>
-                                 <button class="btn btn-primary" onClick={()=>approveHandler(ele._id)}>Approve</button>
+                                <button class="btn btn-primary" onClick={() => approveHandler(ele._id)}>Approve</button>
                             </div>
                         </div>
                     </li>)
-                })} 
+                })}
             </ul>
         </div>
     </div>)

@@ -30,6 +30,38 @@ const AdminDashBoard = () => {
     const date = new Date();
     const today = date.getDay();
 
+    const [erpstats, setErpstats] = useState([]);
+
+
+    useEffect(() => {
+        if (LoginCtx.role !== 'admin') {
+            navigate('/');
+        }
+    }, [LoginCtx, navigate]);
+
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+
+                const resp = await axios.get(`${backendUrl}/api/v1/users/getalluserstats`, {
+                    headers: {
+                        Authorization: `Bearer ${cookies.AccessToken}`,
+                    },
+                });
+                console.log(resp.data.data);
+                setErpstats(resp.data.data);
+            } catch (err) {
+                console.log(err);
+                if (err?.response?.data?.message) {
+                    alertCtx.showAlert("danger", err.response.data.message);
+                    return;
+                }
+                alertCtx.showAlert("danger", "Something went wrong");
+            }
+        }
+        fetch();
+    }, [LoginCtx])
+
     useEffect(() => {
         const asyncFunc1 = async () => {
             if (LoginCtx.user === null) {
@@ -217,12 +249,15 @@ const AdminDashBoard = () => {
                     onClick={handleSidebar}
                 >
                     {isSidebarOpen && <MdArrowBackIosNew />}
-                    {!isSidebarOpen && <MdArrowForwardIos />}
+                    {!isSidebarOpen && <>
+                        <MdArrowForwardIos style={{ boxShadow: "0 0 10px #00ff00" }} />
+                        <MdArrowForwardIos style={{ boxShadow: "0 0 10px #00ff00" }} />
+                    </>}
                 </div>
             </div>
             <div className={classes.content}
                 style={{
-                    width: isSidebarOpen ? '87vw' : '100vw'
+                    width: isSidebarOpen ? 'calc(100vw - 200px)' : '100vw'
                 }}
             >
                 <header className="header">
@@ -257,25 +292,87 @@ const AdminDashBoard = () => {
                             </ul>
                         </div>
                         <div className={classes.box1}>
-                                
+
+                            <div
+                                style={{
+                                    display: "flex",
+                                    // alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <h3>Stats</h3>
+                                <div
+                                    style={{
+                                        maxWidth: "150px",
+                                        maxHeight: "200px",
+                                    }}
+                                >
+                                    <PieChart
+                                        startAngle={-90}
+                                        lengthAngle={-360}
+                                        lineWidth={50}
+                                        // segmentsShift={(index) => (index === 0 ? 10 : 0)}
+                                        label={({ dataEntry }) => {
+                                            console.log(dataEntry)
+                                            if (dataEntry?.value === 0) {
+                                                return null;
+                                            }
+                                            return `${dataEntry?.title}: ${dataEntry?.value}`;
+                                        }}
+                                        labelStyle={{
+                                            fontSize: "8px",
+                                            fontFamily: "sans-serif",
+                                            fill: "#121212",
+                                            // color: 'cyan'
+                                        }}
+                                        labelPosition={50}
+                                        data={[
+                                            {
+                                                title: erpstats[0]?._id,
+                                                value: erpstats[0]?.numUsers,
+                                                // value: 7,
+                                                color: "#E1AFD1",
+                                            },
+                                            {
+                                                title: erpstats[1]?._id,
+                                                value: erpstats[1]?.numUsers,
+                                                // value: 7,
+                                                color: "#AD88C6",
+                                            },
+                                            {
+                                                title: erpstats[2]?._id,
+                                                value: erpstats[2]?.numUsers,
+                                                // value: 7,
+                                                color: "#7469B6",
+                                            },
+
+                                            // {
+                                            //   title: "Absent",
+                                            //   value: Attendance.absent,
+                                            //   color: "#B1B2FF",
+                                            // },
+                                        ]}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div className={classes.box1} onClick={()=>openApproveUser()}>
-                                Approve Users
+                        <div className={classes.box1} onClick={() => openApproveUser()}>
+                            Approve Users
                         </div>
 
                     </div>
                     <div className={classes.parent1}>
-                        <div onClick={()=>openAddCourse()}>
+                        <div onClick={() => openAddCourse()}>
                             Add Courses
                         </div>
-                        <div onClick={()=>openAddAnnouncements()}>
+                        <div onClick={() => openAddAnnouncements()}>
                             Add Anouncements
                         </div>
-                        <div onClick={()=>openAddEquipment()}>
+                        <div onClick={() => openAddEquipment()}>
                             Add SAC Items
                         </div>
-                        <div onClick={()=>openAllCourses()}>
-                            View All Courses 
+                        <div onClick={() => openAllCourses()}>
+                            View All Courses
                         </div>
                     </div>
 

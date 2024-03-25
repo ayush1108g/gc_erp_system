@@ -146,7 +146,7 @@ const Attendance = () => {
             const distance = Math.sqrt((position.coords.latitude - location.lat) ** 2 + (position.coords.longitude - location.long) ** 2);
             console.log(distance);
             //distance in km
-            if (distance > 0.2) {
+            if (distance > 0.1) { // 100 m check
                 console.log("You are not in the location");
                 alertCtx.showAlert("danger", "You are not in the location");
                 return;

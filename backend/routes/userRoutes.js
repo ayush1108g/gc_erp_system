@@ -31,7 +31,7 @@ router
 
 router
   .route("/approve/:id")
-  .patch(authcontroller.protect, userController.approveuser);
+  .get(authcontroller.protect, userController.approveuser);
 
 router.route("/getall").get(userController.getallusers);
 

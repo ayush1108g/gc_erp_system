@@ -338,8 +338,8 @@ const Assignment_page2 = () => {
                   <a href={yourSubmission?.submissionFile}
                     target="_blank" rel="noopener noreferrer"
                   >Submitted File</a>
-                  <div>{yourSubmission?.grade}</div>
-                  <div>{yourSubmission?.comments}</div>
+                  <div>Grade: {yourSubmission?.grade}</div>
+                  <div>Teacher's comment: {yourSubmission?.comments}</div>
                   {/* <div>yourSubmission.comments</div> */}
                 </div>
               </div>

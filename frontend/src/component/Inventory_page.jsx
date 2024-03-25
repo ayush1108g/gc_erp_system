@@ -17,7 +17,7 @@ import image9 from "../assets/9.jpg"
 //     {name:"Table tennis"}
 // ] ;
 
-const imgarr = [image5,image9,image7,image8,image6]
+const imgarr = [image5, image9, image7, image8, image6]
 
 const Invenotory_Page = () => {
 
@@ -58,16 +58,16 @@ const Invenotory_Page = () => {
     return (<div className={classes.Body}>
         <h1 className={classes.title}>Welcome to SAC Inventory</h1>
         <div className={classes.eqp}>
-            <h5 style={{ margin: '30px' , marginLeft:'10%'}}> <FaPlus color="blue" /> Add Equipment</h5>
+            {Loginctx?.role === 'admin' && <h5 style={{ margin: '30px', marginLeft: '10%' }}> <FaPlus color="blue" /> Add Equipment</h5>}
             <ul>
                 {data.map((ele, ind) => {
                     return (<li onClick={() => openInvetoryForm(ele._id)} key={ind}>
-                           <img src={imgarr[ind%5]} alt="" className={classes.img}/>
-                        
+                        <img src={imgarr[ind % 5]} alt="" className={classes.img} />
+
                         <div className={classes.name}>
-                        {ele.equipment_name}
+                            {ele.equipment_name}
                         </div>
-                        </li>)
+                    </li>)
                 })}
             </ul>
         </div>
