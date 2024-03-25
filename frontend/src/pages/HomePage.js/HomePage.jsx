@@ -195,6 +195,10 @@ function HomePage() {
     setModalisOpen(false);
     setModalData(null);
   }
+
+  const openProfilePage = () => {
+    navigate('/profile');
+  }
   // console.log(LoginCtx.user);
   return (
     <>
@@ -215,7 +219,7 @@ function HomePage() {
                   <div className="header-text">
                     <h1>Welcome,👋🏽</h1>
                   </div>
-                  <div className="header-profile">
+                  <div className="header-profile" onClick={openProfilePage}>
                     <p>{LoginCtx.role}</p>
                     <img src={LoginCtx?.user?.personal_info?.profile_picture} alt="profile_photo" />
                     <p>{LoginCtx.name}</p>
