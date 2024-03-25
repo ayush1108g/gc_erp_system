@@ -11,43 +11,7 @@ import { backendUrl } from "../constant";
 import LoginContext from "../store/context/loginContext";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
-
-const data = [
-  { name: "John", comment: "This is a great product!" },
-  { name: "Alice", comment: "I love the design!" },
-  { name: "Bob", comment: "Works perfectly for me." },
-  { name: "Emma", comment: "Could use some improvements." },
-  { name: "Michael", comment: "Very satisfied with the quality." },
-  { name: "Sarah", comment: "Fast shipping, thank you!" },
-  { name: "David", comment: "Excellent customer service." },
-  { name: "Emily", comment: "Affordable price, great value." },
-  { name: "James", comment: "Highly recommend to others." },
-  { name: "Olivia", comment: "Easy to use and setup." }
-];
-
-const dummydata= [
-    {
-      "rollnumber": "123456",
-      "link": "https://example.com/page1"
-    },
-    {
-      "rollnumber": "234567",
-      "link": "https://example.com/page2"
-    },
-    {
-      "rollnumber": "345678",
-      "link": "https://example.com/page3"
-    },
-    {
-      "rollnumber": "456789",
-      "link": "https://example.com/page4"
-    },
-    {
-      "rollnumber": "567890",
-      "link": "https://example.com/page5"
-    }
-  ]
-  
+import AssignmentSubmissions from './AssignmentSubmissions';  
 
 const Assignment_page2 = () => {
     const [loading, setLoading] = useState(false);
@@ -61,13 +25,12 @@ const Assignment_page2 = () => {
   const navigate = useNavigate();
   const [courseData, setCourseData] = useState(null);
   const [assignmentData, setAssignmentData] = useState(null);
+  const [submissions, setSubmissions] = useState([]);
+  const [yourSubmission, setYourSubmission] = useState(null);
   const [doubts, setDoubts] = useState([]);
   const { courseId, assignmentId } = useParams();
   const [message, setMessage] = useState("");
-  const [messageOfTeacher, setMessageOfTeacher] = useState("");
-  const [studentGrade, setStudentGrade] = useState();
   console.log("Hi from assignment_page2", courseId, assignmentId);
-  let matchingSubmission;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,31 +54,27 @@ const Assignment_page2 = () => {
         const courseInfo = courseResponse.data.data.data[0];
         const assignmentInfo = assignmentResponse.data.assignment;
         const doubtsInfo = assignmentInfo.doubts;
+        const submissionInfo = assignmentInfo.submissions;
         setCourseData(courseInfo);
         setDoubts(doubtsInfo);
         setAssignmentData(assignmentInfo);
+        setSubmissions(submissionInfo);
         console.log(Loginctx.user);
 
-        const userStudentId = Loginctx.user._id; // Assuming this is the user's student ID
+        const userStudentId = Loginctx.user._id; 
 
         const submissions = assignmentInfo.submissions;
         console.log(submissions);
-        matchingSubmission = submissions.find(submission => submission.studentId === userStudentId);
+        const matchingSubmission = submissions.find(submission => submission.studentId === userStudentId);
         console.log("matchingSubmission",matchingSubmission);
-
-        // if (matchingSubmission) {
-        //     console.log("Comments:", matchingSubmission.comments);
-        //     console.log("Grade:", matchingSubmission.grade);
-        //     } else {
-        //     console.log("User's student ID does not match any in the submissions array.");
-        // }
+        setYourSubmission(matchingSubmission);
 
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-  }, [courseId, assignmentId, Loginctx.AccessToken]);
+  }, [courseId, assignmentId, Loginctx.AccessToken]);//, doubts, submissions]);
 
   const uploadHandler = async () => {
         if (fileuploading) {
@@ -152,7 +111,6 @@ const Assignment_page2 = () => {
         }
     }
     
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { day: "numeric", month: "long", year: "numeric" };
@@ -203,35 +161,11 @@ const Assignment_page2 = () => {
 
         console.log("Doubt posted successfully:", response.data);
         setMessage("");
-        // Optionally, you can update the UI or show a success message upon successful posting of doubt
+        
     } catch (error) {
         console.error("Error posting doubt:", error);
-        // Handle errors or show an error message to the user
     }
     };
-    console.log(Loginctx);
-
-    const submitStudentGradeAndComment = async () => {
-  try {
-    const requestBody = {
-      assignmentId: assignmentId,
-      studentId: "65ffb50f902555634db490e9",
-      grade: studentGrade, 
-      comments: messageOfTeacher, 
-    };
-
-    const response = await axios.patch(backendUrl+'/api/v1/assignments', requestBody, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${Loginctx.AccessToken}`, // Include the bearer token in the headers
-      },
-    });
-
-    console.log('Grade and comment submitted successfully:', response.data);
-  } catch (error) {
-    console.error('Error submitting grade and comment:', error);
-  }
-};
 
 const submitAssignment = async() => {
     if(!profileUrl){
@@ -357,51 +291,16 @@ const submitAssignment = async() => {
             </div>
           </div>
             {
-                // Loginctx.role==='teacher' && 
-          <div className={classes.box2}>
-            <div>
-              <div className={classes.icon5}>
-                <SlPeople />
-              </div>
-              <div>Private comment</div>
-            </div>
-                <div>
-                <input
-                    type="number"
-                    placeholder="  Add Student Grade"
-                    className={classes.input2}
-                    value={studentGrade}
-                    onChange={(e) => setStudentGrade(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="  Add Private Comment to Student"
-                    className={classes.input2}
-                    value={messageOfTeacher}
-                    onChange={(e) => setMessageOfTeacher(e.target.value)}
-                />
-                <IoSend
-                    color="blue"
-                    size={"25px"}
-                    style={{
-                    marginBottom: "4px",
-                    marginLeft: "5px",
-                    marginTop: "23px",
-                    }}
-                    onClick = {submitStudentGradeAndComment}
-                />
-                </div>
-          </div>
-            }
-            {
                 Loginctx.role==='student' &&  
           <div className={classes.box2}>
             <div>
               <div className={classes.icon5}>
                 <SlPeople />
               </div>
-              <div>{matchingSubmission.grade}</div>
-              <div>{matchingSubmission.comments}</div>
+              {/* <div>{yourSubmission.grade}</div>
+              <div>{yourSubmission.comments}</div> */}
+              <div>yourSubmission.grade</div>
+              <div>yourSubmission.comments</div>
             </div>
           </div>
             }
@@ -409,18 +308,11 @@ const submitAssignment = async() => {
       </div>
       <div className={classes.studentwork}>
       {
-            dummydata.map((ele,ind)=>{
-                return(<div className={classes.student}>
-                   <div>
-                     {ele.rollnumber}
-                   </div>
-                   <div >
-                       {ele.link}
-                   </div>
-                   <input type="text" placeholder="Grade the Student" />
-                   <input type="text" placeholder="Add Comment" style={{width:'50vw'}}/>
-                   <button>Submit</button>
-                </div>)
+            // Loginctx.role==='teacher' && 
+            submissions.map((ele,ind)=>{
+              return(
+                <AssignmentSubmissions rollNumber={ele.rollNumber} submissionFile={ele.submissionFile} studentId={ele.studentId} assignmentId={assignmentId}/>
+              )
            })
           }
           </div>

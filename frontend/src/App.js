@@ -147,7 +147,7 @@ const RoutesWithAnimation = () => {
         <Route path="/registration" element={<CourseRegistration />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/feedback" element={<FeedbackForm />} />
-        <Route path="/assignment_upload" element={<Assignment_upload/>} />
+        <Route path="/:courseId/assignment_upload" element={<Assignment_upload/>} />
       </Routes>
     </>
   );
