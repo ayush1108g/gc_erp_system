@@ -13,13 +13,13 @@ import ForgotPassPage from "../pages/ForgotPass/ForgotPassPage";
 import ForgotPassIDPage from "../pages/ForgotPass/ForgotPassIDPage";
 import ForgotPassConfirmPage from "../pages/ForgotPass/ForgotPassConfirmPage";
 import Errorpage from "../pages/Errorpage";
-import HomePage from "../pages/HomePage/HomePage";
+import HomePage from "../pages/Dashboard/HomePage";
 
 import Attendance from "../pages/AttendancePages/Attendance";
 import ProfilePage from "./ProfilePage";
 import AddCourses from "../pages/CoursePages/Add_courses";
 import AddAnnouncement from "./AddAnnouncement";
-import AdminDashBoard from "./AdminDashboard";
+import AdminDashBoard from "../pages/Dashboard/AdminDashboard";
 import ApproveUser from "./ApproveUser";
 import AddInventoryItem from "../pages/SACInventoryPages/AddInventoryItem";
 import UpdateInventoryItem from "../pages/SACInventoryPages/UpdateInventoryItem";

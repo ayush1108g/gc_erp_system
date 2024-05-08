@@ -10,7 +10,7 @@ import Modal from "../../component/Modal";
 import Navbar from "../../component/Navbar/Navbar";
 import { backendUrl } from "../../constant";
 import { useAlert } from "../../store/context/Alert-context";
-import classes from '../../component/admindashboard.module.css';
+import classes from './AdminDashboard.module.css';
 import { useSidebar } from "../../store/context/sidebarcontext";
 
 const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -26,7 +26,8 @@ function HomePage() {
   const [announcement, setAnnouncement] = useState([]);
   const [modalisOpen, setModalisOpen] = useState(false);
   // const [isSidebarOpen, setIsSideBarOpen] = useState(true);
-  const { isSidebarOpen, setIsSideBarOpen } = useSidebar();
+  const isSidebarOpen = useSidebar().isSidebarOpen;
+  const setIsSideBarOpen = useSidebar().toggleSidebar;
   const [todayTimetable, setTodayTimetable] = useState([]);
   const [Attendance, setAttendance] = useState({ total: 0, present: 0, absent: 0 });
 
@@ -77,16 +78,16 @@ function HomePage() {
       data = Array.from(new Set(data));
       setCourses(data);
       let todayTimetable = data.map((course) => {
-        let schedule = course.schedule;
+        let schedule = course?.schedule;
         schedule = Array.from(new Set(schedule));
 
         // if schedule is empty return null
-        if (schedule.length === 0) {
+        if (schedule?.length === 0) {
           return null;
         }
 
         // if today's schedule is not present return null
-        let ifToday = schedule.map((obj) => {
+        let ifToday = schedule?.map((obj) => {
           if (obj.day === day[today]) {
             return obj;
           } else return null;

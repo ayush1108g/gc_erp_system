@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
-import classes from "./admindashboard.module.css"
-import Navbar from "./Navbar/Navbar"
-import Modal from "./Modal";
+import classes from "./AdminDashboard.module.css"
+import Navbar from "../../component/Navbar/Navbar"
+import Modal from "../../component/Modal";
 import { useNavigate } from "react-router-dom";
-import { useAlert } from "../store/context/Alert-context";
+import { useAlert } from "../../store/context/Alert-context";
 import axios from "axios";
-import { backendUrl } from "../constant";
-import LoginContext from "../store/context/loginContext";
+import { backendUrl } from "../../constant";
+import LoginContext from "../../store/context/loginContext";
 import { useCookies } from "react-cookie";
 import { PieChart } from 'react-minimal-pie-chart';
 
 import { MdArrowBackIosNew } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 
-import { useSidebar } from "../store/context/sidebarcontext";
+import { useSidebar } from "../../store/context/sidebarcontext";
 const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 
@@ -102,12 +102,12 @@ const AdminDashBoard = () => {
             data = Array.from(new Set(data));
             setCourses(data);
             let todayTimetable = data.map((course) => {
-                let schedule = course.schedule;
+                let schedule = course?.schedule;
                 schedule = Array.from(new Set(schedule));
-                if (schedule.length === 0) {
+                if (schedule?.length === 0) {
                     return null;
                 }
-                let ifToday = schedule.map((obj) => {
+                let ifToday = schedule?.map((obj) => {
                     if (obj.day === day[today]) {
                         return obj;
                     }
