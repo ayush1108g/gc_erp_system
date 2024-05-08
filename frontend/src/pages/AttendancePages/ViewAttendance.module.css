@@ -2,14 +2,6 @@
   text-align: center;
   justify-content: center;
   align-items: center;
-  margin: 5vw;
-}
-.subtitle {
-  margin-left: 5vw;
-}
-.form {
-  margin: 5vw;
-  margin-bottom: 20px;
 }
 
 .gridContainer {
@@ -21,7 +13,25 @@
 
 .gridItem {
   background-color: #f0f0f0;
-  border-radius: 10px;
   padding: 20px;
   font-size: large;
+  border-radius: 10px;
+}
+
+.attendanceGrid {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2vw;
+  margin-bottom: 2vw;
+  width: 98%;
+  overflow-x: auto;
+}
+
+.attendanceGrid td {
+  border: 2px solid black;
+}
+
+.attendanceGrid th {
+  border: 2px solid black;
 }

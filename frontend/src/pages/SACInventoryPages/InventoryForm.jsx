@@ -1,30 +1,29 @@
-import React from "react";
-import classes from './inventoryform.module.css'
-import { useState, useContext, useEffect } from 'react'
-import axios from 'axios';
-import LoginContext from "../store/context/loginContext";
-import { backendUrl } from "../constant";
+import React, { useState, useContext, useEffect } from "react";
+import classes from './InventoryForm.module.css'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router"
+import axios from 'axios';
 
-import { useAlert } from "../store/context/Alert-context";
+import { backendUrl } from "../../constant";
+import LoginContext from "../../store/context/loginContext";
+import { useAlert } from "../../store/context/Alert-context";
+import { useSidebar } from "../../store/context/sidebarcontext";
 
 const Inventory_form = () => {
   const Alertctx = useAlert();
   const Loginctx = useContext(LoginContext);
   const navigate = useNavigate();
-  const [equipmentData, setEquipmentData] = useState(null);
   const { equipmentId } = useParams();
+  const isSidebarOpen = useSidebar().isSidebarOpen;
+
+  const [equipmentData, setEquipmentData] = useState(null);
   let isadmin = Loginctx.role === 'admin';
 
   useEffect(() => {
+    // Fetch the equipment data from the backend
     const fetchdata = async () => {
       try {
-        const response = await axios.get(backendUrl + '/api/v1/inventory/' + equipmentId, {
-          headers: {
-            Authorization: `Bearer ${Loginctx.AccessToken}`
-          }
-        });
+        const response = await axios.get(backendUrl + '/api/v1/inventory/' + equipmentId, { headers: { Authorization: `Bearer ${Loginctx.AccessToken}` } });
         const equipment = response.data.equipment;
         setEquipmentData(equipment);
         console.log(equipment);
@@ -33,36 +32,24 @@ const Inventory_form = () => {
       }
     };
     fetchdata();
-
   }, [equipmentId, Loginctx.AccessToken]);
 
+  // Function to issue the equipment
   const handleIssueEquipment = async () => {
     console.log("Button Pressed");
     if (!Loginctx.isLoggedIn) {
       Alertctx.showAlert("Please Login to Issue Equipment");
-      navigate('/login');
-      return;
+      return navigate('/login');
     }
     if (equipmentData.available_quantity === 0) {
-      Alertctx.showAlert("No Equipment Available");
-      return;
+      return Alertctx.showAlert("No Equipment Available");
     }
 
     try {
-      const response = await axios.post(
-        backendUrl + '/api/v1/inventory',
-        {
-          equipmentId: equipmentId,
-          issued_date: new Date().toISOString().slice(0, 10) // Format the date as YYYY-MM-DD
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${Loginctx.AccessToken}`
-          }
-        }
-      );
+      const response = await axios.post(backendUrl + '/api/v1/inventory', { equipmentId: equipmentId, issued_date: new Date().toISOString().slice(0, 10) }, {
+        headers: { Authorization: `Bearer ${Loginctx.AccessToken}` }
+      });
       console.log(response.data);
-
       Alertctx.showAlert("danger", "Equipment Issued Successfully");
       setTimeout(() => {
         navigate('/inventory');
@@ -71,15 +58,15 @@ const Inventory_form = () => {
       console.error('Error issuing equipment:', error);
       Alertctx.showAlert("danger", "Error Issuing Equipment");
     }
-
   };
 
+  // Function to navigate to the update page
   const openUpdateItemPage = () => {
     navigate(`/${equipmentId}/update_inventory_item`)
   }
 
   return (
-    <>
+    <div style={{ marginLeft: isSidebarOpen ? '210px' : '10px' }}>
       {equipmentData && (
         <>
           <h1 className={classes.title}>{equipmentData.equipment_name}</h1>
@@ -89,7 +76,7 @@ const Inventory_form = () => {
               <div className={classes.yoyo}>{equipmentData.available_quantity}</div>
               {
                 isadmin &&
-                 <button type="button" class="btn btn-success" onClick={()=>openUpdateItemPage()}>Update</button>
+                <button type="button" class="btn btn-success" onClick={() => openUpdateItemPage()}>Update</button>
               }
             </div>
             <div className={classes.gridItem}>
@@ -127,7 +114,7 @@ const Inventory_form = () => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

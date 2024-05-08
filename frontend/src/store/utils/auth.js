@@ -7,11 +7,7 @@ export const refreshAccessToken = async (func, loginCtx) => {
   try {
     const resp = await axios.get(
       `${backendUrl}/api/v1/user/verifyrefreshtoken`,
-      {
-        headers: {
-          Authorization: `Bearer ${rtoken}`,
-        },
-      }
+      { headers: { Authorization: `Bearer ${rtoken}` } }
     );
     console.log(resp);
     if (
@@ -41,9 +37,7 @@ export const refreshAccessToken = async (func, loginCtx) => {
 export const verifyToken = async (token) => {
   try {
     const response = await axios.get(`${backendUrl}/api/v1/users/verifytoken`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
     if (response.status === 200) {
       return { isLoggedin: true, name: response.data.name };

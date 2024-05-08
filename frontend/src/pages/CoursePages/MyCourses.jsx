@@ -1,39 +1,30 @@
 import React, { useState, useEffect, useContext } from "react";
-import classes from "./coursespage.module.css"
+import classes from "./MyCourses.module.css"
+
 import { FaBookOpen } from "react-icons/fa";
 import { MdAssignment } from "react-icons/md";
 import { BsPersonRaisedHand } from "react-icons/bs";
-import axios from 'axios';
-import { backendUrl } from "../constant";
 import { useNavigate } from "react-router"
-import LoginContext from "../store/context/loginContext";
+import axios from 'axios';
 
-import image1 from "../assets/1.jpg"
-import image2 from "../assets/2.jpg"
-import image3 from "../assets/3.jpg"
-import image4 from "../assets/4.jpg"
-import image0 from "../assets/0.jpg"
-import { useAlert } from "../store/context/Alert-context";
+import { backendUrl } from "../../constant";
+import LoginContext from "../../store/context/loginContext";
+import { useAlert } from "../../store/context/Alert-context";
+import { useSidebar } from "../../store/context/sidebarcontext";
 
-// const data = [
-//     { "courseName": "Mathematics", "professorName": "Dr. Smith" },
-//     { "courseName": "Physics", "professorName": "Prof. Johnson" },
-//     { "courseName": "Biology", "professorName": "Dr. Anderson" },
-//     { "courseName": "Chemistry", "professorName": "Prof. Wilson" },
-//     { "courseName": "English", "professorName": "Dr. Brown" },
-//     { "courseName": "History", "professorName": "Prof. Martinez" },
-//     { "courseName": "Computer Science", "professorName": "Dr. Thompson" },
-//     { "courseName": "Economics", "professorName": "Prof. Garcia" },
-//     { "courseName": "Psychology", "professorName": "Dr. Lee" },
-//     { "courseName": "Sociology", "professorName": "Prof. Davis" }
-// ];
+import image0 from "../../assets/0.jpg"
+import image1 from "../../assets/1.jpg"
+import image2 from "../../assets/2.jpg"
+import image3 from "../../assets/3.jpg"
+import image4 from "../../assets/4.jpg"
 
 const linkarr = [image1, image2, image3, image4, image0]
 
-const Courses_page = () => {
+const MyCourses = () => {
     const navigate = useNavigate();
     const alertCtx = useAlert();
     const Loginctx = useContext(LoginContext);
+    const isSidebarOpen = useSidebar().isSidebarOpen;
     const [coursesIds, setCoursesIds] = useState([]);
     const [courses, setCourses] = useState([]);
     const [message, setMessage] = useState('Loading...');
@@ -95,7 +86,7 @@ const Courses_page = () => {
         console.log(courseId);
     }
 
-    return (<div className={classes.Body}>
+    return (<div className={classes.Body} style={{ marginLeft: isSidebarOpen ? '210px' : '5px' }}>
         <h1 className={classes.title}><FaBookOpen color="Purple" /> &nbsp; Courses</h1>
         <p>{message}</p>
         <div className={classes.eqp}>
@@ -104,11 +95,7 @@ const Courses_page = () => {
                     return (<li key={ind}
                         className={classes.listitem}
                         onClick={() => { coursePage(ele._id) }}>
-                        <img src={linkarr[ind % 5]} alt=""
-                            style={{
-                                minHeight: '150px'
-                            }}
-                        />
+                        <img src={linkarr[ind % 5]} alt="" style={{ minHeight: '150px' }} />
                         <div className={classes.details} >
                             <h4 className={classes.courceName}>{ele.name}</h4>
                             <p className={classes.profName}>{ele.professor[0]}</p>
@@ -126,4 +113,4 @@ const Courses_page = () => {
     </div>)
 }
 
-export default Courses_page;
+export default MyCourses;

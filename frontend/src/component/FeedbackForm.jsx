@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
-import classes from './feedbackform.module.css';
-import axios from 'axios';
-import { backendUrl } from '../constant';
-import LoginContext from '../store/context/loginContext';
+import classes from './FeedbackForm.module.css';
+
 import { useParams } from 'react-router-dom';
 import { RiStarSFill, RiStarSLine } from 'react-icons/ri';
 import { useNavigate } from "react-router"
+import axios from 'axios';
+
+import { backendUrl } from '../constant';
 import { useAlert } from '../store/context/Alert-context';
+import LoginContext from '../store/context/loginContext';
+import { useSidebar } from '../store/context/sidebarcontext';
 
 
 const Feedback_form = () => {
   const alertCtx = useAlert();
   const Loginctx = useContext(LoginContext);
+  const { courseId } = useParams();
+  const navigate = useNavigate();
+  const { isSidebarOpen } = useSidebar();
+
   const [courseData, setCourseData] = useState(null);
   const [starFill, setStarFill] = useState([
     { id: 1, fill: false },
@@ -21,23 +28,16 @@ const Feedback_form = () => {
     { id: 5, fill: false }
   ]);
   const [comment, setComment] = useState('');
-  const { courseId } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const response = await axios.get(backendUrl + '/api/v1/courses/' + courseId, {
-          headers: {
-            Authorization: `Bearer ${Loginctx.AccessToken}`
-          }
-        });
+        const response = await axios.get(backendUrl + '/api/v1/courses/' + courseId, { headers: { Authorization: `Bearer ${Loginctx.AccessToken}` } });
         const courseInfo = response.data.data.data[0];
         setCourseData(courseInfo);
       } catch (err) {
         if (err?.response?.data?.message) {
-          alertCtx.showAlert("danger", err.response.data.message);
-          return
+          return alertCtx.showAlert("danger", err.response.data.message);
         }
         console.log(err);
         alertCtx.showAlert("danger", "Error fetching data");
@@ -47,16 +47,13 @@ const Feedback_form = () => {
   }, [courseId, Loginctx.AccessToken]);
 
   const starsfillHandler = index => {
-    const temp = starFill.map((item, i) => ({
-      ...item,
-      fill: i <= index
-    }));
+    const temp = starFill.map((item, i) => ({ ...item, fill: i <= index }));
     setStarFill(temp);
   };
 
+  // Function to handle form submission
   const handleSubmit = async e => {
     e.preventDefault();
-    // Implement your form submission logic here
     const rating = starFill.filter(item => item.fill).length;
 
     if (rating === 0 || comment === '') {
@@ -64,7 +61,6 @@ const Feedback_form = () => {
       return;
     }
     try {
-      // Prepare the data to be sent in the request body
       const formData = {
         course_id: courseId,
         rating: starFill.filter(item => item.fill).length,
@@ -72,34 +68,27 @@ const Feedback_form = () => {
       };
 
       // Make a POST request to the feedback endpoint
-      const response = await axios.post(backendUrl + '/api/v1/feedback', formData, {
-        headers: {
-          Authorization: `Bearer ${Loginctx.AccessToken}`
-        }
-      });
+      const response = await axios.post(backendUrl + '/api/v1/feedback', formData, { headers: { Authorization: `Bearer ${Loginctx.AccessToken}` } });
 
       // Handle success response
       console.log('Feedback submitted successfully:', response.data);
-
       alertCtx.showAlert("success", "Feedback submitted successfully");
-      // Optionally, you can navigate to a different page or show a success message
       navigate(`/my_courses/${courseId}`);
     } catch (error) {
       if (error?.response?.data?.message) {
-        alertCtx.showAlert("danger", error.response.data.message);
-        return
+        return alertCtx.showAlert("danger", error.response.data.message);
       }
       // Handle error
       console.error('Error submitting feedback:', error);
       alertCtx.showAlert("danger", "Error submitting feedback");
     }
-
   };
 
   return (
-    <>
+    <div style={{ marginLeft: isSidebarOpen ? '210px' : '10px' }}>
       <h1 className={classes.title}>Provide Feedback</h1>
       <h5 className={classes.subtitle}>The feedback provided by you will remain anonymous</h5>
+
       <div className={classes.gridContainer}>
         <div className={classes.gridItem}>
           <div>Course:</div>
@@ -114,18 +103,13 @@ const Feedback_form = () => {
           <div className={classes.yoyo}>{courseData && courseData.semester.join(', ')}</div>
         </div>
       </div>
+
       <form className={classes.form} onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="commentInput" className="form-label">
             Provide your views about the course and teacher
           </label>
-          <textarea
-            className="form-control"
-            id="commentInput"
-            rows="3"
-            value={comment}
-            onChange={e => setComment(e.target.value)}
-          ></textarea>
+          <textarea className="form-control" id="commentInput" rows="3" value={comment} onChange={e => setComment(e.target.value)} />
         </div>
         <div className="mb-3">
           <label className="form-label">Give Rating out of 5</label>
@@ -143,7 +127,7 @@ const Feedback_form = () => {
           Submit
         </button>
       </form >
-    </>
+    </div>
   );
 };
 

@@ -1,23 +1,27 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import classes from "./addcourses.module.css";
+
 import { useNavigate } from "react-router";
 import axios from "axios";
-import { backendUrl } from "../constant";
-import LoginContext from "../store/context/loginContext";
-import { useAlert } from "../store/context/Alert-context";
+
+import { backendUrl } from "../../constant";
+import LoginContext from "../../store/context/loginContext";
+import { useAlert } from "../../store/context/Alert-context";
+import { useSidebar } from "../../store/context/sidebarcontext";
 
 const Add_courses = () => {
     const alertCtx = useAlert();
     const navigate = useNavigate();
     const Loginctx = useContext(LoginContext);
+    const isSidebarOpen = useSidebar().isSidebarOpen;
+
     const [courseName, setCourseName] = useState("");
     const [facultyName, setFacultyName] = useState("");
 
     const addCourse = async (e) => {
         e.preventDefault();
         if (courseName.trim().length === 0 || facultyName.trim().length === 0) {
-            alertCtx.showAlert("danger", "Fields cannot be empty");
-            return;
+            return alertCtx.showAlert("danger", "Fields cannot be empty");
         }
         try {
             const requestBody = {
@@ -25,33 +29,22 @@ const Add_courses = () => {
                 professor: [facultyName]
             };
             console.log(requestBody);
-            const response = await axios.post(
-                `${backendUrl}/api/v1/courses`,
-                requestBody,
-                {
-                    headers: {
-                        Authorization: `Bearer ${Loginctx.AccessToken}`,
-                    },
-                }
-            );
-
+            const response = await axios.post(`${backendUrl}/api/v1/courses`, requestBody, { headers: { Authorization: `Bearer ${Loginctx.AccessToken}`, }, });
             console.log("Course Added successfully:", response.data);
             setCourseName("");
             setFacultyName("");
             alertCtx.showAlert("success", "Course Added Successfully");
             navigate('/');
-
         } catch (error) {
             console.error("Error adding Course:", error);
             if (error?.response?.data?.message) {
-                alertCtx.showAlert("danger", error.response.data.message);
-                return;
+                return alertCtx.showAlert("danger", error.response.data.message);
             }
             alertCtx.showAlert("danger", "Error adding Course");
         }
     };
 
-    return (<>
+    return (<div style={{ marginLeft: isSidebarOpen ? '210px' : '10px' }}>
         <h3 className={classes.title}>Add Courses</h3>
         <form className={classes.inputform}>
             <div class="mb-3">
@@ -77,7 +70,7 @@ const Add_courses = () => {
 
             <button type="submit" class="btn btn-primary" onClick={(e) => addCourse(e)}>Submit</button>
         </form>
-    </>)
+    </div>)
 }
 
 export default Add_courses 

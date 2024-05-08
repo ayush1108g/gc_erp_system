@@ -1,67 +1,55 @@
 import React, { useState, useRef, useContext } from "react";
-import classes from "./assignmentupload.module.css"
+import classes from "./AssignmentUpload.module.css"
 
 import axios from "axios";
-import { backendUrl } from "../constant";
-import LoginContext from "../store/context/loginContext";
 import { useParams } from "react-router-dom";
-// import { useNavigate } from "react-router";
-import { useAlert } from "../store/context/Alert-context";
+import { useAlert } from "../../store/context/Alert-context";
+
+import { backendUrl } from "../../constant";
+import LoginContext from "../../store/context/loginContext";
+import { useSidebar } from "../../store/context/sidebarcontext";
 
 const Assignment_upload = () => {
-
-    const datepickerRef = useRef('');
     const Loginctx = useContext(LoginContext);
+    const datepickerRef = useRef('');
     const { courseId } = useParams();
     const alertCtx = useAlert();
+    const isSidebarOpen = useSidebar().isSidebarOpen;
 
-    // const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
     const [profile, setProfile] = useState(null);
     const [profileUrl, setProfileUrl] = useState("");
     const [fileuploading, setFileuploading] = useState(false);
-
     const [assignmentName, setAssignmentName] = useState("");
     const [assignmentDesc, setAssignmentDesc] = useState("");
-    // const [assignmentDate, setAssignmentDate] = useState("");
     const [totalMarks, setTotalMarks] = useState(null);
 
+    // Function to upload the file to the server and get the URL
     const uploadHandler = async () => {
-
         if (fileuploading) {
-            alert("File is uploading, please wait");
-            return;
+            return alert("File is uploading, please wait");
         }
         if (!profile) {
-            alert("Please select a file");
-            return;
+            return alert("Please select a file");
         }
         console.log('Selected file:', profile);
 
         const formData = new FormData();
         formData.append("file", profile);
-
         console.log(formData);
         setFileuploading(true);
         try {
-            const res = await axios.post(`${backendUrl}/api/v1/submitAssignment/upload-file`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            const res = await axios.post(`${backendUrl}/api/v1/submitAssignment/upload-file`, formData, { headers: { "Content-Type": "multipart/form-data", }, });
             console.log(res);
             const id = res.data.data.id;
             const url = `https://drive.google.com/file/d/${id}/view?usp=sharing`;
             setProfileUrl(url);
             alertCtx.showAlert('success', 'File uploaded successfully');
         } catch (err) {
-
             console.log(err);
-
             if (err.response?.data?.message) {
                 setError(err.response.data.message);
-                alertCtx.showAlert('error', err.response.data.message);
+                return alertCtx.showAlert('error', err.response.data.message);
             }
             setError("Error uploading file");
         } finally {
@@ -69,15 +57,13 @@ const Assignment_upload = () => {
         }
     };
 
+    // Function to add the assignment to the database 
     const addtAssignment = async (e) => {
         e.preventDefault();
-
         console.log("Hi from add assignment");
         const due_date = datepickerRef.current.value;
-
         if (!profileUrl) {
-            alert("Fail");
-            return;
+            return alert("Fail");
         }
         const body = {
             "courseId": courseId,
@@ -92,65 +78,35 @@ const Assignment_upload = () => {
         console.log("profileUrl", profileUrl);
 
         try {
-            const response = await axios.post(backendUrl + '/api/v1/assignments', body, {
-                headers: {
-                    Authorization: `Bearer ${Loginctx.AccessToken}`,
-                },
-            });
+            const response = await axios.post(backendUrl + '/api/v1/assignments', body, { headers: { Authorization: `Bearer ${Loginctx.AccessToken}`, }, });
             console.log(response);
             alertCtx.showAlert("Assignment added successfully", "success");
-
         } catch (err) {
             console.log(err);
             if (err.response?.data?.message) {
-                alertCtx.showAlert("Error adding assignment", "error");
-                return;
+                return alertCtx.showAlert("Error adding assignment", "error");
             }
             alertCtx.showAlert("Error adding assignment", "error");
         }
     }
 
-    return (<>
+    return (<div style={{ marginLeft: isSidebarOpen ? '210px' : '10px' }}>
         <h3 className={classes.title}>Upload the Assignment </h3>
         <form className={classes.inputform}>
             <div class="mb-3">
                 <label for="1" class="form-label">Assignment Name</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="1"
-                    aria-describedby="emailHelp"
-                    value={assignmentName}
-                    onChange={(e) => setAssignmentName(e.target.value)}
-                />
+                <input type="text" class="form-control" id="1" aria-describedby="emailHelp" value={assignmentName} onChange={(e) => setAssignmentName(e.target.value)} />
             </div>
             <div class="mb-3">
                 <label for="2" class="form-label">Description</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="2"
-                    input={assignmentDesc}
-                    onChange={(e) => setAssignmentDesc(e.target.value)}
-                />
+                <input type="text" class="form-control" id="2" input={assignmentDesc} onChange={(e) => setAssignmentDesc(e.target.value)} />
             </div>
             <div class={`${classes.gridContainer} ${classes.Container2}`}>
                 <label for="3" class="form-label">Question File</label>
                 <div className={`${classes.gridItem} input-group mb-3`}>
-                    <input
-                        type="file"
-                        class="form-control shadow-none "
-                        id="inputGroupFile02"
-                        // value={profile}
-                        onChange={(e) => setProfile(e.target.files[0])}
-                    />
+                    <input type="file" class="form-control shadow-none " id="inputGroupFile02" onChange={(e) => setProfile(e.target.files[0])} />
                     <span class="input-group-text" for="inputGroupFile02" onClick={uploadHandler}>
-
-                        {!fileuploading && 'Upload'}
-                        {fileuploading && (
-                            <div className="spinner-border text-danger" role="status">
-                            </div>
-                        )}
+                        {fileuploading ? (<div className="spinner-border text-danger" role="status"> </div>) : 'Upload'}
                     </span>
                 </div>
             </div>
@@ -162,21 +118,11 @@ const Assignment_upload = () => {
             </div>
             <div class="mb-3">
                 <label for="4" class="form-label">Total Marks</label>
-                <input
-                    type="number"
-                    class="form-control"
-                    id="4"
-                    value={totalMarks}
-                    onChange={(e) => setTotalMarks(e.target.value)}
-                />
+                <input type="number" class="form-control" id="4" value={totalMarks} onChange={(e) => setTotalMarks(e.target.value)} />
             </div>
-            <button
-                type="submit"
-                class="btn btn-primary"
-                onClick={(e) => addtAssignment(e)}
-            >Submit</button>
+            <button type="submit" class="btn btn-primary" onClick={(e) => addtAssignment(e)}            >Submit</button>
         </form>
-    </>)
+    </div>)
 }
 
-export default Assignment_upload 
+export default Assignment_upload;

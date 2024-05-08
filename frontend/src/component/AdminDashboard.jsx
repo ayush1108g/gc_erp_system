@@ -13,6 +13,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 import { MdArrowBackIosNew } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 
+import { useSidebar } from "../store/context/sidebarcontext";
 const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 
@@ -20,9 +21,11 @@ const AdminDashBoard = () => {
     const [cookies] = useCookies(["AccessToken", "RefreshToken"]);
     const LoginCtx = useContext(LoginContext);
     const [todayTimetable, setTodayTimetable] = useState([]);
+    const sidebarCtx = useSidebar();
+    const isSidebarOpen = sidebarCtx.isSidebarOpen;
+    const setIsSideBarOpen = sidebarCtx.toggleSidebar;
     const [announcement, setAnnouncement] = useState([]);
     const alertCtx = useAlert();
-    const [isSidebarOpen, setIsSideBarOpen] = useState(true);
     const [courses, setCourses] = useState([]);
     const [modalisOpen, setModalisOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
@@ -42,19 +45,13 @@ const AdminDashBoard = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-
-                const resp = await axios.get(`${backendUrl}/api/v1/users/getalluserstats`, {
-                    headers: {
-                        Authorization: `Bearer ${cookies.AccessToken}`,
-                    },
-                });
+                const resp = await axios.get(`${backendUrl}/api/v1/users/getalluserstats`, { headers: { Authorization: `Bearer ${cookies.AccessToken}`, }, });
                 console.log(resp.data.data);
                 setErpstats(resp.data.data);
             } catch (err) {
                 console.log(err);
                 if (err?.response?.data?.message) {
-                    alertCtx.showAlert("danger", err.response.data.message);
-                    return;
+                    return alertCtx.showAlert("danger", err.response.data.message);
                 }
                 alertCtx.showAlert("danger", "Something went wrong");
             }
@@ -102,7 +99,6 @@ const AdminDashBoard = () => {
                 })
             );
             // console.log(data);
-
             data = Array.from(new Set(data));
             setCourses(data);
             let todayTimetable = data.map((course) => {
@@ -136,8 +132,6 @@ const AdminDashBoard = () => {
             setTodayTimetable(Array.from(new Set(todayTimetable)));
 
         }
-
-
         asyncFunc1();
     }, [LoginCtx]);
 
@@ -151,7 +145,7 @@ const AdminDashBoard = () => {
                         Authorization: `Bearer ${cookies.AccessToken}`,
                     },
                 });
-                console.log(resp.data.announcements);
+                // console.log(resp.data.announcements);
                 const data = resp.data.announcements;
                 data.sort((a, b) => {
                     return new Date(b.date) - new Date(a.date);
@@ -170,10 +164,12 @@ const AdminDashBoard = () => {
         asyncFunc();
     }, []);
 
+    // Function to handle the sidebar
     const handleSidebar = () => {
         setIsSideBarOpen(!isSidebarOpen);
     }
 
+    // Function to handle the attendance
     const handleAttendance = () => {
         if (LoginCtx.role === 'student') {
             navigate('/attendance');
@@ -183,40 +179,49 @@ const AdminDashBoard = () => {
         }
     }
 
+    // Function to open the modal
     const openModal = (route) => {
         setModalData(route);
         setModalisOpen(true);
     };
 
+    // Function to open the course page
     const openMyCoursesPage = () => {
         navigate('/my_courses');
     };
 
+    // Function to close the modal
     const closeModal = () => {
         setModalisOpen(false);
         setModalData(null);
     }
 
+    // Function to open the profile page
     const openProfilePage = () => {
         navigate('/profile');
     }
 
+    // Function to open the add course page
     const openAddCourse = () => {
         navigate('/add_courses');
     }
 
+    // Function to open the add announcement page
     const openAddAnnouncements = () => {
         navigate('/add_announcement');
     }
 
+    // Function to open the add equipment page
     const openAddEquipment = () => {
         navigate('/add_inventory_item')
     }
 
+    // Function to open the all courses page
     const openAllCourses = () => {
         navigate('/registration')
     }
 
+    // Function to open the approve user page
     const openApproveUser = () => {
         navigate('/approve')
     }
@@ -228,38 +233,20 @@ const AdminDashBoard = () => {
             courses={courses}
             data={modalData}
         />
-        <div className={classes.body}>
-            <div className={classes.navbar}
-                style={{
-                    width: isSidebarOpen ? '200px' : '20px'
-                }}
-            >
-                <Navbar className={classes.navbar2}
-                    style={{
-                        width: isSidebarOpen ? '200px' : '0px',
-                        display: isSidebarOpen ? 'block' : 'none'
-                    }}
-                    handleAttendance={handleAttendance}
-                    openModal={openModal}
-                />
-                <div className={classes.icon}
-                    style={{
-                        left: isSidebarOpen ? '203px' : '5px'
-                    }}
-                    onClick={handleSidebar}
-                >
-                    {isSidebarOpen && <MdArrowBackIosNew />}
-                    {!isSidebarOpen && <>
-                        <MdArrowForwardIos style={{ boxShadow: "0 0 10px #00ff00" }} />
-                        <MdArrowForwardIos style={{ boxShadow: "0 0 10px #00ff00" }} />
-                    </>}
-                </div>
+        <div className={classes.body}        >
+            <div style={{ width: isSidebarOpen ? '200px' : '20px' }} />
+            <Navbar className={classes.navbar2}
+                style={{ width: isSidebarOpen ? '200px' : '0px', display: isSidebarOpen ? 'block' : 'none' }}
+                handleAttendance={handleAttendance} openModal={openModal}
+            />
+            <div className={classes.icon} style={{ left: isSidebarOpen ? '203px' : '5px' }} onClick={handleSidebar}            >
+                {isSidebarOpen && <MdArrowBackIosNew />}
+                {!isSidebarOpen && <>
+                    <MdArrowForwardIos style={{ boxShadow: "0 0 10px #00ff00" }} />
+                    <MdArrowForwardIos style={{ boxShadow: "0 0 10px #00ff00" }} />
+                </>}
             </div>
-            <div className={classes.content}
-                style={{
-                    width: isSidebarOpen ? 'calc(100vw - 200px)' : '100vw'
-                }}
-            >
+            <div className={classes.content} style={{ width: isSidebarOpen ? 'calc(100vw - 200px)' : '100vw' }}            >
                 <header className="header">
                     <div className="header-text">
                         <h1>Welcome,👋🏽</h1>
@@ -292,66 +279,15 @@ const AdminDashBoard = () => {
                             </ul>
                         </div>
                         <div className={classes.box1}>
-
-                            <div
-                                style={{
-                                    display: "flex",
-                                    // alignItems: "center",
-                                    justifyContent: "center",
-                                }}
-                            >
+                            <div style={{ display: "flex", justifyContent: "center", }}                            >
                                 <h3>Stats</h3>
-                                <div
-                                    style={{
-                                        maxWidth: "150px",
-                                        maxHeight: "200px",
-                                    }}
-                                >
-                                    <PieChart
-                                        startAngle={-90}
-                                        lengthAngle={-360}
-                                        lineWidth={50}
-                                        // segmentsShift={(index) => (index === 0 ? 10 : 0)}
-                                        label={({ dataEntry }) => {
-                                            console.log(dataEntry)
-                                            if (dataEntry?.value === 0) {
-                                                return null;
-                                            }
-                                            return `${dataEntry?.title}: ${dataEntry?.value}`;
-                                        }}
-                                        labelStyle={{
-                                            fontSize: "8px",
-                                            fontFamily: "sans-serif",
-                                            fill: "#121212",
-                                            // color: 'cyan'
-                                        }}
-                                        labelPosition={50}
-                                        data={[
-                                            {
-                                                title: erpstats[0]?._id,
-                                                value: erpstats[0]?.numUsers,
-                                                // value: 7,
-                                                color: "#E1AFD1",
-                                            },
-                                            {
-                                                title: erpstats[1]?._id,
-                                                value: erpstats[1]?.numUsers,
-                                                // value: 7,
-                                                color: "#AD88C6",
-                                            },
-                                            {
-                                                title: erpstats[2]?._id,
-                                                value: erpstats[2]?.numUsers,
-                                                // value: 7,
-                                                color: "#7469B6",
-                                            },
-
-                                            // {
-                                            //   title: "Absent",
-                                            //   value: Attendance.absent,
-                                            //   color: "#B1B2FF",
-                                            // },
-                                        ]}
+                                <div style={{ maxWidth: "150px", maxHeight: "200px", }}                                >
+                                    <PieChart startAngle={-90} lengthAngle={-360} lineWidth={50} labelPosition={50}
+                                        label={({ dataEntry }) => { if (dataEntry?.value === 0) { return null; } return `${dataEntry?.title}: ${dataEntry?.value}`; }}
+                                        labelStyle={{ fontSize: "8px", fontFamily: "sans-serif", fill: "#121212", }}
+                                        data={[{ title: erpstats[0]?._id, value: erpstats[0]?.numUsers, color: "#E1AFD1", },
+                                        { title: erpstats[1]?._id, value: erpstats[1]?.numUsers, color: "#AD88C6", },
+                                        { title: erpstats[2]?._id, value: erpstats[2]?.numUsers, color: "#7469B6", },]}
                                     />
                                 </div>
                             </div>

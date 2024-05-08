@@ -1,25 +1,25 @@
 import React, { useState, useRef, useContext } from "react"
 import classes from "./signup.module.css";
-import { backendUrl } from "../constant.js";
-import axios from "axios";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
-import { useAlert } from "../store/context/Alert-context.js";
-import LoginContext from "../store/context/loginContext.js";
 import { useNavigate } from "react-router";
 import { useCookies } from "react-cookie";
+import axios from "axios";
+
+import { backendUrl } from "../constant.js";
+import { useAlert } from "../store/context/Alert-context.js";
+import LoginContext from "../store/context/loginContext.js";
 
 const SignupPage = () => {
-
-    const [showPassword, setShowPassword] = useState(false);
-
     const Loginctx = useContext(LoginContext);
     const Alertctx = useAlert();
     const [cookie, setCookie] = useCookies(["AccessToken", "RefreshToken"]);
     const navigate = useNavigate();
 
-    const [role, setRole] = useState('');
     const passwordInputRef = useRef(null);
     const datepickerRef = useRef('');
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [role, setRole] = useState('');
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [rollNumber, setRollNumber] = useState("");
@@ -32,21 +32,24 @@ const SignupPage = () => {
     const [program, setProgram] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
     const [profile, setProfile] = useState(null);
     const [profileUrl, setProfileUrl] = useState("");
     const [fileuploading, setFileuploading] = useState(false);
 
+    // function to toggle password visibility
     const handleTogglePassword = (e) => {
         e.preventDefault();
         setShowPassword(!showPassword);
     };
 
+    // function to navigate to login page
     const handleLogin = () => {
         navigate("/login");
     }
 
+    // function to handle signup
     const handleSubmitSignup = async () => {
+        // check if all fields are filled
         if (!role || !email || !name || !phone || !address)
             return Alertctx.showAlert("danger", "Please fill all the fields");
         if (role === 'student' && !rollNumber)
@@ -57,13 +60,13 @@ const SignupPage = () => {
         const dob = datepickerRef.current.value;
         const password = passwordInputRef.current.value;
 
+        // check if dob is valid
         if (dob === "" || dob === null || dob === undefined || dob.split('-').length !== 3) {
-            Alertctx.showAlert("danger", "Please enter a valid date of birth");
-            return;
+            return Alertctx.showAlert("danger", "Please enter a valid date of birth");
         }
+        // check if password is valid and atleast 8 characters long
         if (password.length < 8 || !password) {
-            Alertctx.showAlert("danger", "Password must be at least 8 characters long");
-            return;
+            return Alertctx.showAlert("danger", "Password must be at least 8 characters long");
         }
         setLoading(true);
         const nprogram = Array.from(program.split(','));
@@ -74,34 +77,20 @@ const SignupPage = () => {
         const profile_picture = profileUrl === '' ? null : profileUrl;
 
         const data = {
-            role,
-            email,
-            password,
-            personal_info: {
-                name,
-                rollNumber,
-                phone,
-                address,
-                date_of_birth: dob,
-                gender,
-                profile_picture: profile_picture,
-            },
-            academic_info: {
-                program: nprogram,
-                department: ndept,
-                batch: nbatch,
-                semester: nsemester,
-            },
+            role, email, password,
+            personal_info: { name, rollNumber, phone, address, date_of_birth: dob, gender, profile_picture: profile_picture, },
+            academic_info: { program: nprogram, department: ndept, batch: nbatch, semester: nsemester, },
         }
 
+        // make a post request to signup
         try {
             const res = await axios.post(`${backendUrl}/api/v1/users/signup`, data);
             console.log(res);
             if (role === 'student') {
                 Alertctx.showAlert("success", "Signup successful");
 
-                setCookie("AccessToken", res.data.AccessToken, { path: "/", maxAge: 60 * 60 * 24 * 1 * 0.2 });
-                setCookie("RefreshToken", res.data.RefreshToken, { path: "/", maxAge: 60 * 60 * 24 * 30 * 0.6 });
+                setCookie("AccessToken", res.data.AccessToken, { path: "/", maxAge: 60 * 60 * 24 * 1 * 0.2 }); // 0.2 day = 4.8 hours
+                setCookie("RefreshToken", res.data.RefreshToken, { path: "/", maxAge: 60 * 60 * 24 * 1 * 0.6 }); // 0.6 day = 14.4 hours
 
                 Loginctx.login(res.data.AccessToken, res.data.RefreshToken, res.data.data.user);
                 navigate("/");
@@ -112,25 +101,25 @@ const SignupPage = () => {
             console.log(err);
             if (err?.response?.data?.message) {
                 setError(err?.response?.data?.message);
-                Alertctx.showAlert("danger", err?.response?.data?.message);
-                return;
+                return Alertctx.showAlert("danger", err?.response?.data?.message);
             }
             else
                 setError("Something went wrong");
         } finally {
             setLoading(false);
         }
-
     }
 
+    // function to upload profile picture to google drive
     const uploadHandler = async () => {
+        // check if file is uploading
         if (fileuploading) {
-            Alertctx.showAlert("danger", "Please wait while the file is uploading");
-            return;
+            return Alertctx.showAlert("danger", "Please wait while the file is uploading");
         }
+
+        // check if file is selected
         if (!profile) {
-            Alertctx.showAlert("danger", "Please select a file");
-            return;
+            return Alertctx.showAlert("danger", "Please select a file");
         }
         console.log('Selected file:', profile);
 
@@ -140,14 +129,10 @@ const SignupPage = () => {
         console.log(formData);
         setFileuploading(true);
         try {
-            const res = await axios.post(`${backendUrl}/api/v1/submitAssignment/upload-file`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            const res = await axios.post(`${backendUrl}/api/v1/submitAssignment/upload-file`, formData, { headers: { "Content-Type": "multipart/form-data", }, });
             console.log(res);
             const id = res.data.data.id;
-            const url = `https://drive.google.com/file/d/${id}/view?usp=sharing`;
+            const url = `https://drive.google.com/thumbnail?id=${id}`;
             setProfileUrl(url);
             Alertctx.showAlert('success', 'File uploaded successfully');
         } catch (err) {
@@ -161,12 +146,7 @@ const SignupPage = () => {
             setFileuploading(false);
         }
     }
-    return (<div style={{
-        display: "flex",
-        justifyContent: "center",
-        // width: "100vw",
-        // height: "100vh",
-    }}>
+    return (<div style={{ display: "flex", justifyContent: "center", }}>
 
         <div className={classes.container}>
             <h1 className={classes.h1}>Sign Up</h1>
@@ -374,25 +354,12 @@ const SignupPage = () => {
             {!loading && <p className={classes.loading}> {error}</p>}
             {loading && <p className={classes.loading}>&nbsp; </p>}
             <div className={classes.button}>
-                <button type="button" class={` btn btn-success`}
-
-                    onClick={handleSubmitSignup}
-                    disabled={loading}
-                >
-
-                    {!loading && "Submit"}
-                    {loading && (
-                        <div className="spinner-border text-danger" role="status">
-                        </div>
-                    )}
+                <button type="button" class={` btn btn-success`} onClick={handleSubmitSignup} disabled={loading}                >
+                    {loading ? (<div className="spinner-border text-danger" role="status" />) : "Submit"}
                 </button>
-                <div style={{
-                    // marginLeft: "25px",
-                    marginTop: "20px",
-                }}><p onClick={handleLogin}>
-
-                        Already have an account? <span style={{ color: "blue", cursor: "pointer" }}>Login</span>
-                    </p>
+                <div style={{ marginTop: "20px", }}><p onClick={handleLogin}>
+                    Already have an account? <span style={{ color: "blue", cursor: "pointer" }}>Login</span>
+                </p>
                 </div>
 
             </div>
